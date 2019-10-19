@@ -1,0 +1,67 @@
+{  
+    "extends": [
+        "airbnb",
+        "plugin:react/recommended"
+    ],
+    "plugins": [
+        "react"
+    ],
+    "parser": "babel-eslint",
+    "env": 
+    {    
+        "node": true,    
+        "es6": true,    
+        "browser": true  
+    },
+    "settings": {
+        "react": {
+            "pragma": "React",
+            "version": "latest"
+        }
+    },
+    "rules": 
+    {    
+        "semi": [2, "never"],
+        "no-console": "off",
+        "react/jsx-filename-extension": [1, {
+            "extensions": [".js", ".jsx"]
+        }],
+        "implicit-arrow-linebreak": "off",    
+        "comma-dangle": "off",    
+        "indent": "off",    
+        "arrow-parens": ["error", "as-needed"],
+        "no-trailing-spaces": "off",
+        "no-shadow": "off",
+        "no-confusing-arrow": "off",
+        "function-paren-newline": "off",
+        "import/prefer-default-export": "off",
+        "react/button-has-type": ["off", {"button": false}],
+        "react/jsx-curly-newline": "off",
+        "react/jsx-indent": [2, 4],
+        "react/jsx-indent-props": [2, 4],
+        "react/prop-types": "off",
+        "react/jsx-one-expression-per-line": [0, { "allow": "none" }],
+        "react/jsx-props-no-spreading": "off",
+        "no-alert": "off",
+        "jsx-quotes": [2, "prefer-single"],
+        "jsx-a11y/click-events-have-key-events": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "jsx-a11y/no-static-element-interactions": ["off", {
+            "handlers": [
+                "onClick"
+            ]
+        }],
+        "object-curly-newline": ["error", {
+            "ObjectExpression": {
+                "multiline": false,
+                "minProperties": 3,
+                "consistent": true 
+            },
+            "ObjectPattern": {
+                "multiline": true,
+                "minProperties": 5,
+                "consistent": true
+            }
+        }]
+    }
+}
