@@ -1,0 +1,27 @@
+$border-color: #6c6c6c;
+
+.searchContainer {
+    position: relative;
+    padding-left: 0.4rem;
+    margin-right: 0.4rem;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    
+    .searchInput {
+        border: 0;
+        background: none;
+        color: #fff;
+    }    
+}
+
+.searchIcon {
+    display: flex;
+    align-items: center;
+    padding: 0.15rem 0.3rem;
+
+    svg {
+        fill: #ffffff6e;
+        width: 1.3rem;
+        height: 1.3rem;
+    }
+}

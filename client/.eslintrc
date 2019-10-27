@@ -4,7 +4,10 @@
         "plugin:react/recommended"
     ],
     "plugins": [
-        "react"
+        "react",
+        "react-hooks",
+        "prettier",
+        "jsx-a11y"
     ],
     "parser": "babel-eslint",
     "env": 
@@ -21,6 +24,7 @@
     },
     "rules": 
     {    
+        "react-hooks/rules-of-hooks": "error",
         "semi": [2, "never"],
         "no-console": "off",
         "react/jsx-filename-extension": [1, {

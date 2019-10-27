@@ -1,0 +1,57 @@
+$svg-size: 1.5rem;
+$svg-spacing: 0.6rem;
+
+@mixin b($width, $color) {
+    > * {
+        border: $width solid $color;
+    }
+}
+
+.sidebarContainer {
+    background: #270F5C;
+    grid-area: sidebar;
+    display: grid;
+    grid-template-rows: max-content auto;
+}
+
+.svgContainer {
+    padding: $svg-spacing;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        background: #ffffff17;
+    }
+
+    svg {
+        fill: #fff;
+        width: $svg-size;
+        height: $svg-size;
+
+    }
+}
+
+.sidebarLogoContainer {
+    background: #FFE600;
+    svg {
+        fill: #000;
+    }
+}
+
+.sidebarLogo {
+    display: flex;
+    justify-content: center;
+}
+
+.sidebarTools {
+    display: grid;
+    align-content: space-between;
+    
+}
+
+.sidebarPrimary,
+.sidebarSecondary {
+    display: grid;
+    justify-content: center;
+    // gap: $svg-spacing;
+}
