@@ -1,63 +1,50 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import { MenuDown, MenuUp } from '../../icons/icons'
-import Icon from '../../icons/icons-utils'
+import DropdownToggle from '../dropdown-toggle/dropdown-toggle'
+import DropdownItems from '../dropdown-items-container/dropdown-items-container'
 import DropdownItem from '../dropdown-item/dropdown-item'
 
 import s from './dropdown.module.scss'
 
 const Dropdown = ({ items, placeholder }) => {
+    const dropdown = useRef()
+
     const [workspace, setWorkspace] = useState(placeholder)
     const [toggle, setToggle] = useState(false)
 
-    const dropdown = useRef()
-
-    const toggleDropdown = () => {
+    const selectWorkspace = value => {
+        setWorkspace(value)
         setToggle(!toggle)
     }
 
-    const clickOutside = e => {
-        if (!dropdown.current.contains(e.target)) {
-            toggleDropdown()
-        }
-    }
-
-    const selectWorkspace = value => {
-        setWorkspace(value)
-        toggleDropdown()
-    }
-
     useEffect(() => {
+        const clickOutside = e => {
+            if (!dropdown.current.contains(e.target)) {
+                setToggle(!toggle)
+            }
+        }
+
         if (toggle) {
             document.addEventListener('mousedown', clickOutside)
         } else {
             document.removeEventListener('mousedown', clickOutside)
         }
 
+        // cleanup function / willUnmount
         return () => {
             document.removeEventListener('mousedown', clickOutside)
         }
-    }, [clickOutside, toggle])
+    }, [toggle])
 
     return (
         <div ref={dropdown} className={s.dropdown}>
-            <button
-                id='dropdown-workspace'
-                aria-expanded={toggle}
-                className={s.dropdownToggle}
-                onClick={toggleDropdown}
-                type='button'
-            >
-                <span className={s.dropdownCurrent}>{workspace}</span>
-                {Icon(toggle ? MenuUp : MenuDown)}
-            </button>
+            <DropdownToggle
+                toggle={toggle}
+                current={workspace}
+                onToggle={() => setToggle(!toggle)}
+            />
             {toggle && (
-                <div
-                    role='listbox'
-                    tabIndex='0'
-                    aria-labelledby='dropdown-workspace'
-                    className={s.dropdownMenu}
-                >
+                <DropdownItems>
                     {items.map(({ id, label }) => (
                         <DropdownItem
                             key={id}
@@ -67,7 +54,7 @@ const Dropdown = ({ items, placeholder }) => {
                             {label}
                         </DropdownItem>
                     ))}
-                </div>
+                </DropdownItems>
             )}
         </div>
     )

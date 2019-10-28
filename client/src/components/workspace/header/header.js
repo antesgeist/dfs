@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { Plus, Gear, Lock, Info, Avatar } from '../../icons/icons'
-import Icon from '../../icons/icons-utils'
+import Button from '../../icons/icons-utils'
 import Dropdown from '../../common/dropdown/dropdown'
 import SearchBox from '../../common/search/search'
 
-import s from './header.module.scss'
+import styles from './header.module.scss'
 
 const workspaceArray = [
     {
@@ -31,29 +31,28 @@ const workspaceArray = [
 ]
 
 const Header = () => (
-    <div className={s.headerContainer}>
-        <div className={s.headerContentLeft}>
-            <div className={s.workspaceContent}>
-                <Dropdown
-                    items={workspaceArray}
-                    placeholder='Select Workspace'
-                />
-                <div className={s.workspaceAdd}>{Icon(Plus)}</div>
+    <div className={styles.headerContainer}>
+        <div className={styles.headerContentLeft}>
+            <div className={styles.workspaceContent}>
+                <Dropdown items={workspaceArray} placeholder='Select Workspace' />
+                <div className={styles.workspaceAdd}>
+                    <Button svg={<Plus />} />
+                </div>
             </div>
 
-            <div className={s.workspaceToolbar}>
-                {Icon(Gear)}
-                {Icon(Lock)}
+            <div className={styles.workspaceToolbar}>
+                <Button svg={<Gear />} />
+                <Button svg={<Lock />} />
             </div>
 
-            <div className={s.workspaceUnsavedHint}>Unsaved changes...</div>
+            <div className={styles.workspaceUnsavedHint}>Unsaved changes...</div>
         </div>
-        <div className={s.headerContentRight}>
+        <div className={styles.headerContentRight}>
             <SearchBox />
-            <div className={s.userPrimaryIcon}>{Icon(Info)}</div>
-            <div className={s.userDropdown}>
-                <div className={s.userPrimaryIcon}>{Icon(Avatar)}</div>
-                <div className={s.userDropdownContent}>
+            <Button svg={<Info />} style={[styles.userPrimaryIcon]} />
+            <div className={styles.userDropdown}>
+                <Button svg={<Avatar />} style={[styles.userPrimaryIcon]} />
+                <div className={styles.userDropdownContent}>
                     <ul>
                         <li>Account</li>
                         <li>Settings</li>

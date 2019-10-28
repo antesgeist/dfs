@@ -12,6 +12,7 @@ $svg-spacing: 0.6rem;
     grid-area: sidebar;
     display: grid;
     grid-template-rows: max-content auto;
+    z-index: 20;
 }
 
 .svgContainer {

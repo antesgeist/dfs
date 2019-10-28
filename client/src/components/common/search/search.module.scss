@@ -1,4 +1,4 @@
-$border-color: #6c6c6c;
+$border-color: #404040;
 
 .searchContainer {
     position: relative;
@@ -6,12 +6,18 @@ $border-color: #6c6c6c;
     margin-right: 0.4rem;
     border: 1px solid $border-color;
     border-radius: 2px;
+    height: 1.7rem;
     
+    &:focus-within {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
+        outline: 0;
+    }
+
     .searchInput {
         border: 0;
         background: none;
         color: #fff;
-    }    
+    }
 }
 
 .searchIcon {

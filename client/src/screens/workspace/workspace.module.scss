@@ -3,7 +3,7 @@
     height: 100vh;
     display: grid;
     grid-template: 
-        "sidebar header" auto
+        "sidebar header" max-content
         "sidebar canvas" 1fr
         / max-content auto;
 }

@@ -1,5 +1,5 @@
 $svg-size: 1.75rem;
-$border-color: #6c6c6c;
+$border-color: #404040;
 $header-gap: 0.75rem;
 
 @mixin b($color) {
@@ -26,10 +26,9 @@ $header-gap: 0.75rem;
     justify-content: space-between;
     font-size: 0.8rem;
     font-weight: 700;
-    padding: 0 0.4rem;
+    padding: 0.5rem;
+    z-index: 30;
 }
-
-
 
 .headerContentLeft,
 .headerContentRight {
@@ -44,6 +43,7 @@ $header-gap: 0.75rem;
     > *:not(.workspaceUnsavedHint) {
         border: 1px solid $border-color;
         border-radius: 2px;
+        height: 1.7rem;
     }
 
     svg {
@@ -72,11 +72,10 @@ $header-gap: 0.75rem;
     color: #555;
 }
 
-
-
 /* HEADER RIGHT */
 
 .userPrimaryIcon {
+    padding: 0 0.25rem;
     svg {
         width: $svg-size;
         height: $svg-size;
