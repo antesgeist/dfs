@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './icons.module.scss'
+import styles from './button.module.scss'
 
 const Button = ({
     svg = null,

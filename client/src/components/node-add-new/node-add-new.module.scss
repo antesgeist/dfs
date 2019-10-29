@@ -1,0 +1,26 @@
+.nodeAddNew {
+    display: grid;
+    align-items: center;
+
+    svg {
+        fill: #fff;
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .svgPlusOutline {
+        margin-left: 0.1rem;
+        fill: #ffffff26;
+    }
+}
+
+.nodeDash {
+    width: 0.5rem;
+    height: 100vh;
+    left: -0.8rem;
+    bottom: 50%;
+    border: 1px solid #404040;
+    border-top: 0;
+    border-right: 0;
+    position: absolute;
+}

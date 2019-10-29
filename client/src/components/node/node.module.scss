@@ -1,0 +1,152 @@
+@mixin fxc {
+    display: flex;
+    align-items: center;
+
+    > * {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.nodeDash {
+    width: 0.5rem;
+    height: 100vh;
+    left: -0.8rem;
+    bottom: 50%;
+    border: 1px solid #404040;
+    border-top: 0;
+    border-right: 0;
+    position: absolute;
+}
+
+.node {    
+    display: grid;
+    align-items: center;
+
+    svg {
+        fill: #fff;
+        width: 1rem;
+        height: 1rem;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        font-family: 'Fira Code';
+        text-transform: lowercase;
+    }
+
+    &.nodeCollapsed {
+        ul {
+            display: none;
+        }
+
+        .collapseBtn {
+            svg {
+                fill: #fff;
+            }
+        }
+    }
+}
+
+.collapseBtn {
+    position: absolute;
+    top: -0.2rem;
+    left: -2.35rem;
+    padding: 0;
+
+    &:hover {
+        background: #fff1;
+    }
+
+    $collapseSvg: 1.3rem;
+
+    svg {
+        width: $collapseSvg;
+        height: $collapseSvg;
+        fill: #ffffff2e;
+    }
+}
+
+.nodeContent {
+    padding: 0.2rem;
+    @include fxc;
+    position: relative;
+
+    .nodeVisible {
+        > :not(:last-child) {
+            margin-right: 0.35rem;
+        }
+    }
+    
+    > :not(:last-child) {
+        margin-right: 0.35rem;
+    }
+
+    .toggleCheck {
+        display: flex;
+        align-items: center;
+        background: #ffde7f;
+        background: #404040;
+        border-radius: 50%;
+        padding: 1px;
+    }
+
+    $checkSize: 0.65rem;
+ 
+    .svgCheck {
+        fill: #000;
+        width: $checkSize;
+        height: $checkSize;
+        opacity: 0;
+    }
+}
+
+
+.nodeToolbar {
+    padding: 0.25rem;
+    @include fxc;
+    justify-content: flex-end;
+    // display: none;
+
+    > * :not(:first-child) {
+        margin-left: 0.35rem;
+    }
+
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgba(255, 255, 255, 0.048);
+    height: 100%;
+    width: 100%;
+    
+    .nodeToolsDefault {
+        position: relative;
+
+        .nodeGear {
+            width: 0.75rem;
+        }
+        
+        .nodeMax {
+            width: 0.75rem;
+        }
+        
+        .nodeCopy {   
+            width: 0.8rem;
+        }
+        
+        .nodeLayer {
+            width: 0.85rem;
+        }
+        
+        .nodeToolsExpanded {
+            background: #fff2;
+            display: flex;
+            // display: none;
+            position: absolute;
+            left: -4.75rem;
+            padding: 0 0.2rem 0 0.3rem;
+        }
+    }
+}

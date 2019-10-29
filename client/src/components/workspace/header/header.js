@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Plus, Gear, Lock, Info, Avatar } from '../../icons/icons'
-import Button from '../../icons/icons-utils'
+import Button from '../../common/button/button'
 import Dropdown from '../../common/dropdown/dropdown'
 import SearchBox from '../../common/search/search'
 

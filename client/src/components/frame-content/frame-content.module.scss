@@ -1,0 +1,23 @@
+.frameContent {
+    min-height: 400px;
+    margin: 0.5rem;
+    margin-top: 0;
+    color: #fff;
+    background: #1C1E25;
+    border-radius: 2px;
+    overflow-y: auto;
+    padding: 1.2rem 0;
+
+    
+
+    $nodeGap: 0.4rem;
+    $vLineOffset: 0.3rem;
+    $toggleOffset: 2rem;
+    
+    li {
+        display: grid;
+        gap: $nodeGap;
+        margin-left: 1.9rem;
+        position: relative;
+    }
+}
