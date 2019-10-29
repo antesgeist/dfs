@@ -17,6 +17,7 @@ const Dropdown = ({ items, placeholder }) => {
         setToggle(!toggle)
     }
 
+    // componentDidMount
     useEffect(() => {
         const clickOutside = e => {
             if (!dropdown.current.contains(e.target)) {
@@ -30,7 +31,7 @@ const Dropdown = ({ items, placeholder }) => {
             document.removeEventListener('mousedown', clickOutside)
         }
 
-        // cleanup function / willUnmount
+        // cleanup function / componentWillUnmount
         return () => {
             document.removeEventListener('mousedown', clickOutside)
         }
@@ -45,13 +46,13 @@ const Dropdown = ({ items, placeholder }) => {
             />
             {toggle && (
                 <DropdownItems>
-                    {items.map(({ id, label }) => (
+                    {items.map(({ id, title }) => (
                         <DropdownItem
                             key={id}
                             link='#'
-                            select={() => selectWorkspace(label)}
+                            select={() => selectWorkspace(title)}
                         >
-                            {label}
+                            {title}
                         </DropdownItem>
                     ))}
                 </DropdownItems>

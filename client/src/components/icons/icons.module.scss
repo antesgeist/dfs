@@ -8,6 +8,10 @@
     border-radius: 50%;
     background: none;
 
+    &.noPadding {
+        padding: 0;
+    }
+
     &:focus {
         outline: 0;
     }

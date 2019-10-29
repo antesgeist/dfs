@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from './dropdown-toggle.module.scss'
 import { MenuUp, MenuDown } from '../../icons/icons'
-import Button from '../../icons/icons-utils'
 
 const DropdownToggle = ({ toggle, onToggle, current }) => (
     <button
@@ -11,8 +10,14 @@ const DropdownToggle = ({ toggle, onToggle, current }) => (
         onClick={onToggle}
         type='button'
     >
-        <span className={styles.dropdownCurrent}>{current}</span>
-        {toggle ? <Button svg={<MenuUp />} /> : <Button svg={<MenuDown />} />}
+        <div className={styles.toggleContent}>
+            <span className={styles.dropdownCurrent}>{current}</span>
+            {toggle ? (
+                <MenuUp className={styles.toggleSvg} />
+            ) : (
+                <MenuDown className={styles.toggleSvg} />
+            )}
+        </div>
     </button>
 )
 

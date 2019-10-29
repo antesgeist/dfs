@@ -1,6 +1,8 @@
 import React from 'react'
-import styles from './App.module.scss'
+
 import Workspace from './screens/workspace/workspace'
+
+import styles from './App.module.scss'
 
 const App = () => (
     <div className={styles.appContainer}>

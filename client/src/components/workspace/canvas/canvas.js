@@ -11,15 +11,12 @@ import {
     Edit,
     More,
     MenuRight,
-    Check,
     CheckBold,
     Maximize,
     Close,
     Stack,
     Copy,
     PlusOutline,
-    Minus,
-    MenuUp
 } from '../../icons/icons'
 import Button from '../../icons/icons-utils'
 
@@ -71,23 +68,27 @@ const Canvas = () => {
                         <li className={`${styles.node} ${isCollapsed ? styles.nodeCollapsed : ''}`}>
                             <div className={styles.nodeContent}>
                                 <span className={styles.nodeDash} />
-                                <span className={styles.toggleCheck}>
-                                    <CheckBold className={styles.svgCheck} />
-                                </span>
-                                <p className={styles.nodeBody}>Node 1</p>
-                            </div>
-                            <div className={styles.nodeToolbar}>
-                                <div className={styles.nodeToolsExpanded}>
-                                    <span>copy</span>
-                                    <span>stack</span>
-                                    <span>plus</span>
+                                <div className={styles.nodeVisible}>
+                                    <span className={styles.toggleCheck}>
+                                        <CheckBold className={styles.svgCheck} />
+                                    </span>
+                                    <p className={styles.nodeBody}>Node 1</p>
                                 </div>
-                                <div className={styles.nodeToolsDefault}>
-                                    <span>gear</span>
-                                    <span>maximize</span>
-                                    <span>close</span>
+                                <div className={styles.nodeToolbar}>
+                                    <div className={styles.nodeToolsDefault}>
+                                        <Button svg={<Gear className={styles.nodeGear} />} opt={['noPadding']} />
+                                        <Button svg={<Maximize className={styles.nodeMax} />} opt={['noPadding']} />
+                                        <Button svg={<Close />} opt={['noPadding']} />
+
+                                        <div className={styles.nodeToolsExpanded}>
+                                            <Button svg={<Copy className={styles.nodeCopy} />} opt={['noPadding']} />                                        
+                                            <Button svg={<Stack className={styles.nodeLayer} />} opt={['noPadding']} />                                        
+                                            <Button svg={<Plus />} opt={['noPadding']} />                                        
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            
                             <Button
                                 svg={isCollapsed ? <MenuRight /> : <MenuDown />}
                                 style={[styles.collapseBtn]}
@@ -103,18 +104,6 @@ const Canvas = () => {
                                         </span>
                                         <p className={styles.nodeBody}>Node 1.1</p>
                                     </div>
-                                    <div className={styles.nodeToolbar}>
-                                        <div className={styles.nodeToolsExpanded}>
-                                            <span>copy</span>
-                                            <span>stack</span>
-                                            <span>plus</span>
-                                        </div>
-                                        <div className={styles.nodeToolsDefault}>
-                                            <span>gear</span>
-                                            <span>maximize</span>
-                                            <span>close</span>
-                                        </div>
-                                    </div>
                                     <ul>
                                         <li className={styles.node}>
                                             <div className={styles.nodeContent}>
@@ -129,18 +118,6 @@ const Canvas = () => {
                                                     Node 1.1.1
                                                 </p>
                                             </div>
-                                            <div className={styles.nodeToolbar}>
-                                                <div className={styles.nodeToolsExpanded}>
-                                                    <span>copy</span>
-                                                    <span>stack</span>
-                                                    <span>plus</span>
-                                                </div>
-                                                <div className={styles.nodeToolsDefault}>
-                                                    <span>gear</span>
-                                                    <span>maximize</span>
-                                                    <span>close</span>
-                                                </div>
-                                            </div>
                                         </li>
                                         <li className={styles.node}>
                                             <div className={styles.nodeContent}>
@@ -154,18 +131,6 @@ const Canvas = () => {
                                                 <p className={styles.nodeBody}>
                                                     Node 1.1.2
                                                 </p>
-                                            </div>
-                                            <div className={styles.nodeToolbar}>
-                                                <div className={styles.nodeToolsExpanded}>
-                                                    <span>copy</span>
-                                                    <span>stack</span>
-                                                    <span>plus</span>
-                                                </div>
-                                                <div className={styles.nodeToolsDefault}>
-                                                    <span>gear</span>
-                                                    <span>maximize</span>
-                                                    <span>close</span>
-                                                </div>
                                             </div>
                                         </li>
                                         <li
@@ -193,18 +158,6 @@ const Canvas = () => {
                                 </span>
                                 <p className={styles.nodeBody}>Node 2</p>
                             </div>
-                            <div className={styles.nodeToolbar}>
-                                <div className={styles.nodeToolsExpanded}>
-                                    <span>copy</span>
-                                    <span>stack</span>
-                                    <span>plus</span>
-                                </div>
-                                <div className={styles.nodeToolsDefault}>
-                                    <span>gear</span>
-                                    <span>maximize</span>
-                                    <span>close</span>
-                                </div>
-                            </div>
                             <ul>
                                 <li className={styles.node}>
                                     <div className={styles.nodeContent}>
@@ -215,18 +168,6 @@ const Canvas = () => {
                                         </span>
                                         <p className={styles.nodeBody}>Node 2.1</p>
                                     </div>
-                                    <div className={styles.nodeToolbar}>
-                                        <div className={styles.nodeToolsExpanded}>
-                                            <span>copy</span>
-                                            <span>stack</span>
-                                            <span>plus</span>
-                                        </div>
-                                        <div className={styles.nodeToolsDefault}>
-                                            <span>gear</span>
-                                            <span>maximize</span>
-                                            <span>close</span>
-                                        </div>
-                                    </div>
                                 </li>
                                 <li className={styles.node}>
                                     <div className={styles.nodeContent}>
@@ -236,18 +177,6 @@ const Canvas = () => {
                                             <CheckBold className={styles.svgCheck} />
                                         </span>
                                         <p className={styles.nodeBody}>Node 2.2</p>
-                                    </div>
-                                    <div className={styles.nodeToolbar}>
-                                        <div className={styles.nodeToolsExpanded}>
-                                            <span>copy</span>
-                                            <span>stack</span>
-                                            <span>plus</span>
-                                        </div>
-                                        <div className={styles.nodeToolsDefault}>
-                                            <span>gear</span>
-                                            <span>maximize</span>
-                                            <span>close</span>
-                                        </div>
                                     </div>
                                 </li>
                                 <li className={`${styles.node} ${styles.nodeAddNew}`}>

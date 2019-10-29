@@ -1,15 +1,25 @@
 import React from 'react'
-import s from './icons.module.scss'
+import styles from './icons.module.scss'
 
 const Button = ({
     svg = null,
     text = null,
     children = null,
     style = [],
-    onClick
+    opt = [],
+    onClick = null
 }) => {
     const firstClassIsValid = style[0]
     let formattedClass
+
+    const options = opt.map(option => {
+        switch (option) {
+            case 'noPadding':
+                return styles.noPadding
+            default:
+                return false
+        }
+    })
 
     if (style.length === 1 && firstClassIsValid) {
         formattedClass = ` ${style[0].toString()}`
@@ -19,35 +29,19 @@ const Button = ({
             .reduce((acc, cur) => `${acc} ${cur}`, '')
     }
 
+    const generatedClass = `
+        ${styles.buttonContainer}
+        ${formattedClass || ''}
+        ${options || ''}
+    `
+
     return (
         <button
-            className={`${
-                s.buttonContainer
-            }${formattedClass || ''}`}
+            className={generatedClass}
             type='button'
             onClick={onClick}
         >
             {svg || children || text}
-        </button>
-    )
-}
-
-export const SVG = (Svg, options = []) => {
-    let formattedClass
-
-    if (options.length > 1 && options[0] !== false) {
-        formattedClass = options
-            .filter(className => className !== 'null')
-            .reduce((acc, cur) => `${acc} ${cur}`, '')
-    }
-
-    return (
-        <button
-            className={`${
-                s.buttonContainer
-            }${formattedClass || ''}`}
-        >
-            <Svg />
         </button>
     )
 }

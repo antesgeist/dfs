@@ -201,13 +201,18 @@ $framePadding: 0.5rem;
     }
 }
 
-
-
 .nodeContent {
+    padding: 0.2rem;
     @include fxc;
     position: relative;
 
-    :not(:last-child) {
+    .nodeVisible {
+        > :not(:last-child) {
+            margin-right: 0.35rem;
+        }
+    }
+    
+    > :not(:last-child) {
         margin-right: 0.35rem;
     }
 
@@ -230,6 +235,56 @@ $framePadding: 0.5rem;
     }
 }
 
+
+.nodeToolbar {
+    padding: 0.25rem;
+    @include fxc;
+    justify-content: flex-end;
+    // display: none;
+
+    > * :not(:first-child) {
+        margin-left: 0.35rem;
+    }
+
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgba(255, 255, 255, 0.048);
+    height: 100%;
+    width: 100%;
+    
+    .nodeToolsDefault {
+        position: relative;
+
+        .nodeGear {
+            width: 0.75rem;
+        }
+        
+        .nodeMax {
+            width: 0.75rem;
+        }
+        
+        .nodeCopy {   
+            width: 0.8rem;
+        }
+        
+        .nodeLayer {
+            width: 0.85rem;
+        }
+        
+        .nodeToolsExpanded {
+            background: #fff2;
+            display: flex;
+            // display: none;
+            position: absolute;
+            left: -4.75rem;
+            padding: 0 0.2rem 0 0.3rem;
+        }
+    }
+    
+
+}
+
 .nodeAddNew {
     display: flex;
 
@@ -238,8 +293,3 @@ $framePadding: 0.5rem;
         fill: #ffffff26;
     }
 }
-
-.nodeToolbar {
-    display: none;
-}
-
