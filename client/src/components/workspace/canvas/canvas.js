@@ -18,7 +18,8 @@ import {
     Stack,
     Copy,
     PlusOutline,
-    Minus
+    Minus,
+    MenuUp
 } from '../../icons/icons'
 import Button from '../../icons/icons-utils'
 
@@ -28,6 +29,7 @@ const Canvas = () => {
     const [frameTitle, setFrameTitle] = useState('Vladimirs')
     const [hasChanges, setHasChanges] = useState(false)
     const [editMode, setEditMode] = useState(true)
+    const [isCollapsed, setIsCollapsed] = useState(false)
 
     const updateFrameTitle = e => setFrameTitle(e.target.value)
     const frameToolsState = hasChanges && styles.hasUnsaved
@@ -36,6 +38,8 @@ const Canvas = () => {
     return (
         <div className={styles.canvasContainer}>
             <div className={styles.frame}>
+                {/* START FRAME HEADER */}
+
                 <div className={styles.frameHeader}>
                     <div className={styles.frameLabel}>
                         <Button svg={<Dot />} style={[styles.dotIcon]} />
@@ -59,9 +63,12 @@ const Canvas = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* START FRAME CONTENT */}
+
                 <div className={styles.frameContent}>
                     <ul id='frameRootId' className={styles.root}>
-                        <li className={styles.node}>
+                        <li className={`${styles.node} ${isCollapsed ? styles.nodeCollapsed : ''}`}>
                             <div className={styles.nodeContent}>
                                 <span className={styles.nodeDash} />
                                 <span className={styles.toggleCheck}>
@@ -81,6 +88,11 @@ const Canvas = () => {
                                     <span>close</span>
                                 </div>
                             </div>
+                            <Button
+                                svg={isCollapsed ? <MenuRight /> : <MenuDown />}
+                                style={[styles.collapseBtn]}
+                                onClick={() => setIsCollapsed(!isCollapsed)}
+                            />
                             <ul>
                                 <li className={styles.node}>
                                     <div className={styles.nodeContent}>
