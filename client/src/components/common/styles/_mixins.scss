@@ -1,0 +1,23 @@
+@mixin fxc {
+    display: flex;
+    align-items: center;
+
+    > * {
+        display: flex;
+        align-items: center;
+    }
+}
+
+@mixin lines {
+    &:before {
+        content: '';
+        width: 0.35rem;
+        height: 100vh;
+        left: 0rem;
+        bottom: 50%;
+        border: 1px solid #292929;
+        border-top: 0;
+        border-right: 0;
+        position: absolute;
+    }
+}

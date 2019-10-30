@@ -1,26 +1,23 @@
+@import '../common/styles/mixins';
+
 .nodeAddNew {
+    @include lines;
+
     display: grid;
     align-items: center;
+    position: relative;
+    height: 1.25rem;
+
+    $svgAddOutline: 0.95rem;
 
     svg {
         fill: #fff;
-        width: 1rem;
-        height: 1rem;
+        width: $svgAddOutline;
+        height: $svgAddOutline;
     }
 
     .svgPlusOutline {
-        margin-left: 0.1rem;
+        margin-left: 0.6rem;
         fill: #ffffff26;
     }
-}
-
-.nodeDash {
-    width: 0.5rem;
-    height: 100vh;
-    left: -0.8rem;
-    bottom: 50%;
-    border: 1px solid #404040;
-    border-top: 0;
-    border-right: 0;
-    position: absolute;
 }

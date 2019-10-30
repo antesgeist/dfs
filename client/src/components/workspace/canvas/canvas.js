@@ -1,56 +1,31 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { connect } from 'react-redux'
 
-import Button from '../../common/button/button'
-import { MenuDown, MenuRight } from '../../icons/icons'
+import { fetchCanvasFrames } from '../../../redux/canvas/canvas.actions'
 
 import Frame from '../../frame/frame'
 import FrameContent from '../../frame-content/frame-content'
-import Node from '../../node/node'
-import NodeContent from '../../node-content/node-content'
 import NodeParent from '../../node-parent/node-parent'
-import NodeAddNew from '../../node-add-new/node-add-new'
 
 import styles from './canvas.module.scss'
 
-const Canvas = () => {
-    const [isCollapsed, setIsCollapsed] = useState(false)
-
-    const btnCollapseState = isCollapsed ? (
-        <MenuRight />
-    ) : (
-        <MenuDown />
-    )
-
-    return (
-        <div className={styles.canvasContainer}>
-            <Frame>
+const Canvas = ({ canvasFrames }) => (
+    <div className={styles.canvasContainer}>
+        {canvasFrames.map(({ id, title, descendant }) => (
+            <Frame key={id} title={title}>
                 <FrameContent>
-                    <NodeParent root>
-                        <Node isCollapsed={isCollapsed}>
-                            <NodeContent value='Maxxis' />
-                            <Button
-                                svg={btnCollapseState}
-                                style={[styles.collapseBtn]}
-                                onClick={() =>
-                                    setIsCollapsed(!isCollapsed)
-                                }
-                            />
-                            <NodeParent>
-                                <Node isCollapsed={isCollapsed}>
-                                    <NodeContent value='Maxwell' />
-                                </Node>
-                                <Node isCollapsed={isCollapsed}>
-                                    <NodeContent value='Boron' />
-                                </Node>
-                                <NodeAddNew />
-                            </NodeParent>
-                        </Node>
-                        <NodeAddNew />
-                    </NodeParent>
+                    <NodeParent root='true' nodes={descendant} />
                 </FrameContent>
             </Frame>
-        </div>
-    )
-}
+        ))}
+    </div>
+)
 
-export default Canvas
+const mapStateToProps = state => ({
+    canvasFrames: state.canvas.canvasFrames
+})
+
+export default connect(
+    mapStateToProps,
+    fetchCanvasFrames
+)(Canvas)

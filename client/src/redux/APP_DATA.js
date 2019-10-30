@@ -50,7 +50,7 @@ const frames = [
         id: 1,
         order: 0,
         title: 'Initial Frame',
-        nodes: [
+        descendant: [
             {
                 id: 1,
                 value: 'Node Tree Mechanism',
@@ -74,7 +74,16 @@ const frames = [
                                     expanded: true,
                                     checked: false
                                 },
-                                descendant: null
+                                descendant: []
+                            },
+                            {
+                                id: 2,
+                                value: 'use parent context sssss',
+                                state: {
+                                    expanded: true,
+                                    checked: false
+                                },
+                                descendant: []
                             }
                         ]
                     },
@@ -85,7 +94,16 @@ const frames = [
                             expanded: true,
                             checked: false
                         },
-                        descendant: null
+                        descendant: []
+                    },
+                    {
+                        id: 3,
+                        value: 'node states',
+                        state: {
+                            expanded: true,
+                            checked: false
+                        },
+                        descendant: []
                     }
                 ]
             },
@@ -104,7 +122,7 @@ const frames = [
                             expanded: true,
                             checked: false
                         },
-                        descendant: null
+                        descendant: []
                     },
                     {
                         id: 2,
@@ -113,7 +131,7 @@ const frames = [
                             expanded: true,
                             checked: false
                         },
-                        descendant: null
+                        descendant: []
                     }
                 ]
             }

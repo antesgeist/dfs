@@ -7,22 +7,3 @@
     z-index: 10;
     position: relative;
 }
-
-.collapseBtn {
-    position: absolute;
-    top: -0.2rem;
-    left: -2.35rem;
-    padding: 0;
-
-    &:hover {
-        background: #fff1;
-    }
-
-    $collapseSvg: 1.3rem;
-
-    svg {
-        width: $collapseSvg;
-        height: $collapseSvg;
-        fill: #ffffff2e;
-    }
-}

@@ -1,6 +1,5 @@
-$nodeGap: 0.4rem;
-$vLineOffset: 0.3rem;
-$toggleOffset: 2rem;
+$nodeGap: 0rem;
+$vLineOffset: 0rem;
 
 ul {
     list-style-type: none;
@@ -11,8 +10,33 @@ ul {
     padding-top: $vLineOffset;
     margin-top: -#{$vLineOffset};
     overflow: hidden;
+    
+    &.root {
+    }
+    
+    li {
+        display: grid;
+        gap: $nodeGap;
+        margin-left: 1.75rem;
+    }
 }
 
-.root {
-    padding: 0.4rem 0.8rem;
+.collapseBtn {
+    position: absolute;
+    top: 0;
+    left: -1.4rem;
+    padding: 0;
+
+    $collapseSvg: 1.2rem;
+    
+    svg {
+        width: $collapseSvg;
+        height: $collapseSvg;
+        fill: #ffffff3b;
+        // background: blue;
+        
+        &:hover {
+            fill: #ffffff6e;
+        }
+    }
 }

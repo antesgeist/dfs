@@ -4,9 +4,9 @@ import FrameHeader from '../frame-header/frame-header'
 
 import styles from './frame.module.scss'
 
-const Frame = ({ children }) => (
+const Frame = ({ title, children }) => (
     <div className={styles.frame}>
-        <FrameHeader title='Vladimirs' />
+        <FrameHeader title={title} />
         {children}
     </div>
 )

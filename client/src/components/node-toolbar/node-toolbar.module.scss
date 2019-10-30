@@ -1,0 +1,44 @@
+@import '../common/styles/mixins';
+
+.nodeToolbar {
+    @include fxc;
+
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: none;
+    // border: 1px solid red;
+
+    > * :not(:first-child) {
+        margin-left: 0.35rem;
+    }   
+}
+
+.nodeToolsDefault {
+    position: relative;
+
+    .nodeGear {
+        width: 0.75rem;
+    }
+    
+    .nodeMax {
+        width: 0.75rem;
+    }
+    
+    .nodeCopy {   
+        width: 0.8rem;
+    }
+    
+    .nodeLayer {
+        width: 0.85rem;
+    }
+    
+    .nodeToolsExpanded {
+        background: #fff2;
+        display: flex;
+        display: none;
+        position: absolute;
+        left: -4.75rem;
+        padding: 0 0.2rem 0 0.3rem;
+    }
+}
