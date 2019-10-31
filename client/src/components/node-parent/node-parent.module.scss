@@ -10,8 +10,13 @@ ul {
     padding-top: $vLineOffset;
     margin-top: -#{$vLineOffset};
     overflow: hidden;
+
+    &[data-is-collapsed="true"] {
+        display: none;
+    }
     
     &.root {
+        position: static;
     }
     
     li {
@@ -33,7 +38,6 @@ ul {
         width: $collapseSvg;
         height: $collapseSvg;
         fill: #ffffff3b;
-        // background: blue;
         
         &:hover {
             fill: #ffffff6e;

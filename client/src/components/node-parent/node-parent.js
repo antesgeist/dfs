@@ -1,4 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
+import { connect } from 'react-redux'
+
+import { selectCanvasFrames } from '../../redux/canvas/canvas.selectors'
 
 import Button from '../common/button/button'
 import { MenuDown, MenuRight } from '../icons/icons'
@@ -9,34 +12,57 @@ import NodeAddNew from '../node-add-new/node-add-new'
 
 import styles from './node-parent.module.scss'
 
-const NodeParent = ({ root, nodes }) => {
-    const [isCollapsed, setIsCollapsed] = useState(false)
-    const btnCollapseState = isCollapsed ? <MenuRight /> : <MenuDown />
+const mapNodesToParent = (nodeArray, toggle) =>
+    nodeArray.map(({ id, value, descendant, state }) => (
+        <Node key={id} expanded={state.expanded}>
+            <NodeContent title={value} />
+            {descendant.length > 0 && (
+                <NodeParent
+                    nodes={descendant}
+                    collapsed={state.collapsed}
+                    id={id}
+                    toggle={toggle}
+                />
+            )}
+        </Node>
+    ))
+
+const NodeParent = ({ root, nodes, collapsed, toggle, id }) => {
+    const [isCollapsed, setIsCollapsed] = useState(collapsed)
+
+    const collapseNode = () => {
+        setIsCollapsed(!isCollapsed)
+        toggle(id)
+    }
 
     const rootProps = root && {
         id: 'frameRootId',
         className: styles.root
     }
 
-    const mapNodesToParent = nodesArray =>
-        nodesArray.map(({ id, value, descendant }) => (
-            <Node key={id} isCollapsed={isCollapsed}>
-                <NodeContent title={value} />
-                {descendant.length > 0 && <NodeParent nodes={descendant} />}
-            </Node>
-        ))
+    const attrs = {
+        'data-is-collapsed': collapsed
+    }
 
     return (
-        <ul {...rootProps}>
-            <Button
-                svg={btnCollapseState}
-                style={[styles.collapseBtn]}
-                onClick={() => setIsCollapsed(!isCollapsed)}
-            />
-            {mapNodesToParent(nodes)}
-            <NodeAddNew />
-        </ul>
+        <Fragment>
+            {!root && (
+                <Button
+                    svg={isCollapsed ? <MenuRight /> : <MenuDown />}
+                    style={[styles.collapseBtn]}
+                    onClick={collapseNode}
+                />
+            )}
+            <ul {...rootProps} {...attrs}>
+                {mapNodesToParent(nodes, toggle)}
+                <NodeAddNew />
+            </ul>
+        </Fragment>
     )
 }
 
-export default NodeParent
+const mapStateToProps = state => ({
+    frame: selectCanvasFrames(state)[0] // get first frame
+})
+
+export default connect(mapStateToProps)(NodeParent)

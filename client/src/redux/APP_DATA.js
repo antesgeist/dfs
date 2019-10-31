@@ -52,18 +52,18 @@ const frames = [
         title: 'Initial Frame',
         descendant: [
             {
-                id: 1,
+                id: 123123,
                 value: 'Node Tree Mechanism',
                 state: {
-                    expanded: true,
+                    collapsed: false,
                     checked: false
                 },
                 descendant: [
                     {
-                        id: 1,
+                        id: 12345,
                         value: 'node view toggles',
                         state: {
-                            expanded: true,
+                            collapsed: true,
                             checked: false
                         },
                         descendant: [
@@ -71,7 +71,7 @@ const frames = [
                                 id: 1,
                                 value: 'svg switch',
                                 state: {
-                                    expanded: true,
+                                    collapsed: false,
                                     checked: false
                                 },
                                 descendant: []
@@ -80,7 +80,7 @@ const frames = [
                                 id: 2,
                                 value: 'use parent context sssss',
                                 state: {
-                                    expanded: true,
+                                    collapsed: false,
                                     checked: false
                                 },
                                 descendant: []
@@ -91,7 +91,7 @@ const frames = [
                         id: 2,
                         value: 'add new node',
                         state: {
-                            expanded: true,
+                            collapsed: true,
                             checked: false
                         },
                         descendant: []
@@ -100,7 +100,7 @@ const frames = [
                         id: 3,
                         value: 'node states',
                         state: {
-                            expanded: true,
+                            collapsed: true,
                             checked: false
                         },
                         descendant: []
@@ -111,7 +111,7 @@ const frames = [
                 id: 2,
                 value: 'Edit Mode',
                 state: {
-                    expanded: true,
+                    collapsed: false,
                     checked: false
                 },
                 descendant: [
@@ -119,7 +119,7 @@ const frames = [
                         id: 1,
                         value: 'toggle edit mode',
                         state: {
-                            expanded: true,
+                            collapsed: true,
                             checked: false
                         },
                         descendant: []
@@ -128,7 +128,7 @@ const frames = [
                         id: 2,
                         value: 'hover buttons',
                         state: {
-                            expanded: true,
+                            collapsed: true,
                             checked: false
                         },
                         descendant: []
