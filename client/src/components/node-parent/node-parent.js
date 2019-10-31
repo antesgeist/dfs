@@ -1,7 +1,4 @@
 import React, { useState, Fragment } from 'react'
-import { connect } from 'react-redux'
-
-import { selectCanvasFrames } from '../../redux/canvas/canvas.selectors'
 
 import Button from '../common/button/button'
 import { MenuDown, MenuRight } from '../icons/icons'
@@ -12,27 +9,33 @@ import NodeAddNew from '../node-add-new/node-add-new'
 
 import styles from './node-parent.module.scss'
 
-const mapNodesToParent = (nodeArray, toggle) =>
+const mapNodesToParent = (nodeArray, onCollapse, onCheck) =>
     nodeArray.map(({ id, value, descendant, state }) => (
-        <Node key={id} expanded={state.expanded}>
-            <NodeContent title={value} />
+        <Node key={id} expanded={state.collapsed}>
+            <NodeContent
+                title={value}
+                onCheck={onCheck}
+                id={id}
+                checked={state.checked}
+            />
             {descendant.length > 0 && (
                 <NodeParent
                     nodes={descendant}
                     collapsed={state.collapsed}
                     id={id}
-                    toggle={toggle}
+                    onCollapse={onCollapse}
+                    onCheck={onCheck}
                 />
             )}
         </Node>
     ))
 
-const NodeParent = ({ root, nodes, collapsed, toggle, id }) => {
+const NodeParent = ({ root, nodes, collapsed, id, onCollapse, onCheck }) => {
     const [isCollapsed, setIsCollapsed] = useState(collapsed)
 
     const collapseNode = () => {
         setIsCollapsed(!isCollapsed)
-        toggle(id)
+        onCollapse({ id, type: 'COLLAPSE' })
     }
 
     const rootProps = root && {
@@ -54,15 +57,11 @@ const NodeParent = ({ root, nodes, collapsed, toggle, id }) => {
                 />
             )}
             <ul {...rootProps} {...attrs}>
-                {mapNodesToParent(nodes, toggle)}
+                {mapNodesToParent(nodes, onCollapse, onCheck)}
                 <NodeAddNew />
             </ul>
         </Fragment>
     )
 }
 
-const mapStateToProps = state => ({
-    frame: selectCanvasFrames(state)[0] // get first frame
-})
-
-export default connect(mapStateToProps)(NodeParent)
+export default NodeParent

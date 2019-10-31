@@ -1,16 +1,19 @@
 import CanvasActionTypes from './canvas.types'
 
-export const fetchCanvasFrames = framesObject => dispatch =>
+export const fetchCanvasFrames = frames => dispatch =>
     dispatch({
         type: CanvasActionTypes.FETCH_CANVAS_FRAMES,
-        payload: framesObject
+        payload: frames
     })
 
-export const toggleFrameNodeView = nodeId => ({
-    type: CanvasActionTypes.TOGGLE_FRAME_NODE_VIEW,
-    payload: nodeId
-})
+export const toggleNodeCollapse = ({ id, type }) => dispatch =>
+    dispatch({
+        type: CanvasActionTypes.TOGGLE_NODE_COLLAPSE,
+        payload: { id, type }
+    })
 
-export const foundIt = () => ({
-    type: CanvasActionTypes.FOUND
-})
+export const toggleNodeCheck = ({ id, type }) => dispatch =>
+    dispatch({
+        type: CanvasActionTypes.TOGGLE_NODE_CHECK_ONE,
+        payload: { id, type }
+    })

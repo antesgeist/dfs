@@ -33,13 +33,21 @@
         text-transform: lowercase;
     }
 
-    .toggleCheck {
+    %toggleCheckedSpan {
         display: flex;
         align-items: center;
-        background: #ffde7f;
-        background: #f0f0f00d;
         border-radius: 50%;
         padding: 1px;
+    }
+
+    .toggleIsChecked {
+        @extend %toggleCheckedSpan;
+        background: #ffde7f;
+    }
+
+    .toggleIsUnchecked {
+        @extend %toggleCheckedSpan;
+        background: #f0f0f00d;
     }
     
     svg {
@@ -50,10 +58,20 @@
 
     $checkSize: 0.65rem;
 
-    .svgCheck {
-        fill: #000;
+    %svgCheckedStyle {
         width: $checkSize;
         height: $checkSize;
+        pointer-events: none;
+    }
+    
+    .svgCheckedVisible {
+        @extend %svgCheckedStyle;
+        opacity: 1;
+        fill: #000;
+    }
+    
+    .svgCheckedHidden {
+        @extend %svgCheckedStyle;
         opacity: 0;
-    }    
+    }
 }

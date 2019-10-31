@@ -120,14 +120,30 @@ const INITIAL_STATE = {
     ]
 }
 
-const mapOverNodes = (descendant, id) =>
+const mapOverNodes = (descendant, id, toggleType) =>
     descendant.map(node => {
         if (node.id === id) {
+            let toggleAction
+            let stateProperty
+
+            switch (toggleType) {
+                case 'COLLAPSE':
+                    toggleAction = !node.state.collapsed
+                    stateProperty = 'collapsed'
+                    break
+                case 'CHECK':
+                    toggleAction = !node.state.checked
+                    stateProperty = 'checked'
+                    break
+                default:
+                    break
+            }
+
             return {
                 ...node,
                 state: {
                     ...node.state,
-                    collapsed: !node.state.collapsed
+                    [stateProperty]: toggleAction
                 }
             }
         }
@@ -136,7 +152,7 @@ const mapOverNodes = (descendant, id) =>
         if (node.descendant.length > 0) {
             return {
                 ...node,
-                descendant: mapOverNodes(node.descendant, id)
+                descendant: mapOverNodes(node.descendant, id, toggleType)
             }
         }
 
@@ -144,30 +160,37 @@ const mapOverNodes = (descendant, id) =>
         return node
     })
 
-const mapOverFrames = (canvasFrames, nodeId) => {
-    console.log(`nodeId: ${nodeId}`)
-
-    const frames = canvasFrames.map(frame => ({
+// Export as separate frame reducer / selector
+const mapOverFrames = (canvasFrames, nodeId, toggleType) =>
+    canvasFrames.map(frame => ({
         ...frame,
-        descendant: mapOverNodes(frame.descendant, nodeId)
+        descendant: mapOverNodes(frame.descendant, nodeId, toggleType)
     }))
 
-    console.log(frames)
-
-    return frames
-}
-
-const canvasReducer = (state = INITIAL_STATE, action) => {
-    switch (action.type) {
+const canvasReducer = (state = INITIAL_STATE, { type, payload }) => {
+    switch (type) {
         case CanvasActionTypes.FETCH_CANVAS_FRAMES:
             return {
                 ...state,
-                canvasFrames: action.payload
+                canvasFrames: payload
             }
-        case CanvasActionTypes.TOGGLE_FRAME_NODE_VIEW:
+        case CanvasActionTypes.TOGGLE_NODE_COLLAPSE:
             return {
                 ...state,
-                canvasFrames: mapOverFrames(state.canvasFrames, action.payload)
+                canvasFrames: mapOverFrames(
+                    state.canvasFrames,
+                    payload.id,
+                    payload.type
+                )
+            }
+        case CanvasActionTypes.TOGGLE_NODE_CHECK_ONE:
+            return {
+                ...state,
+                canvasFrames: mapOverFrames(
+                    state.canvasFrames,
+                    payload.id,
+                    payload.type
+                )
             }
         default:
             return state

@@ -4,7 +4,7 @@ import logger from 'redux-logger'
 
 import rootReducer from './root-reducer'
 
-const middlewares = [logger, thunk]
+const middlewares = [thunk, logger]
 
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable operator-linebreak */

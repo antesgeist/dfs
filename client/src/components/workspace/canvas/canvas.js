@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
 import { selectCanvasFrames } from '../../../redux/canvas/canvas.selectors'
-import { toggleFrameNodeView } from '../../../redux/canvas/canvas.actions'
+import {
+    toggleNodeCollapse,
+    toggleNodeCheck
+} from '../../../redux/canvas/canvas.actions'
 
 import Frame from '../../frame/frame'
 import FrameContent from '../../frame-content/frame-content'
@@ -11,7 +14,7 @@ import NodeParent from '../../node-parent/node-parent'
 
 import styles from './canvas.module.scss'
 
-const Canvas = ({ canvasFrames, toggleFrameNodeView }) => (
+const Canvas = ({ canvasFrames, toggleNodeCollapse, toggleNodeCheck }) => (
     <div className={styles.canvasContainer}>
         {canvasFrames.map(({ id, title, descendant }) => (
             <Frame key={id} title={title}>
@@ -19,7 +22,8 @@ const Canvas = ({ canvasFrames, toggleFrameNodeView }) => (
                     <NodeParent
                         root='true'
                         nodes={descendant}
-                        toggle={toggleFrameNodeView}
+                        onCollapse={toggleNodeCollapse}
+                        onCheck={toggleNodeCheck}
                     />
                 </FrameContent>
             </Frame>
@@ -32,7 +36,8 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const mapDispatchToProps = {
-    toggleFrameNodeView
+    toggleNodeCollapse,
+    toggleNodeCheck
 }
 
 export default connect(

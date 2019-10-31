@@ -65,7 +65,7 @@
             },
             "ObjectPattern": {
                 "multiline": true,
-                "minProperties": 5,
+                "minProperties": 7,
                 "consistent": true
             }
         }]
