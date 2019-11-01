@@ -30,7 +30,7 @@ const mapNodesToParent = (nodeArray, onCollapse, onCheck) =>
         </Node>
     ))
 
-const NodeParent = ({ root, nodes, collapsed, id, onCollapse, onCheck }) => {
+const NodeParent = ({ root, collapsed, id, nodes, onCollapse, onCheck }) => {
     const [isCollapsed, setIsCollapsed] = useState(collapsed)
 
     const collapseNode = () => {

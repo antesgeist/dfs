@@ -6,15 +6,20 @@ import DropdownItem from '../dropdown-item/dropdown-item'
 
 import s from './dropdown.module.scss'
 
-const Dropdown = ({ items, placeholder }) => {
-    const dropdown = useRef()
-
-    const [workspace, setWorkspace] = useState(placeholder)
+const Dropdown = ({ toggleIcon, items, placeholder, opt, label }) => {
+    const [workspace, setWorkspace] = useState(label || placeholder)
     const [toggle, setToggle] = useState(false)
+
+    const dropdown = useRef()
+    const { selection, theme } = opt
 
     const selectWorkspace = value => {
         setWorkspace(value)
         setToggle(!toggle)
+    }
+
+    const onSelectHandler = option => {
+        return selection ? () => selectWorkspace(option) : null
     }
 
     // componentDidMount
@@ -40,17 +45,19 @@ const Dropdown = ({ items, placeholder }) => {
     return (
         <div ref={dropdown} className={s.dropdown}>
             <DropdownToggle
+                icon={toggleIcon}
                 toggle={toggle}
                 current={workspace}
                 onToggle={() => setToggle(!toggle)}
+                theme={theme}
             />
             {toggle && (
                 <DropdownItems>
                     {items.map(({ id, title }) => (
                         <DropdownItem
                             key={id}
-                            link='#'
-                            select={() => selectWorkspace(title)}
+                            link={!selection ? 'red' : '#'} // add custom routing to !selection
+                            select={onSelectHandler(title)}
                         >
                             {title}
                         </DropdownItem>

@@ -37,7 +37,10 @@
         display: flex;
         align-items: center;
         border-radius: 50%;
+        border-radius: 1px;
         padding: 1px;
+        padding: 0;
+        cursor: pointer;
     }
 
     .toggleIsChecked {
@@ -47,7 +50,7 @@
 
     .toggleIsUnchecked {
         @extend %toggleCheckedSpan;
-        background: #f0f0f00d;
+        background: #f0f0f012;
     }
     
     svg {

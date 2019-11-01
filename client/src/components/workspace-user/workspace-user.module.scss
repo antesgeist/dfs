@@ -1,0 +1,67 @@
+@import '../common/styles/mixins';
+
+.workspaceUserContainer {
+    @include fxc;
+}
+
+.userDropdown {
+    display: flex;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.7rem;
+    margin: 0 1rem 0 0.5rem;
+
+    .userAvatarMask {
+        display: flex;
+        overflow: hidden;
+        border-radius: 50%;
+        justify-content: center;
+    }
+    
+    .svgAvatarDefault {
+        // background: #313131;
+        position: relative;
+        $svg-size: 1.5rem;
+        // bottom: -0.25rem;
+        fill: #fff;
+        border-radius: 50%;
+        width: $svg-size;
+        height: $svg-size;
+    }
+
+    .svgMenuDown {
+        $svgMenuDown: 1.2rem;
+    
+        width: $svgMenuDown;
+        height: $svgMenuDown;
+        fill: #fff;
+    }
+}
+
+.userDropdownToggle {
+    padding: 0 0.35rem;
+    
+    
+}
+
+.userDropdownContent {
+    // display: none;
+    position: absolute;
+    right: 0;
+    top: 3.25rem;
+    background: #fff;
+    box-shadow: 0 2px 6px -2px rgba(0,0,0,0.4);
+    color: #000;
+    font-size: 0.9rem;
+    border-radius: 3px;
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        
+        li {
+            padding: 0.5rem 2rem;
+        }
+    }
+}

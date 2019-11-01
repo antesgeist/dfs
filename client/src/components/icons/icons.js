@@ -18,6 +18,7 @@ import { ReactComponent as Lock } from '../../assets/svg/lock-outline.svg'
 import { ReactComponent as Search } from '../../assets/svg/magnify-outline.svg'
 import { ReactComponent as Info } from '../../assets/svg/information-outline.svg'
 import { ReactComponent as Avatar } from '../../assets/svg/account-circle-outline.svg'
+import { ReactComponent as AccountPlain } from '../../assets/svg/account.svg'
 
 import { ReactComponent as Dot } from '../../assets/svg/circle-medium.svg'
 import { ReactComponent as Undo } from '../../assets/svg/arrow-left.svg'
@@ -54,6 +55,7 @@ export {
     Search,
     Info,
     Avatar,
+    AccountPlain,
     Dot,
     Undo,
     Redo,

@@ -18,8 +18,15 @@
         padding: 0 0.3rem 0 0.7rem;
     }
 
+    $defaultSvg: 1.2rem;
     .toggleSvg {
         margin-left: 0.5rem;
+        width: $defaultSvg;
+        height: $defaultSvg;
+    }
+
+    .darkTheme {   
+        fill: #fff;
     }
 
     &:hover {
