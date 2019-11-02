@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
-import { fetchWorkspace } from '../../../redux/workspace/workspace.actions'
+import { createStructuredSelector } from 'reselect'
 
 import WorkspaceControls from '../../workspace-controls/workspace-controls'
 import WorkspaceUser from '../../workspace-user/workspace-user'
+
+import { selectWorkspaces } from '../../../redux/workspace/workspace.selectors'
 
 import styles from './header.module.scss'
 
@@ -15,11 +16,8 @@ const Header = ({ workspaceItems }) => (
     </div>
 )
 
-const mapStateToProps = state => ({
-    workspaceItems: state.workspaces.workspaceItems
+const mapStateToProps = createStructuredSelector({
+    workspaceItems: selectWorkspaces
 })
 
-export default connect(
-    mapStateToProps,
-    fetchWorkspace
-)(Header)
+export default connect(mapStateToProps)(Header)

@@ -1,41 +1,28 @@
 import WorkspaceActionTypes from './workspace.types'
 
 const INITIAL_STATE = {
-    workspaceItems: [
-        {
-            userId: 1,
-            id: 1,
-            title: 'Frame Tree',
-            isActive: true
-        },
-        {
-            userId: 1,
-            id: 2,
-            title: 'Canvas Features',
-            isActive: false
-        },
-        {
-            userId: 1,
-            id: 3,
-            title: 'Frame Maximize',
-            isActive: false
-        },
-        {
-            userId: 1,
-            id: 4,
-            title: 'New Frame',
-            isActive: false
-        }
-    ],
+    workspaceItems: [],
+    isFetching: false,
     errorMessage: null
 }
 
-const workspaceReducer = (state = INITIAL_STATE, action) => {
-    switch (action.type) {
-        case WorkspaceActionTypes.FETCH_WORKSPACE:
+const workspaceReducer = (state = INITIAL_STATE, { type, payload }) => {
+    switch (type) {
+        case WorkspaceActionTypes.FETCH_WORKSPACE_START:
             return {
-                ...state
-                // workspaceItems: action.payload
+                ...state,
+                isFetching: true
+            }
+        case WorkspaceActionTypes.FETCH_WORKSPACE_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                workspaceItems: payload
+            }
+        case WorkspaceActionTypes.FETCH_WORKSPACE_FAILURE:
+            return {
+                ...state,
+                errorMessage: payload
             }
         default:
             return state

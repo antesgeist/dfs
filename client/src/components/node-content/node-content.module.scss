@@ -46,11 +46,19 @@
     .toggleIsChecked {
         @extend %toggleCheckedSpan;
         background: #ffde7f;
+        
+        &:active {
+            opacity: 0.8;
+        }
     }
 
     .toggleIsUnchecked {
         @extend %toggleCheckedSpan;
         background: #f0f0f012;
+        
+        &:hover {
+            background: #f0f0f02c;
+        }
     }
     
     svg {

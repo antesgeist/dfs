@@ -1,8 +1,24 @@
 import WorkspaceActionTypes from './workspace.types'
-import { workspaces } from '../APP_DATA'
+import { workspacesDB } from '../APP_DATA'
 
-export const fetchWorkspace = () => dispatch =>
-    dispatch({
-        type: WorkspaceActionTypes.FETCH_WORKSPACE,
-        payload: workspaces
-    })
+const getWorkspace = (db, workspaceUID) => {
+    // do async stuff...
+    const workspaces = db[workspaceUID]
+    return workspaces
+}
+
+export const fetchWorkspaceStart = () => ({
+    type: WorkspaceActionTypes.FETCH_WORKSPACE_START
+})
+
+export const fetchWorkspaceSuccess = workspaceItems => ({
+    type: WorkspaceActionTypes.FETCH_WORKSPACE_SUCCESS,
+    payload: workspaceItems
+})
+
+export const fetchWorkspaceAsync = () => dispatch => {
+    const workspaceItems = getWorkspace(workspacesDB, 'userworkspace1')
+
+    dispatch(fetchWorkspaceStart())
+    dispatch(fetchWorkspaceSuccess(workspaceItems))
+}

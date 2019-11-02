@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 
 import workspaceReducer from './workspace/workspace.reducer'
-import canvasReducer from './canvas/canvas.reducer'
+import frameReducer from './frame/frame.reducer'
 
 const rootReducer = combineReducers({
-    workspaces: workspaceReducer,
-    canvas: canvasReducer
+    workspace: workspaceReducer,
+    frames: frameReducer
 })
 
 export default rootReducer

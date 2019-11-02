@@ -5,11 +5,11 @@ import NodeToolbar from '../node-toolbar/node-toolbar'
 
 import styles from './node-content.module.scss'
 
-const NodeContent = ({ title, onCheck, id, checked }) => {
+const NodeContent = ({ title, frameId, nodeId, onCheck, checked }) => {
     const [isChecked, setIsChecked] = useState(checked)
 
     const toggleNodeCheck = () => {
-        onCheck({ id, type: 'CHECK' })
+        onCheck({ frameId, nodeId, type: 'CHECK' })
         setIsChecked(!isChecked)
     }
 

@@ -2,11 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import { selectCanvasFrames } from '../../../redux/canvas/canvas.selectors'
+import { selectCanvasFrames } from '../../../redux/frame/frame.selectors'
 import {
     toggleNodeCollapse,
     toggleNodeCheck
-} from '../../../redux/canvas/canvas.actions'
+} from '../../../redux/frame/frame.actions'
 
 import Frame from '../../frame/frame'
 import FrameContent from '../../frame-content/frame-content'
@@ -20,6 +20,7 @@ const Canvas = ({ canvasFrames, toggleNodeCollapse, toggleNodeCheck }) => (
             <Frame key={id} title={title}>
                 <FrameContent>
                     <NodeParent
+                        frameId={id}
                         root='true'
                         nodes={descendant}
                         onCollapse={toggleNodeCollapse}
