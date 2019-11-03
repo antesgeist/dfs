@@ -8,6 +8,7 @@ import { ReactComponent as Trash } from '../../assets/svg/trash-can-outline.svg'
 import { ReactComponent as Github } from '../../assets/svg/github-circle.svg'
 import { ReactComponent as Help } from '../../assets/svg/help-circle-outline.svg'
 import { ReactComponent as Message } from '../../assets/svg/email-edit-outline.svg'
+import { ReactComponent as EmailOutline } from '../../assets/svg/email-outline.svg'
 import { ReactComponent as Expand } from '../../assets/svg/exit-to-app.svg'
 
 import { ReactComponent as MenuDown } from '../../assets/svg/menu-down.svg'
@@ -48,6 +49,7 @@ export {
     Github,
     Help,
     Message,
+    EmailOutline,
     Expand,
     MenuDown,
     MenuUp,

@@ -1,0 +1,76 @@
+.formSignup {
+    background: #f7f7f7;
+    padding: 2.5rem;
+    display: grid;
+    border-radius: 5px;
+}
+
+.formHeader {
+    margin-bottom: 2rem;
+    
+    .formLabel {
+        text-align: center;
+        margin: 0;
+        color: #555;
+        font-size: 1.65rem;
+    }
+}
+
+
+.form {
+    display: grid;
+    gap: 1rem;
+
+    .buttonSubmit {
+        border: 0;
+        border-radius: 3px;
+        padding: 0.75rem 0;
+        background: #9746FF;
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+}
+
+.errorMessage {
+    color: red;
+    font-size: 0.75rem;
+}
+
+.fieldGroup {
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 0.5rem;
+
+    svg {
+        $svgFields: 1.15rem;
+
+        fill: #777;
+        width: $svgFields;
+        height: $svgFields;
+    }
+
+    .inputField {
+        flex: 1;
+        margin-left: 0.5rem;
+        border: 0;
+        background: none;
+        font-size: 0.85rem;
+    }
+}
+
+.loginHint {
+    padding-top: 1rem;
+
+    .loginHintLabel {
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    .loginHintLink {
+        color: #621bff;
+    }
+}

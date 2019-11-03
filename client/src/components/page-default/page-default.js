@@ -14,18 +14,21 @@ const PageDefault = ({ children }) => (
             </div>
             <ul className={styles.menuPrimary}>
                 <NavLink exact to='/' className={styles.menuItems}>
-                    HOME
+                    Home
                 </NavLink>
                 <NavLink exact to='/demo' className={styles.menuItems}>
-                    DEMO
+                    Demo
                 </NavLink>
-                <NavLink exact to='/contact' className={styles.menuItems}>
-                    CONTACT
+                <NavLink exact to='/docs' className={styles.menuItems}>
+                    Docs
+                </NavLink>
+                <NavLink exact to='/github' className={styles.menuItems}>
+                    Github
                 </NavLink>
             </ul>
             <div className={styles.userButtons}>
                 <NavLink exact to='/login'>
-                    <span className={`${styles.userBtn} ${styles.signInOut}`}>
+                    <span className={`${styles.userBtn} ${styles.signIn}`}>
                         Log In
                     </span>
                 </NavLink>

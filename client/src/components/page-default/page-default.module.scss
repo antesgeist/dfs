@@ -3,12 +3,12 @@
 .pageContainer {
     display: grid;
     grid-template-rows: auto 1fr auto;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .pageHeader {
     display: flex;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     background: #F0F0F0;
 
     > * {
@@ -19,14 +19,14 @@
 }
 
 .logoContainer {
-    padding: 0.25rem;
+    // padding: 0.25rem;
 }
 
 a {
     text-decoration: none;
     font-weight: 600;
     color: #222;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
 
     &:not(:last-child) {
         margin-right: 0.75rem;
@@ -50,17 +50,21 @@ a {
     a {
         padding: 0.5rem 0;
         text-transform: capitalize;
+
+        &:not(:last-child) {
+            margin-right: 0.25rem;
+        }
     }
     
     .userBtn {
         border-radius: 2px;
-        padding: 0.5rem 0.75rem;
+        padding: 0.35rem 0.65rem 0.4rem 0.65rem;
     }
     
-    .signInOut {
+    .signIn {
         text-transform: capitalize;
-        border: 1px solid #555;
     }
+
 
     .signUp {
         background: #9746FF;
@@ -75,7 +79,7 @@ a {
     justify-content: center;
 
     .content {
-        margin-bottom: 100px;
+        // margin-bottom: 50px;
     }
 }
 
