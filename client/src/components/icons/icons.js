@@ -36,6 +36,8 @@ import { ReactComponent as Copy } from '../../assets/svg/content-copy.svg'
 import { ReactComponent as PlusOutline } from '../../assets/svg/plus-circle-outline.svg'
 import { ReactComponent as Minus } from '../../assets/svg/minus.svg'
 
+import { ReactComponent as FileTree } from '../../assets/svg/file-tree.svg'
+
 export {
     Logo,
     Frames,
@@ -70,5 +72,6 @@ export {
     Stack,
     Copy,
     PlusOutline,
-    Minus
+    Minus,
+    FileTree
 }

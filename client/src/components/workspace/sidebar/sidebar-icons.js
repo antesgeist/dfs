@@ -1,4 +1,7 @@
 import React from 'react'
+
+import { Link } from 'react-router-dom'
+
 import styles from './sidebar.module.scss'
 
 import {
@@ -18,7 +21,9 @@ export const SidebarLogo = () => (
     <div className={styles.sidebarLogoContainer}>
         <div className={styles.svgContainer}>
             <span className={styles.sidebarLogo}>
-                <Logo />
+                <Link to='/'>
+                    <Logo />
+                </Link>
             </span>
         </div>
     </div>
