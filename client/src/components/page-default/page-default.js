@@ -1,55 +1,60 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { FileTree } from '../icons/icons'
+import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+
+import DefaultHeader from '../default-header/default-header'
+
+import { auth, createUserProfileDocument } from '../../firebase/firebase.utils'
 
 import styles from './page-default.module.scss'
 
-const PageDefault = ({ children }) => (
-    <div className={styles.pageContainer}>
-        <div className={styles.pageHeader}>
-            <div className={styles.logoContainer}>
-                <NavLink exact to='/' className={styles.menuItems}>
-                    <FileTree className={styles.svgFileTree} />
-                </NavLink>
-            </div>
-            <ul className={styles.menuPrimary}>
-                <NavLink exact to='/' className={styles.menuItems}>
-                    Home
-                </NavLink>
-                <NavLink exact to='/demo' className={styles.menuItems}>
-                    Demo
-                </NavLink>
-                <NavLink exact to='/docs' className={styles.menuItems}>
-                    Docs
-                </NavLink>
-                <NavLink exact to='/github' className={styles.menuItems}>
-                    Github
-                </NavLink>
-            </ul>
-            <div className={styles.userButtons}>
-                <NavLink exact to='/login'>
-                    <span className={`${styles.userBtn} ${styles.signIn}`}>
-                        Log In
-                    </span>
-                </NavLink>
-                <NavLink exact to='/register'>
-                    <span className={`${styles.userBtn} ${styles.signUp}`}>
-                        Sign Up
-                    </span>
-                </NavLink>
-            </div>
-        </div>
-        <div className={styles.mainContent}>
-            <div className={styles.content}>{children}</div>
-        </div>
-        <div className={styles.pageFooter}>
-            <p className={styles.footerLabel}>© 2019 DFS</p>
-        </div>
-    </div>
-)
+const PageDefault = ({ children, opt = {} }) => {
+    const hasUserButton = opt.header_has_user_button
 
-// <NavLink exact to='/signout'>
-//     <span className={styles.userBtn}>SIGN OUT</span>
-// </NavLink>
+    const [currentUser, setCurrentUser] = useState(null)
+    const [unsubscribeFromAuth, setUnsubscribeFromAuth] = useState(null)
 
-export default PageDefault
+    useEffect(() => {
+        setUnsubscribeFromAuth(
+            auth.onAuthStateChanged(async userAuth => {
+                if (userAuth) {
+                    const userRef = await createUserProfileDocument(userAuth)
+
+                    userRef.onSnapshot(snapShot => {
+                        setCurrentUser({
+                            id: snapShot.id,
+                            ...snapShot.data()
+                        })
+                    })
+                }
+
+                setCurrentUser(userAuth)
+            })
+        )
+
+        return () => {
+            console.log('unsubfrom auth')
+            setUnsubscribeFromAuth(null)
+        }
+    }, [])
+
+    return (
+        <div className={styles.pageContainer}>
+            <DefaultHeader
+                hasUserButton={hasUserButton}
+                currentUser={currentUser}
+            />
+            <div className={styles.mainContent}>
+                <div className={styles.content}>{children}</div>
+            </div>
+            <div className={styles.pageFooter}>
+                <p className={styles.footerLabel}>© 2019 DFS</p>
+            </div>
+        </div>
+    )
+}
+
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
+})
+
+export default connect(mapStateToProps)(PageDefault)

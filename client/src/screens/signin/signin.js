@@ -2,9 +2,11 @@ import React from 'react'
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import { signInWithGoogle } from '../../firebase/firebase.utils'
 
 import PageDefault from '../../components/page-default/page-default'
 import { Lock, EmailOutline } from '../../components/icons/icons'
+
 import styles from './signin.module.scss'
 
 const FormSchema = Yup.object().shape({
@@ -28,7 +30,7 @@ const SignIn = () => {
     }
 
     return (
-        <PageDefault>
+        <PageDefault opt={{ header_has_user_button: false }}>
             <div className={styles.formikWrapper}>
                 <div className={styles.formHeader}>
                     <h1 className={styles.formLabel}>Sign In</h1>
@@ -83,6 +85,17 @@ const SignIn = () => {
                         </Form>
                     )}
                 </Formik>
+                <div className={styles.fieldGoogleSignIn}>
+                    <span className={styles.labelGoogleSignIn}>
+                        OR SIGN IN WITH GOOGLE
+                    </span>
+                    <button
+                        className={styles.btnSubmitGoogleAuth}
+                        onClick={signInWithGoogle}
+                    >
+                        Google Sign In
+                    </button>
+                </div>
             </div>
             <div className={styles.loginHint}>
                 <p className={styles.loginHintLabel}>

@@ -3,13 +3,15 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
+import { auth, createUserProfileDocument } from '../../firebase/firebase.utils'
+
 import PageDefault from '../../components/page-default/page-default'
 import { Lock, EmailOutline, AccountPlain } from '../../components/icons/icons'
 
 import styles from './signup.module.scss'
 
 const SignupSchema = Yup.object().shape({
-    name: Yup.string()
+    displayName: Yup.string()
         .min(3, 'Minimum character length of 3 required.')
         .max(32, 'Maximum character length of 32 exceeded.')
         .required('Name required.'),
@@ -31,22 +33,35 @@ const SignupSchema = Yup.object().shape({
 })
 
 const SignUp = () => {
-    const onSubmit = (values, { setSubmitting }) => {
+    const onSubmit = async (values, { setSubmitting }) => {
         setTimeout(() => {
             alert(JSON.stringify(values, null, 2))
             setSubmitting(false)
-        }, 400)
+        }, 200)
+
+        const { displayName, email, password } = values
+
+        try {
+            const { user } = await auth.createUserWithEmailAndPassword(
+                email,
+                password
+            )
+
+            await createUserProfileDocument(user, { displayName })
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
-        <PageDefault>
+        <PageDefault opt={{ header_has_user_button: false }}>
             <div className={styles.formSignup}>
                 <div className={styles.formHeader}>
                     <h1 className={styles.formLabel}>Create Account</h1>
                 </div>
                 <Formik
                     initialValues={{
-                        name: '',
+                        displayName: '',
                         email: '',
                         password: '',
                         confirmPassword: ''
@@ -63,12 +78,12 @@ const SignUp = () => {
                                 <Field
                                     className={styles.inputField}
                                     type='text'
-                                    name='name'
-                                    placeholder='Name'
+                                    name='displayName'
+                                    placeholder='John Doe'
                                 />
                             </div>
                             <ErrorMessage
-                                name='name'
+                                name='displayName'
                                 component='div'
                                 className={styles.errorMessage}
                             />
