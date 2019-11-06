@@ -1,5 +1,15 @@
 import UserActionTypes from './user.types'
 
+// Thunk Actions
+
+export const setCurrentUser = user => dispatch =>
+    dispatch({
+        type: UserActionTypes.SET_CURRENT_USER,
+        payload: user
+    })
+
+// Saga Actions
+
 export const googleSignInStart = () => ({
     type: UserActionTypes.GOOGLE_SIGN_IN_START
 })

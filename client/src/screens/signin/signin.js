@@ -2,7 +2,8 @@ import React from 'react'
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { signInWithGoogle } from '../../firebase/firebase.utils'
+
+import { signInWithGoogle, auth } from '../../firebase/firebase.utils'
 
 import PageDefault from '../../components/page-default/page-default'
 import { Lock, EmailOutline } from '../../components/icons/icons'
@@ -22,11 +23,17 @@ const FormSchema = Yup.object().shape({
 })
 
 const SignIn = () => {
-    const onSubmit = (values, { setSubmitting }) => {
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2))
+    const onSubmit = async (values, { setSubmitting }) => {
+        const { email, password } = values
+
+        try {
+            await auth.signInWithEmailAndPassword(email, password)
             setSubmitting(false)
-        }, 400)
+
+            console.log('from sign in')
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
@@ -40,6 +47,7 @@ const SignIn = () => {
                         email: '',
                         password: ''
                     }}
+                    enableReinitialize
                     validationSchema={FormSchema}
                     validateOnChange={false}
                     validateOnBlur={false}

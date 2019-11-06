@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
 import { NavLink } from 'react-router-dom'
+
+import { selectCurrentUser } from '../../redux/user/user.selectors'
 import { auth } from '../../firebase/firebase.utils'
 
 import { FileTree } from '../icons/icons'
@@ -69,4 +72,8 @@ const DefaultHeader = ({ hasUserButton, currentUser }) => {
     )
 }
 
-export default DefaultHeader
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser
+})
+
+export default connect(mapStateToProps)(DefaultHeader)

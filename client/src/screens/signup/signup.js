@@ -34,11 +34,6 @@ const SignupSchema = Yup.object().shape({
 
 const SignUp = () => {
     const onSubmit = async (values, { setSubmitting }) => {
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2))
-            setSubmitting(false)
-        }, 200)
-
         const { displayName, email, password } = values
 
         try {
@@ -48,6 +43,7 @@ const SignUp = () => {
             )
 
             await createUserProfileDocument(user, { displayName })
+            setSubmitting(false)
         } catch (error) {
             console.error(error)
         }
