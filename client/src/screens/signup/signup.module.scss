@@ -29,6 +29,10 @@
         color: #fff;
         font-size: 0.9rem;
         font-weight: 700;
+
+        &:disabled {
+            background: #D5B4FF;
+        }
     }
 }
 

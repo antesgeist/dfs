@@ -23,6 +23,7 @@ const frameReducer = (state = INITIAL_STATE, { type, payload }) => {
         case frameActionTypes.FETCH_FRAMES_FAILURE:
             return {
                 ...state,
+                isFetching: false,
                 errorMessage: payload
             }
         case frameActionTypes.TOGGLE_NODE_COLLAPSE:

@@ -39,6 +39,8 @@
         "no-trailing-spaces": "off",
         "no-shadow": "off",
         "no-confusing-arrow": "off",
+        "operator-linebreak": "off",
+        "camelcase": "off",
         "function-paren-newline": "off",
         "import/prefer-default-export": "off",
         "react/button-has-type": ["off", {"button": false}],
@@ -57,17 +59,18 @@
                 "onClick"
             ]
         }],
-        "object-curly-newline": ["error", {
-            "ObjectExpression": {
-                "multiline": false,
-                "minProperties": 3,
-                "consistent": true 
-            },
-            "ObjectPattern": {
-                "multiline": true,
-                "minProperties": 7,
-                "consistent": true
-            }
-        }]
+        // "object-curly-newline": ["error", {
+        //     "ObjectExpression": {
+        //         "multiline": false,
+        //         "minProperties": 3,
+        //         "consistent": true 
+        //     },
+        //     "ObjectPattern": {
+        //         "multiline": true,
+        //         "minProperties": 7,
+        //         "consistent": true
+        //     }
+        // }] // fucking annoying
+        "object-curly-newline": "off"
     }
 }

@@ -1,43 +1,36 @@
 import React from 'react'
-import styles from './workspace-user.module.scss'
+import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
 
 import { AccountPlain } from '../icons/icons'
 import Dropdown from '../common/dropdown/dropdown'
 
-const WorkspaceUser = ({ avatar, name, username }) => {
-    const userDropdownItems = [
-        {
-            id: 1,
-            title: 'Profile Settings'
-        },
-        {
-            id: 2,
-            title: 'Manage Account'
-        },
-        {
-            id: 3,
-            title: 'Help'
-        },
-        {
-            id: 4,
-            title: 'Logout'
-        }
-    ]
-    // <SearchBox />
-    return (
-        <div className={styles.workspaceUserContainer}>
-            <div className={styles.userDropdown}>
-                <Dropdown
-                    toggleIcon={
-                        <AccountPlain className={styles.svgAvatarDefault} />
-                    }
-                    items={userDropdownItems}
-                    label='Boötes Void'
-                    opt={{ selection: false, theme: 'DARK' }}
-                />
-            </div>
-        </div>
-    )
-}
+import userDropdownItems from './user-dropdown-items'
+import { selectUserDisplayName } from '../../redux/user/user.selectors'
 
-export default WorkspaceUser
+import styles from './workspace-user.module.scss'
+
+const WorkspaceUser = ({ displayName }) => (
+    <div className={styles.workspaceUserContainer}>
+        <div className={styles.userDropdown}>
+            <Dropdown
+                toggleIcon={
+                    <AccountPlain className={styles.svgAvatarDefault} />
+                }
+                items={userDropdownItems}
+                label={displayName}
+                opt={{
+                    selection: false,
+                    component: 'USER',
+                    theme: 'DARK'
+                }}
+            />
+        </div>
+    </div>
+)
+
+const mapStateToProps = createStructuredSelector({
+    displayName: selectUserDisplayName
+})
+
+export default connect(mapStateToProps)(WorkspaceUser)

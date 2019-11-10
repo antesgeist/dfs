@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
 import { signInWithGoogle, auth } from '../../firebase/firebase.utils'
+import {
+    emailSignInStart,
+    googleSignInStart,
+    signInFailure
+} from '../../redux/user/user.actions'
 
 import PageDefault from '../../components/page-default/page-default'
 import { Lock, EmailOutline } from '../../components/icons/icons'
@@ -22,18 +28,23 @@ const FormSchema = Yup.object().shape({
         )
 })
 
-const SignIn = () => {
-    const onSubmit = async (values, { setSubmitting }) => {
+const SignIn = ({ googleSignInStart, emailSignInStart, signInFailure }) => {
+    const onSubmit = async (values, { setSubmitting, setFieldError }) => {
         const { email, password } = values
 
         try {
+            emailSignInStart()
             await auth.signInWithEmailAndPassword(email, password)
             setSubmitting(false)
-
-            console.log('from sign in')
         } catch (error) {
-            console.error(error)
+            setFieldError('error', 'Invalid username or password')
+            signInFailure(error.message)
         }
+    }
+
+    const onSignInWithGoogle = () => {
+        googleSignInStart() // redux action
+        signInWithGoogle() // firebase auth
     }
 
     return (
@@ -45,7 +56,8 @@ const SignIn = () => {
                 <Formik
                     initialValues={{
                         email: '',
-                        password: ''
+                        password: '',
+                        error: ''
                     }}
                     enableReinitialize
                     validationSchema={FormSchema}
@@ -55,6 +67,12 @@ const SignIn = () => {
                 >
                     {({ isSubmitting }) => (
                         <Form className={styles.form}>
+                            <Field type='text' name='error' hidden />
+                            <ErrorMessage
+                                name='error'
+                                component='div'
+                                className={styles.onSubmitErrorMessage}
+                            />
                             <div className={styles.fieldGroup}>
                                 <EmailOutline />
                                 <Field
@@ -99,7 +117,7 @@ const SignIn = () => {
                     </span>
                     <button
                         className={styles.btnSubmitGoogleAuth}
-                        onClick={signInWithGoogle}
+                        onClick={onSignInWithGoogle}
                     >
                         Google Sign In
                     </button>
@@ -117,4 +135,13 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+const mapDispatchToProps = dispatch => ({
+    googleSignInStart: () => dispatch(googleSignInStart()),
+    emailSignInStart: () => dispatch(emailSignInStart()),
+    signInFailure: errorMessage => dispatch(signInFailure(errorMessage))
+})
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(SignIn)

@@ -19,14 +19,13 @@
     }
     
     .svgAvatarDefault {
-        // background: #313131;
         position: relative;
         $svg-size: 1.5rem;
-        // bottom: -0.25rem;
         fill: #fff;
         border-radius: 50%;
         width: $svg-size;
         height: $svg-size;
+        margin-right: 0.5rem;
     }
 
     .svgMenuDown {

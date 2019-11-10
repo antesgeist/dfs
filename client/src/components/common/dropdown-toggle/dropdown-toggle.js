@@ -2,8 +2,16 @@ import React from 'react'
 import { MenuUp, MenuDown } from '../../icons/icons'
 import styles from './dropdown-toggle.module.scss'
 
-const DropdownToggle = ({ icon, toggle, onToggle, current, theme }) => {
+const DropdownToggle = ({
+    component,
+    icon,
+    toggle,
+    onToggle,
+    current,
+    theme
+}) => {
     let dropdownTheme
+    let componentStyle
 
     switch (theme) {
         case 'DARK':
@@ -16,7 +24,23 @@ const DropdownToggle = ({ icon, toggle, onToggle, current, theme }) => {
             break
     }
 
-    const svgDownClass = `${styles.toggleSvg} ${theme && dropdownTheme}`
+    switch (component) {
+        case 'USER':
+            componentStyle = styles.userStyles
+            break
+        default:
+            break
+    }
+
+    const svgDownClass = `
+        ${styles.toggleSvg}
+        ${theme ? dropdownTheme : ''}
+    `.trimRight()
+
+    const toggleContentClass = `
+        ${styles.toggleContent}
+        ${component ? componentStyle : ''}
+    `.trimRight()
 
     return (
         <button
@@ -26,7 +50,7 @@ const DropdownToggle = ({ icon, toggle, onToggle, current, theme }) => {
             onClick={onToggle}
             type='button'
         >
-            <div className={styles.toggleContent}>
+            <div className={toggleContentClass}>
                 {icon}
                 <span className={styles.dropdownCurrent}>{current}</span>
                 {toggle ? (

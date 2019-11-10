@@ -32,14 +32,76 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
             console.log('sign up success!')
         } catch (error) {
-            console.log('error creating user', console.log(error.message))
+            console.log('error creating user', error.message)
         }
     }
 
     return userRef
 }
 
+export const convertWorkspaceGroupSnapshotToMap = snapshot => {
+    const transformedWorkspace = snapshot.docs.map(doc => {
+        const { size, framesUID, title, order, isActive } = doc.data()
+
+        return {
+            id: doc.id,
+            title,
+            size,
+            order,
+            isActive,
+            framesUID
+        }
+    })
+
+    return transformedWorkspace
+}
+
+export const convertFrameGroupSnapshotToMap = snapshot => {
+    const transformedFrameGroup = snapshot.docs.map(doc => {
+        const { title, order, descendant } = doc.data()
+
+        return {
+            id: doc.id,
+            title,
+            order,
+            descendant
+        }
+    })
+
+    return transformedFrameGroup
+}
+
 firebase.initializeApp(config)
+
+export const addCollectionAndDocuments = async (
+    collectionKey,
+    objectsToAdd
+) => {
+    // root collection
+    // const collectionsRef = firestore.collection(collectionKey)
+
+    // sub collection - workspaceGroup
+    // const subCollectionsRef = firestore
+    //     .collection(collectionKey)
+    //     .doc('GOQSge82qDQtUX3Brv6B')
+    //     .collection('workspaceItems')
+
+    // sub collection - frameGroup
+    const subCollectionsRef = firestore
+        .collection(collectionKey)
+        .doc('POdx5llTr66TimqHhv0V')
+        .collection('frameGroup')
+
+    const batch = firestore.batch()
+
+    objectsToAdd.forEach(obj => {
+        const newDocRef = subCollectionsRef.doc()
+
+        batch.set(newDocRef, obj)
+    })
+
+    batch.commit()
+}
 
 export const auth = firebase.auth()
 export const firestore = firebase.firestore()

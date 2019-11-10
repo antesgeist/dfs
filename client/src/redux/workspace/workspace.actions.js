@@ -1,11 +1,9 @@
 import WorkspaceActionTypes from './workspace.types'
-import { workspacesDB } from '../APP_DATA'
 
-const getWorkspace = (db, workspaceUID) => {
-    // do async stuff...
-    const workspaces = db[workspaceUID]
-    return workspaces
-}
+import {
+    firestore,
+    convertWorkspaceGroupSnapshotToMap
+} from '../../firebase/firebase.utils'
 
 export const fetchWorkspaceStart = () => ({
     type: WorkspaceActionTypes.FETCH_WORKSPACE_START
@@ -16,9 +14,33 @@ export const fetchWorkspaceSuccess = workspaceItems => ({
     payload: workspaceItems
 })
 
-export const fetchWorkspaceAsync = () => dispatch => {
-    const workspaceItems = getWorkspace(workspacesDB, 'userworkspace1')
+export const fetchWorkspaceFailure = errorMessage => ({
+    type: WorkspaceActionTypes.FETCH_WORKSPACE_FAILURE,
+    payload: errorMessage
+})
 
+export const fetchWorkspaceAsync = (
+    workspaceUID,
+    setUnsubscribe
+) => dispatch => {
     dispatch(fetchWorkspaceStart())
-    dispatch(fetchWorkspaceSuccess(workspaceItems))
+
+    const workspaceGroupRef = firestore
+        .collection('workspaces')
+        .doc(workspaceUID)
+        .collection('workspaceItems')
+
+    let unsubscribe = null
+
+    unsubscribe = workspaceGroupRef.onSnapshot(async snapshot => {
+        try {
+            const workspaceGroup = convertWorkspaceGroupSnapshotToMap(snapshot)
+            dispatch(fetchWorkspaceSuccess(workspaceGroup))
+            setUnsubscribe(unsubscribe)
+        } catch (error) {
+            dispatch(fetchWorkspaceFailure(error.message))
+        }
+    })
+
+    return unsubscribe
 }

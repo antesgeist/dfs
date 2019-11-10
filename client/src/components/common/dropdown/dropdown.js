@@ -11,7 +11,7 @@ const Dropdown = ({ toggleIcon, items, placeholder, opt, label }) => {
     const [toggle, setToggle] = useState(false)
 
     const dropdown = useRef()
-    const { selection, theme } = opt
+    const { selection, theme, component } = opt
 
     const selectWorkspace = value => {
         setWorkspace(value)
@@ -22,7 +22,6 @@ const Dropdown = ({ toggleIcon, items, placeholder, opt, label }) => {
         return selection ? () => selectWorkspace(option) : null
     }
 
-    // componentDidMount
     useEffect(() => {
         const clickOutside = e => {
             if (!dropdown.current.contains(e.target)) {
@@ -36,7 +35,6 @@ const Dropdown = ({ toggleIcon, items, placeholder, opt, label }) => {
             document.removeEventListener('mousedown', clickOutside)
         }
 
-        // cleanup function / componentWillUnmount
         return () => {
             document.removeEventListener('mousedown', clickOutside)
         }
@@ -49,6 +47,7 @@ const Dropdown = ({ toggleIcon, items, placeholder, opt, label }) => {
                 toggle={toggle}
                 current={workspace}
                 onToggle={() => setToggle(!toggle)}
+                component={component}
                 theme={theme}
             />
             {toggle && (
@@ -56,7 +55,7 @@ const Dropdown = ({ toggleIcon, items, placeholder, opt, label }) => {
                     {items.map(({ id, title }) => (
                         <DropdownItem
                             key={id}
-                            link={!selection ? 'red' : '#'} // add custom routing to !selection
+                            link={!selection ? '/' : '#'} // add custom routing to !selection
                             select={onSelectHandler(title)}
                         >
                             {title}

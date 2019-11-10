@@ -1,7 +1,7 @@
 import WorkspaceActionTypes from './workspace.types'
 
 const INITIAL_STATE = {
-    workspaceItems: [],
+    workspaceItems: null,
     isFetching: false,
     errorMessage: null
 }
@@ -22,6 +22,7 @@ const workspaceReducer = (state = INITIAL_STATE, { type, payload }) => {
         case WorkspaceActionTypes.FETCH_WORKSPACE_FAILURE:
             return {
                 ...state,
+                isFetching: false,
                 errorMessage: payload
             }
         default:

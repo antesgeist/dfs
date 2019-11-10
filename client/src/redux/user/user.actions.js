@@ -1,17 +1,18 @@
 import UserActionTypes from './user.types'
+import { auth, createUserProfileDocument } from '../../firebase/firebase.utils'
 
-// Thunk Actions
-
-export const setCurrentUser = user => dispatch =>
-    dispatch({
-        type: UserActionTypes.SET_CURRENT_USER,
-        payload: user
-    })
-
-// Saga Actions
+// SIGN IN
 
 export const googleSignInStart = () => ({
     type: UserActionTypes.GOOGLE_SIGN_IN_START
+})
+
+export const emailSignInStart = () => ({
+    type: UserActionTypes.EMAIL_SIGN_IN_START
+})
+
+export const defaultSignInStart = () => ({
+    type: UserActionTypes.DEFAULT_SIGN_IN_START
 })
 
 export const signInSuccess = user => ({
@@ -24,14 +25,33 @@ export const signInFailure = error => ({
     payload: error
 })
 
-export const emailSignInStart = emailAndPassword => ({
-    type: UserActionTypes.EMAIL_SIGN_IN_START,
-    payload: emailAndPassword
-})
+export const setCurrentUserAsync = () => dispatch => {
+    dispatch(defaultSignInStart())
+
+    // Begin Firebase Auth
+    auth.onAuthStateChanged(async userAuth => {
+        if (userAuth) {
+            const userRef = await createUserProfileDocument(userAuth)
+
+            userRef.onSnapshot(snapShot => {
+                dispatch(
+                    signInSuccess({
+                        id: snapShot.id,
+                        ...snapShot.data()
+                    })
+                )
+            })
+        }
+    })
+}
+
+// CHECK USER SESSION
 
 export const checkUserSession = () => ({
     type: UserActionTypes.CHECK_USER_SESSION
 })
+
+// SIGN OUT
 
 export const signOutStart = () => ({
     type: UserActionTypes.SIGN_OUT_START
@@ -45,6 +65,8 @@ export const signOutFailure = error => ({
     type: UserActionTypes.SIGN_OUT_FAILURE,
     payload: error
 })
+
+// SIGN UP
 
 export const signUpStart = userCredentials => ({
     type: UserActionTypes.SIGN_UP_START,

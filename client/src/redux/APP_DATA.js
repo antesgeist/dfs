@@ -71,27 +71,6 @@ export const workspacesDB = {
     }
 }
 
-export const workspaces = [
-    {
-        userId: 1,
-        id: 1,
-        title: 'Frame Tree',
-        isActive: true
-    },
-    {
-        userId: 1,
-        id: 2,
-        title: 'Canvas Features',
-        isActive: false
-    },
-    {
-        userId: 1,
-        id: 3,
-        title: 'Frame Maximize',
-        isActive: false
-    }
-]
-
 export const framesDB = {
     framesUID1: [
         {
@@ -263,5 +242,28 @@ export const workspaceFrames = [
                 ]
             }
         ]
+    }
+]
+
+// unused
+
+export const workspaces = [
+    {
+        userId: 1,
+        id: 1,
+        title: 'Frame Tree',
+        isActive: true
+    },
+    {
+        userId: 1,
+        id: 2,
+        title: 'Canvas Features',
+        isActive: false
+    },
+    {
+        userId: 1,
+        id: 3,
+        title: 'Frame Maximize',
+        isActive: false
     }
 ]

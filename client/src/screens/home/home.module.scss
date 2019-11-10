@@ -1,3 +1,12 @@
+@import '../../components/common/styles/mixins';
+
 .homeHeadline {
     margin: 0;
+}
+
+.skeleton {
+    width: 200px;
+    padding: 1rem;
+    
+    @include skeleton(#e2e2e2, 1.8s);
 }

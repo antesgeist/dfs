@@ -21,3 +21,48 @@
         position: absolute;
     }
 }
+
+@mixin skeleton($bg, $time) {
+    position: relative;
+    
+    &:after {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: $bg;
+        animation: loading $time linear infinite alternate both;
+    }    
+    
+    @keyframes loading {
+        0% {
+            opacity: 1;
+        }
+        
+        20% {
+            opacity: 0.8;
+        }
+    
+        40% {
+            opacity: 0.6;
+        }
+        
+        50% {
+            opacity: 0.5;
+        }
+    
+        60% {
+            opacity: 0.6;
+        }
+        
+        80% {
+            opacity: 0.8;
+        }
+    
+        100% {
+            opacity: 1;
+        }
+    }
+}

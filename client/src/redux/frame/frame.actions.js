@@ -1,11 +1,11 @@
 import frameActionTypes from './frame.types'
-import { framesDB } from '../APP_DATA'
 
-const getFrames = (db, framesUID) => {
-    // do async stuff...
-    const workspaces = db[framesUID]
-    return workspaces
-}
+import {
+    firestore,
+    convertFrameGroupSnapshotToMap
+} from '../../firebase/firebase.utils'
+
+// FETCH FRAMES
 
 export const fetchFramesStart = () => ({
     type: frameActionTypes.FETCH_FRAMES_START
@@ -21,12 +21,31 @@ export const fetchFramesFailure = errorMessage => ({
     payload: errorMessage
 })
 
-export const fetchFramesAsync = () => dispatch => {
-    const frames = getFrames(framesDB, 'framesUID1')
-
+export const fetchFramesAsync = (
+    activeFramesUID,
+    setUnsubscribe
+) => dispatch => {
     dispatch(fetchFramesStart())
-    dispatch(fetchFramesSuccess(frames))
+
+    const frameGroupRef = firestore
+        .collection('frames')
+        .doc(activeFramesUID)
+        .collection('frameGroup')
+
+    let unsubscribe = null
+
+    unsubscribe = frameGroupRef.onSnapshot(async snapshot => {
+        try {
+            const frameGroup = convertFrameGroupSnapshotToMap(snapshot)
+            dispatch(fetchFramesSuccess(frameGroup))
+            setUnsubscribe(unsubscribe)
+        } catch (error) {
+            dispatch(fetchFramesFailure(error.message))
+        }
+    })
 }
+
+// TOGGLES
 
 export const toggleNodeCollapse = ({ frameId, nodeId, type }) => ({
     type: frameActionTypes.TOGGLE_NODE_COLLAPSE,

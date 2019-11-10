@@ -6,3 +6,8 @@ export const selectCanvasFrames = createSelector(
     [selectFrames],
     frames => frames.canvasFrames
 )
+
+export const selectIsFramesFetching = createSelector(
+    [selectFrames],
+    frames => frames.isFetching
+)

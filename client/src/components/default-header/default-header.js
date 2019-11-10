@@ -38,18 +38,17 @@ const DefaultHeader = ({ hasUserButton, currentUser }) => {
                 </NavLink>
             </ul>
             <div className={styles.userButtons}>
-                {/* currentUser = true */}
-                {hasUserButton && currentUser && (
+                {/* both depend on hasUserButton but conditionally shows
+                    userButton(s) depending on currentUser state */}
+
+                {hasUserButton && currentUser ? (
                     <button
                         className={styles.signOutButton}
                         onClick={onSignOut}
                     >
                         Logout
                     </button>
-                )}
-
-                {/* currentUser = false */}
-                {hasUserButton && !currentUser && (
+                ) : (
                     <Fragment>
                         <NavLink exact to='/login'>
                             <span

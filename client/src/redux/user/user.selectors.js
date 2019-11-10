@@ -6,3 +6,13 @@ export const selectCurrentUser = createSelector(
     [selectUser],
     user => user.currentUser
 )
+
+export const selectUserDisplayName = createSelector(
+    [selectCurrentUser],
+    currentUser => currentUser.displayName
+)
+
+export const selectIsUserFetching = createSelector(
+    [selectUser],
+    user => user.isFetching
+)

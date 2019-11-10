@@ -19,6 +19,7 @@
 
 .form {
     display: grid;
+    grid-template-columns: min-content;
     gap: 1rem;
 
     .buttonSubmit {
@@ -29,6 +30,10 @@
         color: #fff;
         font-size: 0.9rem;
         font-weight: 700;
+        
+        &:disabled {
+            background: #D5B4FF;
+        }
     }
 }
 
@@ -58,6 +63,12 @@
 .errorMessage {
     color: red;
     font-size: 0.75rem;
+}
+
+.onSubmitErrorMessage {
+    @extend .errorMessage;
+    
+    text-align: center;
 }
 
 .fieldGroup {
