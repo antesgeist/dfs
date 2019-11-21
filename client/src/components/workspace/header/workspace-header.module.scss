@@ -1,12 +1,46 @@
+@import '../../common/styles/placeholders';
+
 .headerContainer {
-    background: #000;
-    color: #fff;
     grid-area: header;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    background: #3D3D3D;
+    color: #fff;
     font-size: 0.8rem;
     font-weight: 700;
-    padding: 0.5rem;
     z-index: 30;
-    height: 42px;
+    height: 36px;
+}
+
+.toggleBtn {
+    @extend %dropdown-toggle;
+    
+    svg {
+        fill: #fff;
+        width: 1.2rem;
+        margin: 0 0.15rem;
+    }
+}
+
+.dropdownItems {
+    @extend %dropdown-items;
+
+    top: 100%;
+    left: 0;
+    background: #fff;
+    padding: 0.35rem 0;
+}
+
+.dropdownItem {
+    @extend %dropdown-item;
+    
+    padding: 0.35rem 1.2rem;
+    color: #333;
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 400;
+
+    &:hover {
+        background: #f7f7f7;
+    }
 }

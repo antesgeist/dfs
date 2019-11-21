@@ -1,0 +1,40 @@
+.tabItem {
+    padding: 0 0.7rem 0 0.85rem;
+    height: 100%;
+    background: #313131;
+    cursor: pointer;
+
+    &:not(:last-child) {
+        margin-right: 1px;
+    }
+
+    .tabLabel {
+        margin-right: 0.5rem;
+        color: #9a9a9a;
+    }
+    
+    .svgTabClose {
+        width: 0.9rem;
+        fill: #fff;
+        opacity: 0;
+    }
+    
+    &.tabIsActive {
+        background: #1B1B1B;
+    
+        .tabLabel {
+            color: #fff;
+        }
+    
+        .svgTabClose {
+            opacity: 1;
+        }
+    }
+
+    &:hover {
+        .svgTabClose {
+            opacity: 1;
+        }
+    }
+}
+

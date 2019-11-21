@@ -14,6 +14,11 @@ const WorkspaceUser = ({ displayName }) => (
     <div className={styles.workspaceUserContainer}>
         <div className={styles.userDropdown}>
             <Dropdown
+                style={{
+                    toggleContent: styles.toggleContent,
+                    dropdownItems: styles.dropdownItems,
+                    dropdownItem: styles.dropdownItem
+                }}
                 toggleIcon={
                     <AccountPlain className={styles.svgAvatarDefault} />
                 }
@@ -21,7 +26,6 @@ const WorkspaceUser = ({ displayName }) => (
                 label={displayName}
                 opt={{
                     selection: false,
-                    component: 'USER',
                     theme: 'DARK'
                 }}
             />

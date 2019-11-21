@@ -30,7 +30,7 @@ export const fetchFramesAsync = (
     const frameGroupRef = firestore
         .collection('frames')
         .doc(activeFramesUID)
-        .collection('frameGroup')
+        .collection('frame_group')
 
     let unsubscribe = null
 

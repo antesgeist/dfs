@@ -1,9 +1,10 @@
 .workspaceContainer {
     height: 100vh;
     display: grid;
-    grid-template: 
+    grid-template:
         "sidebar header" max-content
         "sidebar canvas" 1fr
         / max-content auto;
+    background: #1B1B1B;
 }
 

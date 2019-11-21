@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Dot, Undo, Redo, Save, Edit, More } from '../icons/icons'
+import { Undo, Redo, Save, Edit, More } from '../icons/icons'
 import Button from '../common/button/button'
 
 import styles from './frame-header.module.scss'
@@ -18,7 +18,9 @@ const FrameHeader = ({ title }) => {
     return (
         <div className={styles.frameHeader}>
             <div className={styles.frameLabel}>
-                <Button svg={<Dot />} style={[styles.dotIcon]} />
+                <span className={styles.labelDot}>
+                    <span className={styles.dotShape} />
+                </span>
                 <input
                     type='text'
                     className={styles.frameTitle}
@@ -29,18 +31,9 @@ const FrameHeader = ({ title }) => {
             </div>
             <div className={styles.frameToolbar}>
                 <div className={styles.frameTools}>
-                    <Button
-                        svg={<Undo />}
-                        style={[frameToolsState]}
-                    />
-                    <Button
-                        svg={<Redo />}
-                        style={[frameToolsState]}
-                    />
-                    <Button
-                        svg={<Save />}
-                        style={[frameToolsState]}
-                    />
+                    <Button svg={<Undo />} style={[frameToolsState]} />
+                    <Button svg={<Redo />} style={[frameToolsState]} />
+                    <Button svg={<Save />} style={[frameToolsState]} />
                 </div>
                 <div className={styles.frameToolsDefault}>
                     <Button svg={<Edit />} style={[editModeState]} />

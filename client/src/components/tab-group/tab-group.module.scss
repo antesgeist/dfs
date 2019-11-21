@@ -1,0 +1,25 @@
+@import '../common/styles/mixins';
+
+.tabGroupContainer {
+    display: flex;
+
+    .tabGroup {
+        @include fxc;
+        // margin-right: 1rem;
+    }
+
+    .tabControls {
+        display: flex;
+        align-items: center;
+
+        svg {
+            $svgSize: 1.15rem;
+
+            fill: #fff;
+            width: $svgSize;
+            height: $svgSize;
+        }
+    }
+
+    font-size: 0.7rem;
+}

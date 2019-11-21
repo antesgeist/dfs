@@ -1,67 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 
 import DropdownToggle from '../dropdown-toggle/dropdown-toggle'
-import DropdownItems from '../dropdown-items-container/dropdown-items-container'
-import DropdownItem from '../dropdown-item/dropdown-item'
+import DropdownItems from '../dropdown-items/dropdown-items'
 
-import s from './dropdown.module.scss'
+import { useMenuToggle } from '../../utils/custom-hooks'
 
-const Dropdown = ({ toggleIcon, items, placeholder, opt, label }) => {
-    const [workspace, setWorkspace] = useState(label || placeholder)
-    const [toggle, setToggle] = useState(false)
+import styles from './dropdown.module.scss'
 
+const Dropdown = ({ toggleIcon, items, opt, style = false, label }) => {
     const dropdown = useRef()
-    const { selection, theme, component } = opt
+    const [toggle, setToggle] = useMenuToggle(dropdown, false)
 
-    const selectWorkspace = value => {
-        setWorkspace(value)
-        setToggle(!toggle)
-    }
+    const { theme, component } = opt
 
-    const onSelectHandler = option => {
-        return selection ? () => selectWorkspace(option) : null
-    }
-
-    useEffect(() => {
-        const clickOutside = e => {
-            if (!dropdown.current.contains(e.target)) {
-                setToggle(!toggle)
-            }
-        }
-
-        if (toggle) {
-            document.addEventListener('mousedown', clickOutside)
-        } else {
-            document.removeEventListener('mousedown', clickOutside)
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', clickOutside)
-        }
-    }, [toggle])
+    const { dropdownToggle, toggleContent, dropdownItems, dropdownItem } = style
 
     return (
-        <div ref={dropdown} className={s.dropdown}>
+        <div ref={dropdown} className={styles.dropdown}>
             <DropdownToggle
-                icon={toggleIcon}
+                label={label}
+                style={style && { dropdownToggle, toggleContent }}
+                toggleIcon={toggleIcon}
                 toggle={toggle}
-                current={workspace}
                 onToggle={() => setToggle(!toggle)}
                 component={component}
                 theme={theme}
             />
             {toggle && (
-                <DropdownItems>
-                    {items.map(({ id, title }) => (
-                        <DropdownItem
-                            key={id}
-                            link={!selection ? '/' : '#'} // add custom routing to !selection
-                            select={onSelectHandler(title)}
-                        >
-                            {title}
-                        </DropdownItem>
-                    ))}
-                </DropdownItems>
+                <DropdownItems
+                    style={style && { dropdownItems, dropdownItem }}
+                    items={items}
+                    onSelect={() => setToggle(!toggle)}
+                />
             )}
         </div>
     )

@@ -1,5 +1,4 @@
-$svg-size: 1.5rem;
-$svg-spacing: 0.6rem;
+@import '../../common/styles/button';
 
 @mixin b($width, $color) {
     > * {
@@ -8,16 +7,16 @@ $svg-spacing: 0.6rem;
 }
 
 .sidebarContainer {
-    background: #270F5C;
-    background: #14161C;
+    background: #2E303B;
     grid-area: sidebar;
     display: grid;
     grid-template-rows: max-content auto;
-    z-index: 20;
 }
 
+$svg-size: 1.5rem;
+
 .svgContainer {
-    padding: $svg-spacing;
+    padding: 0.6rem 0.65rem 0.6rem 0.6rem;
     display: flex;
     align-items: center;
 
@@ -26,23 +25,23 @@ $svg-spacing: 0.6rem;
     }
 
     svg {
-        fill: #fff;
+        fill: #868686;
         width: $svg-size;
         height: $svg-size;
 
     }
 }
 
-.sidebarLogoContainer {
-    background: #FFE600;
-    svg {
-        fill: #000;
-    }
-}
-
-.sidebarLogo {
+.sidebarMenu {
+    height: 36px;
+    background: #FD9437;
     display: flex;
+    align-items: center;
     justify-content: center;
+
+    svg {
+        fill: #fff;
+    }
 }
 
 .sidebarTools {
@@ -55,5 +54,4 @@ $svg-spacing: 0.6rem;
 .sidebarSecondary {
     display: grid;
     justify-content: center;
-    // gap: $svg-spacing;
 }

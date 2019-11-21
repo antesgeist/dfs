@@ -71,6 +71,9 @@
         //         "consistent": true
         //     }
         // }] // fucking annoying
-        "object-curly-newline": "off"
+        "object-curly-newline": "off",
+        "no-plusplus": ["off", {
+            "allowForLoopAfterthoughts": true
+        }]
     }
 }

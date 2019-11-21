@@ -1,12 +1,15 @@
 import React from 'react'
 
-import { SidebarLogo, SidebarTools } from './sidebar-icons'
+import { SidebarTools } from './sidebar-icons'
+import { FileTree } from '../../icons/icons'
 
 import styles from './sidebar.module.scss'
 
 const Sidebar = () => (
     <div className={styles.sidebarContainer}>
-        <SidebarLogo />
+        <div className={styles.sidebarMenu}>
+            <FileTree />
+        </div>
         <SidebarTools />
     </div>
 )

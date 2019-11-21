@@ -39,21 +39,35 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef
 }
 
-export const convertWorkspaceGroupSnapshotToMap = snapshot => {
-    const transformedWorkspace = snapshot.docs.map(doc => {
-        const { size, framesUID, title, order, isActive } = doc.data()
+export const convertPanelGroupSnapshotToMap = snapshot => {
+    const transformedSnapshotObject = snapshot.docs.reduce((cur, doc) => {
+        const { size, frames_uid, title, order, is_active } = doc.data()
+        return {
+            ...cur,
+            [doc.id]: {
+                title,
+                size,
+                order,
+                is_active,
+                frames_uid
+            }
+        }
+    }, {})
+
+    const transformedSnapshotArray = snapshot.docs.map(doc => {
+        const { size, frames_uid, title, order, is_active } = doc.data()
 
         return {
             id: doc.id,
             title,
             size,
             order,
-            isActive,
-            framesUID
+            is_active,
+            frames_uid
         }
     })
 
-    return transformedWorkspace
+    return { transformedSnapshotObject, transformedSnapshotArray }
 }
 
 export const convertFrameGroupSnapshotToMap = snapshot => {

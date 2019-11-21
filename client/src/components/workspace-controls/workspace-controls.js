@@ -6,7 +6,7 @@ import Dropdown from '../common/dropdown/dropdown'
 
 import styles from './workspace-controls.module.scss'
 
-const WorkspaceControls = ({ items, hasUnsaved }) => (
+const WorkspaceControls = ({ items }) => (
     <div className={styles.workspaceControls}>
         <div className={styles.workspaceCtrlSelect}>
             <Dropdown
@@ -19,13 +19,13 @@ const WorkspaceControls = ({ items, hasUnsaved }) => (
             </div>
         </div>
 
-        <div className={styles.workspaceCtrlToolbar}>
-            <Button svg={<Gear />} />
-            <Button svg={<Lock />} />
-        </div>
-
         <div className={styles.workspaceUnsavedHint}>Unsaved changes...</div>
     </div>
 )
+
+// <div className={styles.workspaceCtrlToolbar}>
+//             <Button svg={<Gear />} />
+//             <Button svg={<Lock />} />
+//         </div>
 
 export default WorkspaceControls

@@ -1,0 +1,5 @@
+@import '../styles/placeholders';
+
+.dropdownItems {
+    @extend %dropdown-items;
+}

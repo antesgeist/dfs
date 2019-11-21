@@ -5,41 +5,42 @@ import { createStructuredSelector } from 'reselect'
 import WorkspaceHeader from '../../components/workspace/header/workspace-header'
 import Sidebar from '../../components/workspace/sidebar/sidebar'
 import Canvas from '../../components/workspace/canvas/canvas'
+import CanvasPlaceholder from './canvas-placeholder/canvas-placeholder'
 
 import { fetchFramesAsync } from '../../redux/frame/frame.actions'
-import { fetchWorkspaceAsync } from '../../redux/workspace/workspace.actions'
+import { fetchPanelsAsync } from '../../redux/panel/panel.actions'
 
 import { selectCurrentUser } from '../../redux/user/user.selectors'
 
 import {
-    selectWorkspaces,
+    selectPanels,
     selectActiveFramesUID
-} from '../../redux/workspace/workspace.selectors'
+} from '../../redux/panel/panel.selectors'
 
 import { selectCanvasFrames } from '../../redux/frame/frame.selectors'
 
 import styles from './workspace.module.scss'
 
 const Workspace = ({
-    workspaceItems,
+    panels,
     currentUser,
     activeFramesUID,
     fetchFramesAsync,
-    fetchWorkspaceAsync,
+    fetchPanelsAsync,
     frames
 }) => {
     useEffect(() => {
         let unsubWorkspace = () => {}
         let unsubFrames = () => {}
 
-        if (!workspaceItems && currentUser) {
+        if (!panels && currentUser) {
             const { workspaceUID } = currentUser
-            fetchWorkspaceAsync(workspaceUID, unsubFromSnapshot => {
+            fetchPanelsAsync(workspaceUID, unsubFromSnapshot => {
                 unsubWorkspace = unsubFromSnapshot
             })
         }
 
-        if (workspaceItems) {
+        if (panels) {
             fetchFramesAsync(activeFramesUID, unsubFromSnapshot => {
                 unsubFrames = unsubFromSnapshot
             })
@@ -50,35 +51,32 @@ const Workspace = ({
             unsubFrames()
         }
     }, [
-        fetchWorkspaceAsync,
+        fetchPanelsAsync,
         fetchFramesAsync,
         currentUser,
-        workspaceItems,
+        panels,
         activeFramesUID
     ])
 
     return (
         <div className={styles.workspaceContainer}>
-            <WorkspaceHeader workspaceItems={workspaceItems} />
+            <WorkspaceHeader />
             <Sidebar />
-            {frames ? <Canvas /> : 'fetching frames'}
+            {frames ? <Canvas /> : <CanvasPlaceholder />}
         </div>
     )
 }
 
 const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
-    workspaceItems: selectWorkspaces,
+    panels: selectPanels,
     activeFramesUID: selectActiveFramesUID,
     frames: selectCanvasFrames
 })
 
-const mapDispatchToProps = dispatch => ({
-    fetchFramesAsync: (uid, set) => dispatch(fetchFramesAsync(uid, set)),
-    fetchWorkspaceAsync: (uid, set) => dispatch(fetchWorkspaceAsync(uid, set))
-})
+const mapDispatchToProps = {
+    fetchFramesAsync,
+    fetchPanelsAsync
+}
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Workspace)
+export default connect(mapStateToProps, mapDispatchToProps)(Workspace)

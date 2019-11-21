@@ -1,17 +1,17 @@
 import React from 'react'
-import { MenuUp, MenuDown } from '../../icons/icons'
+
 import styles from './dropdown-toggle.module.scss'
 
 const DropdownToggle = ({
-    component,
-    icon,
-    toggle,
+    toggleIcon,
+    ariaExpanded,
     onToggle,
-    current,
-    theme
+    theme,
+    style = false,
+    label
 }) => {
+    const { toggleBtn, toggleContent } = style
     let dropdownTheme
-    let componentStyle
 
     switch (theme) {
         case 'DARK':
@@ -24,40 +24,22 @@ const DropdownToggle = ({
             break
     }
 
-    switch (component) {
-        case 'USER':
-            componentStyle = styles.userStyles
-            break
-        default:
-            break
-    }
-
     const svgDownClass = `
         ${styles.toggleSvg}
         ${theme ? dropdownTheme : ''}
     `.trimRight()
 
-    const toggleContentClass = `
-        ${styles.toggleContent}
-        ${component ? componentStyle : ''}
-    `.trimRight()
-
     return (
         <button
             id='dropdown-workspace'
-            aria-expanded={toggle}
-            className={styles.dropdownToggle}
+            aria-expanded={ariaExpanded}
+            className={toggleBtn || styles.dropdownToggle}
             onClick={onToggle}
             type='button'
         >
-            <div className={toggleContentClass}>
-                {icon}
-                <span className={styles.dropdownCurrent}>{current}</span>
-                {toggle ? (
-                    <MenuUp className={svgDownClass} />
-                ) : (
-                    <MenuDown className={svgDownClass} />
-                )}
+            <div className={toggleContent || styles.toggleContent}>
+                {toggleIcon}
+                <span className={styles.buttonLabel}>{label}</span>
             </div>
         </button>
     )

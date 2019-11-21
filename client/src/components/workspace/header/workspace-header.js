@@ -2,22 +2,35 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import {
-    selectIsUserFetching,
-    selectCurrentUser
-} from '../../../redux/user/user.selectors'
+import { selectCurrentUser } from '../../../redux/user/user.selectors'
+import { selectPanels } from '../../../redux/panel/panel.selectors'
 
-import WorkspaceControls from '../../workspace-controls/workspace-controls'
+import tabOptions from './tab-options'
+import TabGroup from '../../tab-group/tab-group'
 import WorkspaceUser from '../../workspace-user/workspace-user'
+
+import OptionsMenu from '../../options-menu/options-menu'
+
+import { Menu } from '../../icons/icons'
 
 import styles from './workspace-header.module.scss'
 
-const WorkspaceHeader = ({ isUserFetching, currentUser, workspaceItems }) => (
+const WorkspaceHeader = ({ currentUser, panels }) => (
     <div className={styles.headerContainer}>
-        {!isUserFetching && currentUser && (
+        <OptionsMenu
+            items={tabOptions}
+            style={{
+                toggleBtn: styles.toggleBtn,
+                dropdownItems: styles.dropdownItems,
+                dropdownItem: styles.dropdownItem
+            }}
+            toggleIcon={<Menu />}
+            opt={{ selection: false }}
+        />
+        {currentUser && panels && (
             <Fragment>
-                <WorkspaceControls items={workspaceItems} />
-                <WorkspaceUser isUserFetching={isUserFetching} />
+                <TabGroup panels={panels} />
+                <WorkspaceUser />
             </Fragment>
         )}
     </div>
@@ -25,7 +38,7 @@ const WorkspaceHeader = ({ isUserFetching, currentUser, workspaceItems }) => (
 
 const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
-    isUserFetching: selectIsUserFetching
+    panels: selectPanels
 })
 
 export default connect(mapStateToProps)(WorkspaceHeader)

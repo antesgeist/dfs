@@ -33,14 +33,10 @@ const Button = ({
         ${styles.buttonContainer}
         ${formattedClass || ''}
         ${options || ''}
-    `
+    `.trimRight()
 
     return (
-        <button
-            className={generatedClass}
-            type='button'
-            onClick={onClick}
-        >
+        <button className={generatedClass} type='button' onClick={onClick}>
             {svg || children || text}
         </button>
     )

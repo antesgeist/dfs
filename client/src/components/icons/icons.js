@@ -4,6 +4,7 @@ import { ReactComponent as Workspaces } from '../../assets/svg/view-list.svg'
 import { ReactComponent as Favourites } from '../../assets/svg/star.svg'
 import { ReactComponent as History } from '../../assets/svg/history.svg'
 import { ReactComponent as Trash } from '../../assets/svg/trash-can-outline.svg'
+import { ReactComponent as Menu } from '../../assets/svg/menu.svg'
 
 import { ReactComponent as Github } from '../../assets/svg/github-circle.svg'
 import { ReactComponent as Help } from '../../assets/svg/help-circle-outline.svg'
@@ -75,5 +76,6 @@ export {
     Copy,
     PlusOutline,
     Minus,
-    FileTree
+    FileTree,
+    Menu
 }
