@@ -5,6 +5,8 @@ import {
     convertPanelGroupSnapshotToMap
 } from '../../firebase/firebase.utils'
 
+import { setActiveFrameGroup } from '../frame/frame.actions'
+
 export const fetchPanelsStart = () => ({
     type: PanelActionTypes.FETCH_START
 })
@@ -19,12 +21,20 @@ export const fetchPanelsFailure = errorMessage => ({
     payload: errorMessage
 })
 
-export const setActivePanel = panelId => ({
-    type: PanelActionTypes.SET_ACTIVE,
-    payload: panelId
-})
+export const setActivePanel = panelId => dispatch => {
+    dispatch({
+        type: PanelActionTypes.SET_ACTIVE,
+        payload: panelId
+    })
 
-export const fetchPanelsAsync = (panelUID, setUnsubscribe) => dispatch => {
+    dispatch(setActiveFrameGroup(panelId))
+}
+
+export const fetchPanelsAsync = (
+    panelUID,
+    workspacePanelFilter,
+    setUnsubscribe
+) => dispatch => {
     dispatch(fetchPanelsStart())
 
     const panelsRef = firestore
@@ -42,8 +52,10 @@ export const fetchPanelsAsync = (panelUID, setUnsubscribe) => dispatch => {
     unsubscribe = panelsRef.onSnapshot(async snapshot => {
         try {
             const { transformedSnapshotArray } = convertPanelGroupSnapshotToMap(
-                snapshot
+                snapshot,
+                workspacePanelFilter
             )
+
             const activePanel = selectActivePanel(transformedSnapshotArray)
 
             dispatch(fetchPanelsSuccess(transformedSnapshotArray))

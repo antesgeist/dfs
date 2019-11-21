@@ -24,10 +24,6 @@ const WorkspaceUser = ({ displayName }) => (
                 }
                 items={userDropdownItems}
                 label={displayName}
-                opt={{
-                    selection: false,
-                    theme: 'DARK'
-                }}
             />
         </div>
     </div>

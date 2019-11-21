@@ -2,39 +2,45 @@ import frameActionTypes from './frame.types'
 import { mapToggleStates } from './frame.utils'
 
 const INITIAL_STATE = {
-    canvasFrames: null,
+    frameGroups: null,
+    activeFrameGroup: null,
     isFetching: false,
     errorMessage: null
 }
 
 const frameReducer = (state = INITIAL_STATE, { type, payload }) => {
     switch (type) {
-        case frameActionTypes.FETCH_FRAMES_START:
+        case frameActionTypes.FETCH_START:
             return {
                 ...state,
                 isFetching: true
             }
-        case frameActionTypes.FETCH_FRAMES_SUCCESS:
+        case frameActionTypes.FETCH_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                canvasFrames: payload
+                frameGroups: payload
             }
-        case frameActionTypes.FETCH_FRAMES_FAILURE:
+        case frameActionTypes.FETCH_FAILURE:
             return {
                 ...state,
                 isFetching: false,
                 errorMessage: payload
             }
+        case frameActionTypes.SET_ACTIVE_GROUP:
+            return {
+                ...state,
+                activeFrameGroup: payload
+            }
         case frameActionTypes.TOGGLE_NODE_COLLAPSE:
             return {
                 ...state,
-                canvasFrames: mapToggleStates(state.canvasFrames, payload)
+                frameGroups: mapToggleStates(state.frameGroups, payload)
             }
         case frameActionTypes.TOGGLE_NODE_CHECK_ONE:
             return {
                 ...state,
-                canvasFrames: mapToggleStates(state.canvasFrames, payload)
+                frameGroups: mapToggleStates(state.frameGroups, payload)
             }
         default:
             return state

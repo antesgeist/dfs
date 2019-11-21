@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export const useMenuToggle = (toggleRef, initialState) => {
+export const useToggle = (toggleRef, initialState) => {
     const [toggle, setToggle] = useState(initialState)
 
     useEffect(() => {

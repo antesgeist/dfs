@@ -2,9 +2,9 @@ import { createSelector } from 'reselect'
 
 const selectFrames = state => state.frames
 
-export const selectCanvasFrames = createSelector(
+export const selectFrameGroup = createSelector(
     [selectFrames],
-    frames => frames.canvasFrames
+    frames => frames.frameGroups
 )
 
 export const selectIsFramesFetching = createSelector(

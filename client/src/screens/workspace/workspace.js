@@ -7,8 +7,8 @@ import Sidebar from '../../components/workspace/sidebar/sidebar'
 import Canvas from '../../components/workspace/canvas/canvas'
 import CanvasPlaceholder from './canvas-placeholder/canvas-placeholder'
 
+import { fetchWorkspaceAsync } from '../../redux/workspace/workspace.actions'
 import { fetchFramesAsync } from '../../redux/frame/frame.actions'
-import { fetchPanelsAsync } from '../../redux/panel/panel.actions'
 
 import { selectCurrentUser } from '../../redux/user/user.selectors'
 
@@ -17,7 +17,7 @@ import {
     selectActiveFramesUID
 } from '../../redux/panel/panel.selectors'
 
-import { selectCanvasFrames } from '../../redux/frame/frame.selectors'
+import { selectFrameGroup } from '../../redux/frame/frame.selectors'
 
 import styles from './workspace.module.scss'
 
@@ -26,32 +26,45 @@ const Workspace = ({
     currentUser,
     activeFramesUID,
     fetchFramesAsync,
-    fetchPanelsAsync,
+    fetchWorkspaceAsync,
     frames
 }) => {
     useEffect(() => {
-        let unsubWorkspace = () => {}
-        let unsubFrames = () => {}
+        let unsubFromWorkspace = () => {}
+        let unsubFromPanels = () => {}
+        let unsubFromFrames = () => {}
+
+        const unsubWorkspace = unsubFromSnapshot => {
+            unsubFromPanels = unsubFromSnapshot
+        }
+
+        const unsubPanels = unsubFromSnapshot => {
+            unsubFromWorkspace = unsubFromSnapshot
+        }
 
         if (!panels && currentUser) {
-            const { workspaceUID } = currentUser
-            fetchPanelsAsync(workspaceUID, unsubFromSnapshot => {
-                unsubWorkspace = unsubFromSnapshot
-            })
+            const { workspace_id, panels_id } = currentUser
+            fetchWorkspaceAsync(
+                workspace_id,
+                panels_id,
+                unsubWorkspace,
+                unsubPanels
+            )
         }
 
         if (panels) {
             fetchFramesAsync(activeFramesUID, unsubFromSnapshot => {
-                unsubFrames = unsubFromSnapshot
+                unsubFromFrames = unsubFromSnapshot
             })
         }
 
         return () => {
-            unsubWorkspace()
-            unsubFrames()
+            unsubFromPanels()
+            unsubFromFrames()
+            unsubFromWorkspace()
         }
     }, [
-        fetchPanelsAsync,
+        fetchWorkspaceAsync,
         fetchFramesAsync,
         currentUser,
         panels,
@@ -71,12 +84,12 @@ const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
     panels: selectPanels,
     activeFramesUID: selectActiveFramesUID,
-    frames: selectCanvasFrames
+    frames: selectFrameGroup
 })
 
-const mapDispatchToProps = {
+const actionCreators = {
     fetchFramesAsync,
-    fetchPanelsAsync
+    fetchWorkspaceAsync
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Workspace)
+export default connect(mapStateToProps, actionCreators)(Workspace)

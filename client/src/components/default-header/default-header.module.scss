@@ -10,13 +10,6 @@
     }
 }
 
-a {
-    text-decoration: none;
-    font-weight: 600;
-    color: #222;
-    font-size: 0.8rem;
-}
-
 .signOutButton {
     color: #222;
     background: none;
@@ -35,6 +28,17 @@ a {
         list-style-type: none;
         display: flex;
     }
+
+    a {
+        text-decoration: none;
+        font-weight: 600;
+        color: #222;
+        font-size: 0.8rem;
+
+        &:not(:last-child) {
+            margin-right: 0.75rem;
+        }
+    }
 }
 
 .userButtons {
@@ -42,8 +46,11 @@ a {
     justify-content: flex-end;
 
     a {
+        text-decoration: none;
+        font-weight: 600;
         padding: 0.5rem 0;
         text-transform: capitalize;
+        font-size: 0.8rem;
 
         &:not(:last-child) {
             margin-right: 0.25rem;

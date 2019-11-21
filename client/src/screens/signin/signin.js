@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -135,13 +135,10 @@ const SignIn = ({ googleSignInStart, emailSignInStart, signInFailure }) => {
     )
 }
 
-const mapDispatchToProps = dispatch => ({
-    googleSignInStart: () => dispatch(googleSignInStart()),
-    emailSignInStart: () => dispatch(emailSignInStart()),
-    signInFailure: errorMessage => dispatch(signInFailure(errorMessage))
-})
+const actionCreators = {
+    googleSignInStart,
+    emailSignInStart,
+    signInFailure
+}
 
-export default connect(
-    null,
-    mapDispatchToProps
-)(SignIn)
+export default connect(null, actionCreators)(SignIn)

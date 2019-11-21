@@ -9,7 +9,7 @@ export const selectCurrentUser = createSelector(
 
 export const selectUserDisplayName = createSelector(
     [selectCurrentUser],
-    currentUser => currentUser && currentUser.displayName
+    currentUser => currentUser && currentUser.display_name
 )
 
 export const selectIsUserFetching = createSelector(

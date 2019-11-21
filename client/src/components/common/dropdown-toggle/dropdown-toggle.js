@@ -6,28 +6,10 @@ const DropdownToggle = ({
     toggleIcon,
     ariaExpanded,
     onToggle,
-    theme,
     style = false,
     label
 }) => {
     const { toggleBtn, toggleContent } = style
-    let dropdownTheme
-
-    switch (theme) {
-        case 'DARK':
-            dropdownTheme = styles.darkTheme
-            break
-        case 'LIGHT':
-            dropdownTheme = styles.lightTheme
-            break
-        default:
-            break
-    }
-
-    const svgDownClass = `
-        ${styles.toggleSvg}
-        ${theme ? dropdownTheme : ''}
-    `.trimRight()
 
     return (
         <button

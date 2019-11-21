@@ -19,14 +19,14 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     const snapShot = await userRef.get()
 
     if (!snapShot.exists) {
-        const { displayName, email } = userAuth
-        const createdAt = new Date()
+        const { display_name, email } = userAuth
+        const created_at = new Date()
 
         try {
             await userRef.set({
-                displayName,
+                display_name,
                 email,
-                createdAt,
+                created_at,
                 ...additionalData
             })
 
@@ -39,39 +39,51 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef
 }
 
-export const convertPanelGroupSnapshotToMap = snapshot => {
-    const transformedSnapshotObject = snapshot.docs.reduce((cur, doc) => {
-        const { size, frames_uid, title, order, is_active } = doc.data()
-        return {
-            ...cur,
-            [doc.id]: {
+export const formatWorkspaceSnapshot = snapshot =>
+    snapshot.docs.reduce((cur, doc) => {
+        const { panel_groups } = doc.data()
+
+        return [...panel_groups]
+    }, [])
+
+export const convertPanelGroupSnapshotToMap = (snapshot, arrayFilter) => {
+    const transformedSnapshotObject = snapshot.docs
+        .filter(doc => arrayFilter.includes(doc.id))
+        .reduce((cur, doc) => {
+            const { size, frames_uid, title, order, is_active } = doc.data()
+
+            return {
+                ...cur,
+                [doc.id]: {
+                    title,
+                    size,
+                    order,
+                    is_active,
+                    frames_uid
+                }
+            }
+        }, {})
+
+    const transformedSnapshotArray = snapshot.docs
+        .filter(doc => arrayFilter.includes(doc.id))
+        .map(doc => {
+            const { size, frames_uid, title, order, is_active } = doc.data()
+
+            return {
+                id: doc.id,
                 title,
                 size,
                 order,
                 is_active,
                 frames_uid
             }
-        }
-    }, {})
-
-    const transformedSnapshotArray = snapshot.docs.map(doc => {
-        const { size, frames_uid, title, order, is_active } = doc.data()
-
-        return {
-            id: doc.id,
-            title,
-            size,
-            order,
-            is_active,
-            frames_uid
-        }
-    })
+        })
 
     return { transformedSnapshotObject, transformedSnapshotArray }
 }
 
 export const convertFrameGroupSnapshotToMap = snapshot => {
-    const transformedFrameGroup = snapshot.docs.map(doc => {
+    const transformSnapshotToArray = snapshot.docs.map(doc => {
         const { title, order, descendant } = doc.data()
 
         return {
@@ -82,7 +94,21 @@ export const convertFrameGroupSnapshotToMap = snapshot => {
         }
     })
 
-    return transformedFrameGroup
+    const transformSnapshotToObject = snapshot.docs.reduce((cur, doc) => {
+        const { title, order, descendant } = doc.data()
+
+        return {
+            ...cur,
+            [doc.id]: {
+                id: doc.id,
+                title,
+                order,
+                descendant
+            }
+        }
+    }, {})
+
+    return transformSnapshotToArray
 }
 
 firebase.initializeApp(config)

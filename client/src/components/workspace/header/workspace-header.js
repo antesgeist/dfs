@@ -17,16 +17,18 @@ import styles from './workspace-header.module.scss'
 
 const WorkspaceHeader = ({ currentUser, panels }) => (
     <div className={styles.headerContainer}>
-        <OptionsMenu
-            items={tabOptions}
-            style={{
-                toggleBtn: styles.toggleBtn,
-                dropdownItems: styles.dropdownItems,
-                dropdownItem: styles.dropdownItem
-            }}
-            toggleIcon={<Menu />}
-            opt={{ selection: false }}
-        />
+        <div className={styles.optionsMenu}>
+            <OptionsMenu
+                items={tabOptions}
+                style={{
+                    toggleBtn: styles.toggleBtn,
+                    dropdownItems: styles.dropdownItems,
+                    dropdownItem: styles.dropdownItem
+                }}
+                toggleIcon={<Menu />}
+                opt={{ selection: false }}
+            />
+        </div>
         {currentUser && panels && (
             <Fragment>
                 <TabGroup panels={panels} />

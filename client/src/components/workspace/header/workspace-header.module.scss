@@ -12,6 +12,10 @@
     height: 36px;
 }
 
+.optionsMenu {
+    background: #2e303b;
+}
+
 .toggleBtn {
     @extend %dropdown-toggle;
     
@@ -20,6 +24,10 @@
         width: 1.2rem;
         margin: 0 0.15rem;
     }
+
+    span {
+        display: none;
+    }
 }
 
 .dropdownItems {
@@ -27,20 +35,20 @@
 
     top: 100%;
     left: 0;
-    background: #fff;
-    padding: 0.35rem 0;
+    background: #2e303b;
+    padding: 0.5rem 0;
 }
 
 .dropdownItem {
     @extend %dropdown-item;
     
     padding: 0.35rem 1.2rem;
-    color: #333;
+    color: #fff;
     margin: 0;
-    font-size: 0.75rem;
-    font-weight: 400;
+    font-size: 0.7rem;
+    font-weight: 600;
 
     &:hover {
-        background: #f7f7f7;
+        background: #353844;
     }
 }

@@ -8,7 +8,9 @@ import styles from './sidebar.module.scss'
 const Sidebar = () => (
     <div className={styles.sidebarContainer}>
         <div className={styles.sidebarMenu}>
-            <FileTree />
+            <a href='/'>
+                <FileTree />
+            </a>
         </div>
         <SidebarTools />
     </div>

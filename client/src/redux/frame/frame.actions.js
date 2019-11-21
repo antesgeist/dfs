@@ -5,20 +5,25 @@ import {
     convertFrameGroupSnapshotToMap
 } from '../../firebase/firebase.utils'
 
-// FETCH FRAMES
+/* Fetch Frames */
 
 export const fetchFramesStart = () => ({
-    type: frameActionTypes.FETCH_FRAMES_START
+    type: frameActionTypes.FETCH_START
 })
 
-export const fetchFramesSuccess = frames => ({
-    type: frameActionTypes.FETCH_FRAMES_SUCCESS,
-    payload: frames
+export const fetchFramesSuccess = frameGroups => ({
+    type: frameActionTypes.FETCH_SUCCESS,
+    payload: frameGroups
 })
 
 export const fetchFramesFailure = errorMessage => ({
-    type: frameActionTypes.FETCH_FRAMES_SUCCESS,
+    type: frameActionTypes.FETCH_SUCCESS,
     payload: errorMessage
+})
+
+export const setActiveFrameGroup = frameGroupId => ({
+    type: frameActionTypes.SET_ACTIVE_GROUP,
+    payload: frameGroupId
 })
 
 export const fetchFramesAsync = (
@@ -45,7 +50,7 @@ export const fetchFramesAsync = (
     })
 }
 
-// TOGGLES
+/* TOGGLES */
 
 export const toggleNodeCollapse = ({ frameId, nodeId, type }) => ({
     type: frameActionTypes.TOGGLE_NODE_COLLAPSE,
