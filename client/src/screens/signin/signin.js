@@ -9,7 +9,7 @@ import {
     emailSignInStart,
     googleSignInStart,
     signInFailure
-} from '../../redux/user/user.actions'
+} from '../../store/user/user.actions'
 
 import PageDefault from '../../components/page-default/page-default'
 import { Lock, EmailOutline } from '../../components/icons/icons'

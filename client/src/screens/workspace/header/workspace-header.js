@@ -2,16 +2,16 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import { selectCurrentUser } from '../../../redux/user/user.selectors'
-import { selectPanels } from '../../../redux/panel/panel.selectors'
+import { selectCurrentUser } from '../../../store/user/user.selectors'
+import { selectPanels } from '../../../store/panel/panel.selectors'
 
 import tabOptions from './tab-options'
-import TabGroup from '../../tab-group/tab-group'
-import WorkspaceUser from '../../workspace-user/workspace-user'
+import TabGroup from '../../../components/tab-group/tab-group'
+import WorkspaceUser from '../../../components/workspace-user/workspace-user'
 
-import OptionsMenu from '../../options-menu/options-menu'
+import OptionsMenu from '../../../components/options-menu/options-menu'
 
-import { Menu } from '../../icons/icons'
+import { Menu } from '../../../components/icons/icons'
 
 import styles from './workspace-header.module.scss'
 

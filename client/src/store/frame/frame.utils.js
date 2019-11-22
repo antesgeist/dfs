@@ -51,3 +51,47 @@ export const mapToggleStates = (frames, { frameId, nodeId, type }) =>
             descendant: mapOverNodes(descendant, nodeId, type)
         }
     })
+
+// by parent doc id = collection.[parentDocID].subCollection.subCollDoc
+export const fetchSubCollectionsByDocIds = async (
+    firestore,
+    idFiltersArray,
+    collectionKey,
+    subCollectionKey
+) => {
+    // fetch documents by id
+    const queries = idFiltersArray.map(id =>
+        firestore
+            .collection(collectionKey)
+            .doc(id)
+            .collection(subCollectionKey)
+    )
+
+    const collectionRefs = await Promise.all(queries)
+
+    const frameGroups = await collectionRefs.reduce(
+        async (collectionObj, collectionRef) => {
+            const subCollectionArray = []
+
+            // returns unsubscribe function = void
+            const querySnapshot = await collectionRef.get()
+
+            querySnapshot.docs.forEach(doc =>
+                subCollectionArray.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            )
+
+            return {
+                ...(await collectionObj),
+                [collectionRef.parent.id]: subCollectionArray
+            }
+        },
+
+        // resolve promise on each iteration
+        Promise.resolve()
+    )
+
+    return frameGroups
+}

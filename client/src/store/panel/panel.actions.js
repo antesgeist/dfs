@@ -1,9 +1,7 @@
 import PanelActionTypes from './panel.types'
 
-import {
-    firestore,
-    convertPanelGroupSnapshotToMap
-} from '../../firebase/firebase.utils'
+import { firestore } from '../../firebase/firebase.utils'
+import { transformPanelSnapshot } from './panel.utils'
 
 import { setActiveFrameGroup } from '../frame/frame.actions'
 
@@ -51,14 +49,14 @@ export const fetchPanelsAsync = (
 
     unsubscribe = panelsRef.onSnapshot(async snapshot => {
         try {
-            const { transformedSnapshotArray } = convertPanelGroupSnapshotToMap(
+            const transformedSnapshot = transformPanelSnapshot(
                 snapshot,
                 panelFilter
             )
 
-            const activePanel = selectActivePanel(transformedSnapshotArray)
+            const activePanel = selectActivePanel(transformedSnapshot)
 
-            dispatch(fetchPanelsSuccess(transformedSnapshotArray))
+            dispatch(fetchPanelsSuccess(transformedSnapshot))
             dispatch(setActivePanel(activePanel))
 
             setUnsubscribe(unsubscribe)

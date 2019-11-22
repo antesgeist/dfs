@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { NavLink } from 'react-router-dom'
 
-import { selectCurrentUser } from '../../redux/user/user.selectors'
+import { selectCurrentUser } from '../../store/user/user.selectors'
 import { auth } from '../../firebase/firebase.utils'
 
 import { FileTree } from '../icons/icons'

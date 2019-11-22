@@ -6,8 +6,8 @@ import Tab from '../tab/tab'
 import Button from '../common/button/button'
 import { Plus } from '../icons/icons'
 
-import { setActivePanel } from '../../redux/panel/panel.actions'
-import { selectActivePanel } from '../../redux/panel/panel.selectors'
+import { setActivePanel } from '../../store/panel/panel.actions'
+import { selectActivePanel } from '../../store/panel/panel.selectors'
 
 import styles from './tab-group.module.scss'
 

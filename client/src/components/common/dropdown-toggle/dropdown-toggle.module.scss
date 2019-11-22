@@ -22,3 +22,8 @@
 .toggleContent {
     @extend %dropdown-content;
 }
+
+.buttonLabel {
+    font-size: 0.8rem;
+    font-weight: 400;
+}

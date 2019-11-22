@@ -15,7 +15,7 @@ import {
     Help,
     Message,
     Expand
-} from '../../icons/icons'
+} from '../../../components/icons/icons'
 
 export const SidebarLogo = () => (
     <div className={styles.sidebarLogoContainer}>

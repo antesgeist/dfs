@@ -1,12 +1,9 @@
 import WorkspaceActionTypes from './workspace.types'
 
-import {
-    firestore,
-    formatWorkspaceSnapshot
-} from '../../firebase/firebase.utils'
+import { firestore } from '../../firebase/firebase.utils'
+import { formatWorkspaceSnapshot } from './workspace.utils'
 
 import { fetchPanelsAsync } from '../panel/panel.actions'
-import { fetchFramesAsync } from '../frame/frame.actions'
 
 export const fetchWorkspaceStart = () => ({
     type: WorkspaceActionTypes.FETCH_START

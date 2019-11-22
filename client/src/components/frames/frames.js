@@ -4,18 +4,18 @@ import { connect } from 'react-redux'
 import {
     toggleNodeCollapse,
     toggleNodeCheck
-} from '../../../redux/frame/frame.actions'
+} from '../../store/frame/frame.actions'
 
-import Frame from '../../frame/frame'
-import FrameContent from '../../frame-content/frame-content'
-import NodeParent from '../../node-parent/node-parent'
+import Frame from '../frame/frame'
+import FrameContent from '../frame-content/frame-content'
+import NodeParent from '../node-parent/node-parent'
 
-import styles from './canvas.module.scss'
+import styles from './frames.module.scss'
 
-const Canvas = ({ frames, isActive, toggleNodeCollapse, toggleNodeCheck }) => {
+const Frames = ({ frames, isActive, toggleNodeCollapse, toggleNodeCheck }) => {
     const extendedClass = `
-        ${styles.canvasContainer}
-        ${isActive ? styles.activeCanvas : ''}
+        ${styles.framesContainer}
+        ${isActive ? styles.activeFrames : ''}
     `.trimRight()
 
     return (
@@ -44,4 +44,4 @@ const actionCreators = {
     toggleNodeCheck
 }
 
-export default connect(null, actionCreators)(Canvas)
+export default connect(null, actionCreators)(Frames)

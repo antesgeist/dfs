@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import { createStructuredSelector } from 'reselect'
 
-import { setCurrentUserAsync } from './redux/user/user.actions'
-import { selectCurrentUser } from './redux/user/user.selectors'
+import { setCurrentUserAsync } from './store/user/user.actions'
+import { selectCurrentUser } from './store/user/user.selectors'
 
 import Home from './screens/home/home'
 import SignIn from './screens/signin/signin'
@@ -50,7 +50,4 @@ const mapDispatchToProps = dispatch => ({
     setCurrentUserAsync: () => dispatch(setCurrentUserAsync())
 })
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withRouter(App))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App))

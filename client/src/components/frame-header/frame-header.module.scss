@@ -42,14 +42,15 @@
     
     .frameTitle {
         border: 0;
+        color: #eee;
+        background: none;
+        font-family: inherit;
         font-size: 0.75rem;
         font-weight: 500;
         padding: 0.15rem 0.3rem;
-        color: #eee;
         border-radius: 1px;
         width: 160px;
         max-width: 180px;
-        background: none;
 
         &:hover {
             background: #00000003;

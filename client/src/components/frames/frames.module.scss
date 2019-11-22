@@ -1,11 +1,10 @@
-.canvasContainer {
+.framesContainer {
     display: none;
-    background: #1B1B1B;
     overflow: hidden;
     position: relative;
     height: 100%;
 }
 
-.activeCanvas {
+.activeFrames {
     display: flex;
 }

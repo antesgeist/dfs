@@ -5,7 +5,8 @@
 
     .tabGroup {
         @include fxc;
-        // margin-right: 1rem;
+
+        background: #4f4f4f;
     }
 
     .tabControls {

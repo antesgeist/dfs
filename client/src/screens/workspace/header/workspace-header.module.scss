@@ -1,10 +1,10 @@
-@import '../../common/styles/placeholders';
+@import '../../../components/common/styles/placeholders';
 
 .headerContainer {
     grid-area: header;
     display: grid;
     grid-template-columns: auto auto 1fr;
-    background: #3D3D3D;
+    background: #313138;
     color: #fff;
     font-size: 0.8rem;
     font-weight: 700;
@@ -13,7 +13,7 @@
 }
 
 .optionsMenu {
-    background: #2e303b;
+    background: #26282f;
 }
 
 .toggleBtn {
@@ -36,7 +36,8 @@
     top: 100%;
     left: 0;
     background: #2e303b;
-    padding: 0.5rem 0;
+    background: #fff;
+    padding: 0.35rem 0;
 }
 
 .dropdownItem {
@@ -44,9 +45,11 @@
     
     padding: 0.35rem 1.2rem;
     color: #fff;
+    color: #333;
     margin: 0;
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 400;
 
     &:hover {
         background: #353844;

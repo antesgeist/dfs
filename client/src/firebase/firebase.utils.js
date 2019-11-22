@@ -39,74 +39,19 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef
 }
 
-export const formatWorkspaceSnapshot = snapshot =>
-    snapshot.docs.reduce((cur, doc) => {
-        const { panel_groups } = doc.data()
-
-        return [...panel_groups]
-    }, [])
-
-export const convertPanelGroupSnapshotToMap = (snapshot, panelFilter) => {
-    const transformedSnapshotObject = snapshot.docs
-        .filter(doc => panelFilter.includes(doc.id))
-        .reduce((cur, doc) => {
-            const { size, frames_uid, title, order, is_active } = doc.data()
-
-            return {
-                ...cur,
-                [doc.id]: {
-                    title,
-                    size,
-                    order,
-                    is_active,
-                    frames_uid
-                }
-            }
-        }, {})
-
-    const transformedSnapshotArray = snapshot.docs
-        .filter(doc => panelFilter.includes(doc.id))
-        .map(doc => {
-            const { size, frames_uid, title, order, is_active } = doc.data()
-
-            return {
-                id: doc.id,
-                title,
-                size,
-                order,
-                is_active,
-                frames_uid
-            }
-        })
-
-    return { transformedSnapshotObject, transformedSnapshotArray }
-}
-
-export const convertFrameGroupSnapshotToMap = snapshot => {
-    const transformSnapshotToArray = snapshot.docs.map(doc => {
-        const { title, order, descendant } = doc.data()
-
-        return {
-            id: doc.id,
-            title,
-            order,
-            descendant
-        }
-    })
-
-    return transformSnapshotToArray
-}
-
 firebase.initializeApp(config)
 
 export const addCollectionAndDocuments = async (
+    firestore,
+    docId,
     collectionKey,
+    subCollectionKey,
     objectsToAdd
 ) => {
     const subCollectionsRef = firestore
         .collection(collectionKey)
-        .doc('POdx5llTr66TimqHhv0V')
-        .collection('frameGroup')
+        .doc(docId)
+        .collection(subCollectionKey)
 
     const batch = firestore.batch()
 

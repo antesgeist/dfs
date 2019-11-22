@@ -1,4 +1,4 @@
-@import '../../common/styles/button';
+@import '../../../components/common/styles/button';
 
 @mixin b($width, $color) {
     > * {
@@ -11,6 +11,10 @@
     grid-area: sidebar;
     display: grid;
     grid-template-rows: max-content auto;
+
+    .sidebarLogoNav {
+        display: flex;
+    }
 }
 
 $svg-size: 1.5rem;
@@ -34,7 +38,7 @@ $svg-size: 1.5rem;
 
 .sidebarMenu {
     height: 36px;
-    background: #FD9437;
+    background: #716351;
     display: flex;
     align-items: center;
     justify-content: center;

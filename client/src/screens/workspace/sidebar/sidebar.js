@@ -1,16 +1,17 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 import { SidebarTools } from './sidebar-icons'
-import { FileTree } from '../../icons/icons'
+import { FileTree } from '../../../components/icons/icons'
 
 import styles from './sidebar.module.scss'
 
 const Sidebar = () => (
     <div className={styles.sidebarContainer}>
         <div className={styles.sidebarMenu}>
-            <a href='/'>
+            <NavLink exact to='/' className={styles.sidebarLogoNav}>
                 <FileTree />
-            </a>
+            </NavLink>
         </div>
         <SidebarTools />
     </div>

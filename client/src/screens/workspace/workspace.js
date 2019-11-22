@@ -2,22 +2,22 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import WorkspaceHeader from '../../components/workspace/header/workspace-header'
-import Sidebar from '../../components/workspace/sidebar/sidebar'
+import WorkspaceHeader from './header/workspace-header'
+import Sidebar from './sidebar/sidebar'
 import CanvasPlaceholder from './canvas-placeholder/canvas-placeholder'
 
-import { fetchWorkspaceAsync } from '../../redux/workspace/workspace.actions'
-import { fetchFramesAsync } from '../../redux/frame/frame.actions'
+import { fetchWorkspaceAsync } from '../../store/workspace/workspace.actions'
+import { fetchFramesAsync } from '../../store/frame/frame.actions'
 
-import { selectCurrentUser } from '../../redux/user/user.selectors'
+import { selectCurrentUser } from '../../store/user/user.selectors'
 
 import {
     selectPanels,
     selectActiveFramesUID
-} from '../../redux/panel/panel.selectors'
+} from '../../store/panel/panel.selectors'
 
-import Panel from '../../components/workspace/panel/panel'
-import { selectFrameGroup } from '../../redux/frame/frame.selectors'
+import Panel from './panel/panel'
+import { selectFrameGroup } from '../../store/frame/frame.selectors'
 
 import styles from './workspace.module.scss'
 

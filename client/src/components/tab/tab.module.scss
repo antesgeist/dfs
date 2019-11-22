@@ -1,33 +1,35 @@
 .tabItem {
     padding: 0 0.7rem 0 0.85rem;
     height: 100%;
-    background: #313131;
+    background: #313138;
+    margin-right: 1px;
     cursor: pointer;
-
-    &:not(:last-child) {
-        margin-right: 1px;
-    }
 
     .tabLabel {
         margin-right: 0.5rem;
         color: #9a9a9a;
+        font-size: 0.8rem;
+        font-weight: 400;
+        font-family: Roboto;
     }
     
     .svgTabClose {
         width: 0.9rem;
-        fill: #fff;
+        fill: #DBDBDB;
         opacity: 0;
     }
-    
+
     &.tabIsActive {
-        background: #1B1B1B;
+        background: #DBDBDB;
+        margin: 0;
     
         .tabLabel {
-            color: #fff;
+            color: #000;
         }
     
         .svgTabClose {
             opacity: 1;
+            fill: #222;
         }
     }
 
@@ -35,6 +37,5 @@
         .svgTabClose {
             opacity: 1;
         }
-    }
+    }    
 }
-
