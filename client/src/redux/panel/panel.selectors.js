@@ -22,3 +22,13 @@ export const selectActiveFramesUID = createSelector(
             .filter(panel => panel.is_active)
             .reduce((framesUIDString, { frames_uid }) => frames_uid, '')
 )
+
+export const selectFramesIdFilter = createSelector(
+    [selectPanels],
+    panels =>
+        panels &&
+        panels.reduce((cur, panel) => {
+            const { frames_uid } = panel
+            return [...frames_uid]
+        }, [])
+)

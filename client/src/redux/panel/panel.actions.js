@@ -32,7 +32,7 @@ export const setActivePanel = panelId => dispatch => {
 
 export const fetchPanelsAsync = (
     panelUID,
-    workspacePanelFilter,
+    panelFilter,
     setUnsubscribe
 ) => dispatch => {
     dispatch(fetchPanelsStart())
@@ -53,7 +53,7 @@ export const fetchPanelsAsync = (
         try {
             const { transformedSnapshotArray } = convertPanelGroupSnapshotToMap(
                 snapshot,
-                workspacePanelFilter
+                panelFilter
             )
 
             const activePanel = selectActivePanel(transformedSnapshotArray)

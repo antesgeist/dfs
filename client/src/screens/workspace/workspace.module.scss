@@ -3,7 +3,7 @@
     display: grid;
     grid-template:
         "sidebar header" max-content
-        "sidebar canvas" 1fr
+        "sidebar panel" 1fr
         / max-content auto;
     background: #1B1B1B;
 }

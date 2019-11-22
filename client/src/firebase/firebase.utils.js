@@ -46,9 +46,9 @@ export const formatWorkspaceSnapshot = snapshot =>
         return [...panel_groups]
     }, [])
 
-export const convertPanelGroupSnapshotToMap = (snapshot, arrayFilter) => {
+export const convertPanelGroupSnapshotToMap = (snapshot, panelFilter) => {
     const transformedSnapshotObject = snapshot.docs
-        .filter(doc => arrayFilter.includes(doc.id))
+        .filter(doc => panelFilter.includes(doc.id))
         .reduce((cur, doc) => {
             const { size, frames_uid, title, order, is_active } = doc.data()
 
@@ -65,7 +65,7 @@ export const convertPanelGroupSnapshotToMap = (snapshot, arrayFilter) => {
         }, {})
 
     const transformedSnapshotArray = snapshot.docs
-        .filter(doc => arrayFilter.includes(doc.id))
+        .filter(doc => panelFilter.includes(doc.id))
         .map(doc => {
             const { size, frames_uid, title, order, is_active } = doc.data()
 
@@ -94,20 +94,6 @@ export const convertFrameGroupSnapshotToMap = snapshot => {
         }
     })
 
-    const transformSnapshotToObject = snapshot.docs.reduce((cur, doc) => {
-        const { title, order, descendant } = doc.data()
-
-        return {
-            ...cur,
-            [doc.id]: {
-                id: doc.id,
-                title,
-                order,
-                descendant
-            }
-        }
-    }, {})
-
     return transformSnapshotToArray
 }
 
@@ -117,16 +103,6 @@ export const addCollectionAndDocuments = async (
     collectionKey,
     objectsToAdd
 ) => {
-    // root collection
-    // const collectionsRef = firestore.collection(collectionKey)
-
-    // sub collection - workspaceGroup
-    // const subCollectionsRef = firestore
-    //     .collection(collectionKey)
-    //     .doc('GOQSge82qDQtUX3Brv6B')
-    //     .collection('workspaceItems')
-
-    // sub collection - frameGroup
     const subCollectionsRef = firestore
         .collection(collectionKey)
         .doc('POdx5llTr66TimqHhv0V')

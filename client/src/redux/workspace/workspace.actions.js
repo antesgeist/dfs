@@ -6,6 +6,7 @@ import {
 } from '../../firebase/firebase.utils'
 
 import { fetchPanelsAsync } from '../panel/panel.actions'
+import { fetchFramesAsync } from '../frame/frame.actions'
 
 export const fetchWorkspaceStart = () => ({
     type: WorkspaceActionTypes.FETCH_START
@@ -49,11 +50,7 @@ export const fetchWorkspaceAsync = (
                 fetchPanelsAsync(panelsId, panelGroups, setUnsubFromPanels)
             )
 
-            // 3 - select active panel
-            const panelId =
-                // 4 - fetch
-
-                setUnsubFromWorkspace(unsubscribe)
+            setUnsubFromWorkspace(unsubscribe)
         } catch (error) {
             dispatch(fetchWorkspaceFailure(error.message))
         }

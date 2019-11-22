@@ -26,28 +26,81 @@ export const setActiveFrameGroup = frameGroupId => ({
     payload: frameGroupId
 })
 
-export const fetchFramesAsync = (
-    activeFramesUID,
-    setUnsubscribe
-) => dispatch => {
+/* 
+    # data model
+
+    frameGroups: {
+        panelId1: [
+            { ...frame1 },
+            { ...frame2 },
+            { ...frame3 },
+        ],
+        panelId2: [
+            { ...frame1 },
+            { ...frame2 },
+            { ...frame3 },
+        ],
+        panelId3: [
+            { ...frame1 },
+            { ...frame2 },
+            { ...frame3 },
+        ],
+    }
+*/
+
+export const fetchFramesAsync = framesFilter => dispatch => {
     dispatch(fetchFramesStart())
 
-    const frameGroupRef = firestore
-        .collection('frames')
-        .doc(activeFramesUID)
-        .collection('frame_group')
+    // by parent doc id = collection.[parentDocID].subCollection.subCollDoc
+    const fetchSubCollectionsByDocIds = async (
+        collectionKey,
+        idFilters,
+        subCollectionKey
+    ) => {
+        // fetch documents by id
+        const queries = idFilters.map(id =>
+            firestore
+                .collection(collectionKey)
+                .doc(id)
+                .collection(subCollectionKey)
+        )
 
-    let unsubscribe = null
+        const collectionRefs = await Promise.all(queries)
 
-    unsubscribe = frameGroupRef.onSnapshot(async snapshot => {
-        try {
-            const frameGroup = convertFrameGroupSnapshotToMap(snapshot)
-            dispatch(fetchFramesSuccess(frameGroup))
-            setUnsubscribe(unsubscribe)
-        } catch (error) {
-            dispatch(fetchFramesFailure(error.message))
-        }
-    })
+        // returns a promise
+        const frameGroups = await collectionRefs.reduce(
+            async (collectionObj, collectionRef) => {
+                const subCollectionArray = []
+
+                // returns unsubscribe function = void
+                const collectionSnapshot = await collectionRef.get()
+
+                // push each document(frame) into parent object
+                collectionSnapshot.docs.forEach(doc =>
+                    subCollectionArray.push({
+                        id: doc.id,
+                        ...doc.data()
+                    })
+                )
+
+                return {
+                    ...(await collectionObj),
+                    [collectionRef.parent.id]: subCollectionArray
+                }
+            },
+
+            // resolve promise on each iteration
+            Promise.resolve()
+        )
+
+        return frameGroups
+    }
+
+    fetchSubCollectionsByDocIds('frames', framesFilter, 'frame_group')
+        .then(frameGroups => {
+            dispatch(fetchFramesSuccess(frameGroups))
+        })
+        .catch(error => dispatch(fetchFramesFailure(error.message)))
 }
 
 /* TOGGLES */
