@@ -21,6 +21,7 @@ const Button = ({
         }
     })
 
+    // refactor this mess
     if (style.length === 1 && firstClassIsValid) {
         formattedClass = ` ${style[0].toString()}`
     } else if (style.length > 0 || firstClassIsValid) {

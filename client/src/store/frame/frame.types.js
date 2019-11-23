@@ -1,12 +1,12 @@
-const frameActionTypes = {
+const FrameActionTypes = {
     FETCH_START: 'frame/FETCH_START',
     FETCH_SUCCESS: 'frame/FETCH_SUCCESS',
     FETCH_FAILURE: 'frame/FETCH_FAILURE',
-    ADD_NEW: 'frame/ADD_NEW',
+    APPEND_NEW_NODE: 'frame/APPEND_NEW_NODE',
     SET_ACTIVE_GROUP: 'frame/SET_ACTIVE_GROUP',
     TOGGLE_NODE_COLLAPSE: 'frame/TOGGLE_NODE_COLLAPSE',
     TOGGLE_NODE_CHECK_ONE: 'frame/TOGGLE_NODE_CHECK_ONE',
     TOGGLE_NODE_CHECK_CASCADE: 'frame/TOGGLE_NODE_CHECK_CASCADE'
 }
 
-export default frameActionTypes
+export default FrameActionTypes

@@ -10,11 +10,17 @@
     }
 }
 
+%header-links {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
 .signOutButton {
-    color: #222;
+    @extend %header-links;
+
     background: none;
-    font-weight: 600;
-    font-size: 0.8rem;
+    color: #202020;
     border: 0;
     border-radius: 2px;
     padding: 0.5rem;
@@ -24,20 +30,18 @@
 .menuPrimary {
     justify-content: center;
 
-    .menus {
-        list-style-type: none;
-        display: flex;
-    }
-
     a {
-        text-decoration: none;
-        font-weight: 600;
-        color: #222;
-        font-size: 0.8rem;
+        @extend %header-links;
+        color: #202020;
 
         &:not(:last-child) {
             margin-right: 0.75rem;
         }
+    }
+
+    .menus {
+        list-style-type: none;
+        display: flex;
     }
 }
 
@@ -46,11 +50,9 @@
     justify-content: flex-end;
 
     a {
-        text-decoration: none;
-        font-weight: 600;
+        @extend %header-links;
         padding: 0.5rem 0;
         text-transform: capitalize;
-        font-size: 0.8rem;
 
         &:not(:last-child) {
             margin-right: 0.25rem;
@@ -65,7 +67,6 @@
     .signIn {
         text-transform: capitalize;
     }
-
 
     .signUp {
         background: #9746FF;

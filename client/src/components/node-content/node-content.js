@@ -7,9 +7,10 @@ import styles from './node-content.module.scss'
 
 const NodeContent = ({ title, frameId, nodeId, onCheck, checked }) => {
     const [isChecked, setIsChecked] = useState(checked)
+    const [nodeBody, setNodeBody] = useState(title)
 
     const toggleNodeCheck = () => {
-        onCheck({ frameId, nodeId, type: 'CHECK' })
+        onCheck({ frameId, parentId: null, nodeId, type: 'CHECK' })
         setIsChecked(!isChecked)
     }
 
@@ -27,7 +28,11 @@ const NodeContent = ({ title, frameId, nodeId, onCheck, checked }) => {
                 <span className={isCheckedSpan} onClick={toggleNodeCheck}>
                     <CheckBold className={isCheckedSVG} />
                 </span>
-                <p className={styles.nodeBody}>{title}</p>
+                <input
+                    className={styles.nodeBody}
+                    value={nodeBody}
+                    onChange={e => setNodeBody(e.target.value)}
+                />
             </div>
 
             <NodeToolbar opt={['noPadding']} />

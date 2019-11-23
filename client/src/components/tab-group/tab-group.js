@@ -12,10 +12,8 @@ import { selectActivePanel } from '../../store/panel/panel.selectors'
 import styles from './tab-group.module.scss'
 
 const TabGroup = ({ panels, activePanel, setActivePanel }) => {
-    const onSelectTab = panelId => {
-        setActivePanel(panelId)
-        // toggle active class
-        // fetch frames
+    const onSelectTab = (panelId, framesId) => {
+        setActivePanel(panelId, framesId)
     }
 
     return (
@@ -23,12 +21,12 @@ const TabGroup = ({ panels, activePanel, setActivePanel }) => {
             <div className={styles.tabGroup}>
                 {panels
                     .sort((a, b) => (a.order < b.order ? -1 : 1))
-                    .map(({ id, title }) => (
+                    .map(({ id, title, frames_uid }) => (
                         <Tab
                             isActive={activePanel === id}
                             key={id}
                             label={title}
-                            onClick={() => onSelectTab(id)}
+                            onClick={() => onSelectTab(id, frames_uid)}
                         />
                     ))}
             </div>

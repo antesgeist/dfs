@@ -26,6 +26,7 @@ const Frames = ({ frames, isActive, toggleNodeCollapse, toggleNodeCheck }) => {
                     <Frame key={id} title={title}>
                         <FrameContent>
                             <NodeParent
+                                parentId={id}
                                 frameId={id}
                                 root='true'
                                 nodes={descendant}

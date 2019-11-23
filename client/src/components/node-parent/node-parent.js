@@ -21,6 +21,7 @@ const mapNodesToParent = (nodeArray, frameId, onCollapse, onCheck) =>
             />
             {descendant.length > 0 && (
                 <NodeParent
+                    parentId={id}
                     frameId={frameId}
                     nodes={descendant}
                     collapsed={state.collapsed}
@@ -35,6 +36,7 @@ const mapNodesToParent = (nodeArray, frameId, onCollapse, onCheck) =>
 const NodeParent = ({
     root,
     collapsed,
+    parentId,
     frameId,
     nodeId,
     nodes,
@@ -68,7 +70,7 @@ const NodeParent = ({
             )}
             <ul {...rootProps} {...attrs}>
                 {mapNodesToParent(nodes, frameId, onCollapse, onCheck)}
-                <NodeAddNew />
+                <NodeAddNew frameId={frameId} parentId={parentId} />
             </ul>
         </Fragment>
     )

@@ -1,4 +1,4 @@
-import frameActionTypes from './frame.types'
+import FrameActionTypes from './frame.types'
 
 import { firestore } from '../../firebase/firebase.utils'
 import { fetchSubCollectionsByDocIds } from './frame.utils'
@@ -6,21 +6,21 @@ import { fetchSubCollectionsByDocIds } from './frame.utils'
 /* Fetch Frames */
 
 export const fetchFramesStart = () => ({
-    type: frameActionTypes.FETCH_START
+    type: FrameActionTypes.FETCH_START
 })
 
 export const fetchFramesSuccess = frameGroups => ({
-    type: frameActionTypes.FETCH_SUCCESS,
+    type: FrameActionTypes.FETCH_SUCCESS,
     payload: frameGroups
 })
 
 export const fetchFramesFailure = errorMessage => ({
-    type: frameActionTypes.FETCH_SUCCESS,
+    type: FrameActionTypes.FETCH_SUCCESS,
     payload: errorMessage
 })
 
 export const setActiveFrameGroup = frameGroupId => ({
-    type: frameActionTypes.SET_ACTIVE_GROUP,
+    type: FrameActionTypes.SET_ACTIVE_GROUP,
     payload: frameGroupId
 })
 
@@ -38,12 +38,19 @@ export const fetchFramesAsync = framesFilter => dispatch => {
 
 /* TOGGLES */
 
-export const toggleNodeCollapse = ({ frameId, nodeId, type }) => ({
-    type: frameActionTypes.TOGGLE_NODE_COLLAPSE,
-    payload: { frameId, nodeId, type }
+export const toggleNodeCollapse = ({ frameId, parentId, nodeId, type }) => ({
+    type: FrameActionTypes.TOGGLE_NODE_COLLAPSE,
+    payload: { frameId, parentId, nodeId, type }
 })
 
-export const toggleNodeCheck = ({ frameId, nodeId, type }) => ({
-    type: frameActionTypes.TOGGLE_NODE_CHECK_ONE,
-    payload: { frameId, nodeId, type }
+export const toggleNodeCheck = ({ frameId, parentId, nodeId, type }) => ({
+    type: FrameActionTypes.TOGGLE_NODE_CHECK_ONE,
+    payload: { frameId, parentId, nodeId, type }
+})
+
+/* ADD NEW NODE */
+
+export const appendNewNode = ({ frameId, parentId, nodeId, type }) => ({
+    type: FrameActionTypes.APPEND_NEW_NODE,
+    payload: { frameId, parentId, nodeId, type }
 })

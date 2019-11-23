@@ -19,17 +19,17 @@ export const fetchPanelsFailure = errorMessage => ({
     payload: errorMessage
 })
 
-export const setActivePanel = panelId => dispatch => {
+export const setActivePanel = (panelId, framesId) => dispatch => {
     dispatch({
         type: PanelActionTypes.SET_ACTIVE,
         payload: panelId
     })
 
-    dispatch(setActiveFrameGroup(panelId))
+    dispatch(setActiveFrameGroup(framesId))
 }
 
 export const fetchPanelsAsync = (
-    panelUID,
+    panelId,
     panelFilter,
     setUnsubscribe
 ) => dispatch => {
@@ -37,13 +37,15 @@ export const fetchPanelsAsync = (
 
     const panelsRef = firestore
         .collection('panels')
-        .doc(panelUID)
+        .doc(panelId)
         .collection('panel_group')
 
     const selectActivePanel = panels =>
         panels
             .filter(({ is_active }) => is_active)
-            .reduce((framesUIDString, { id }) => id, '')
+            .reduce((activeIds, { id, frames_uid }) => {
+                return { id, frames_uid }
+            }, {})
 
     let unsubscribe = null
 
@@ -54,10 +56,10 @@ export const fetchPanelsAsync = (
                 panelFilter
             )
 
-            const activePanel = selectActivePanel(transformedSnapshot)
+            const { id, frames_uid } = selectActivePanel(transformedSnapshot)
 
             dispatch(fetchPanelsSuccess(transformedSnapshot))
-            dispatch(setActivePanel(activePanel))
+            dispatch(setActivePanel(id, frames_uid))
 
             setUnsubscribe(unsubscribe)
         } catch (error) {

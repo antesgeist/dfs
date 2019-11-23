@@ -1,17 +1,41 @@
-const mapOverNodes = (descendant, id, toggleType) =>
-    descendant.map(node => {
-        if (node.id === id) {
-            let toggleAction
-            let stateProperty
+import nanoid from 'nanoid'
 
-            switch (toggleType) {
+const newNode = () => ({
+    value: `New Node: ${Math.floor(Math.random() * 100)}`,
+    state: {
+        checked: false,
+        collapsed: false
+    },
+    id: nanoid(),
+    descendant: []
+})
+
+const mapOverNodes = (parentId, nodeId, descendant, actionType) => {
+    return descendant.map(node => {
+        /* base case */
+        if (node.id !== nodeId && !node.descendant.length) return node
+
+        // append node
+        if (actionType === 'APPEND' && node.id === parentId) {
+            return {
+                ...node,
+                descendant: [...node.descendant, newNode()]
+            }
+        }
+
+        // toggle node
+        if (node.id === nodeId) {
+            let nodeState
+            let stateKey
+
+            switch (actionType) {
                 case 'COLLAPSE':
-                    toggleAction = !node.state.collapsed
-                    stateProperty = 'collapsed'
+                    nodeState = !node.state.collapsed
+                    stateKey = 'collapsed'
                     break
                 case 'CHECK':
-                    toggleAction = !node.state.checked
-                    stateProperty = 'checked'
+                    nodeState = !node.state.checked
+                    stateKey = 'checked'
                     break
                 default:
                     break
@@ -21,7 +45,7 @@ const mapOverNodes = (descendant, id, toggleType) =>
                 ...node,
                 state: {
                     ...node.state,
-                    [stateProperty]: toggleAction
+                    [stateKey]: nodeState
                 }
             }
         }
@@ -30,29 +54,69 @@ const mapOverNodes = (descendant, id, toggleType) =>
         if (node.descendant.length > 0) {
             return {
                 ...node,
-                descendant: mapOverNodes(node.descendant, id, toggleType)
+                descendant: mapOverNodes(
+                    parentId,
+                    nodeId,
+                    node.descendant,
+                    actionType
+                )
             }
         }
-
-        /* base case */
-        return node
     })
+}
 
-export const mapToggleStates = (frames, { frameId, nodeId, type }) =>
-    frames.map(frame => {
-        const { id, descendant } = frame
+/**
+ * Map over frameGroups object state to update toggle node state
+ *
+ * @param {object} frameGroups All frame groups object
+ * @param {string} activeFramesKey Key to lookup target frameGroups array
+ * @param {string} frameId To find matching frame id from array
+ * @param {string} nodeId Used for recursive node search
+ * @param {string/upper} type = ('CHECK', 'COLLAPSE') To distinct event-type dispatch
+ *
+ * @todo normalize to improve lookup
+ */
+export const mapNodeStates = (
+    frameGroups,
+    activeFramesKey,
+    { frameId, parentId, nodeId, type }
+) => {
+    // updated frameGroups object state
+    const frameGroupsObjectState = {
+        ...frameGroups,
+        [activeFramesKey]: frameGroups[activeFramesKey].map(frame => {
+            const { id, descendant } = frame
 
-        if (id !== frameId) {
-            return frame
-        }
+            if (id !== frameId) return frame
 
-        return {
-            ...frame,
-            descendant: mapOverNodes(descendant, nodeId, type)
-        }
-    })
+            // frameId === destructured {id} from frame
+            if (frameId === parentId && nodeId !== parentId) {
+                return {
+                    ...frame,
+                    descendant: [...descendant, newNode()]
+                }
+            }
 
-// by parent doc id = collection.[parentDocID].subCollection.subCollDoc
+            return {
+                ...frame,
+                descendant: mapOverNodes(parentId, nodeId, descendant, type)
+            }
+        })
+    }
+
+    return frameGroupsObjectState
+}
+
+/**
+ * Firebase document query using parent document ID
+ *
+ * @query firestore.collection(key).doc(parentDocID).collection(subKey)
+ *
+ * @param {package} firestore Firestore package module
+ * @param {array} idFiltersArray ID of each active panel on current workspace
+ * @param {strings} collectionKey Key for collection query
+ * @param {strings} subCollectionKey Key for sub-collection query
+ */
 export const fetchSubCollectionsByDocIds = async (
     firestore,
     idFiltersArray,
