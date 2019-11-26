@@ -5,12 +5,19 @@ import NodeToolbar from '../node-toolbar/node-toolbar'
 
 import styles from './node-content.module.scss'
 
-const NodeContent = ({ title, frameId, nodeId, onCheck, checked }) => {
+const NodeContent = ({
+    title,
+    frameId,
+    nodeId,
+    onCheck,
+    checked,
+    isDragging
+}) => {
     const [isChecked, setIsChecked] = useState(checked)
     const [nodeBody, setNodeBody] = useState(title)
 
     const toggleNodeCheck = () => {
-        onCheck({ frameId, parentId: null, nodeId, type: 'CHECK' })
+        onCheck({ frameId, nodeId, type: 'CHECK' })
         setIsChecked(!isChecked)
     }
 
@@ -22,8 +29,13 @@ const NodeContent = ({ title, frameId, nodeId, onCheck, checked }) => {
         ? styles.svgCheckedVisible
         : styles.svgCheckedHidden
 
+    const extendedNodeContentClass = `
+        ${styles.nodeContent}
+        ${isDragging ? styles.nodeIsDragging : ''}
+    `.trimRight()
+
     return (
-        <div className={styles.nodeContent}>
+        <div className={extendedNodeContentClass}>
             <div className={styles.nodeVisible}>
                 <span className={isCheckedSpan} onClick={toggleNodeCheck}>
                     <CheckBold className={isCheckedSVG} />
@@ -35,7 +47,7 @@ const NodeContent = ({ title, frameId, nodeId, onCheck, checked }) => {
                 />
             </div>
 
-            <NodeToolbar opt={['noPadding']} />
+            <NodeToolbar className={styles.nodeToolbar} opt={['noPadding']} />
         </div>
     )
 }

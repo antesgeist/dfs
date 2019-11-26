@@ -13,7 +13,7 @@ const userDropdownItems = [
     },
     {
         id: 4,
-        title: 'Logout'
+        title: 'Sign Out'
     }
 ]
 

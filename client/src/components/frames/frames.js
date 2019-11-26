@@ -1,10 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
-
-import {
-    toggleNodeCollapse,
-    toggleNodeCheck
-} from '../../store/frame/frame.actions'
 
 import Frame from '../frame/frame'
 import FrameContent from '../frame-content/frame-content'
@@ -12,7 +6,7 @@ import NodeParent from '../node-parent/node-parent'
 
 import styles from './frames.module.scss'
 
-const Frames = ({ frames, isActive, toggleNodeCollapse, toggleNodeCheck }) => {
+const Frames = ({ frames, isActive }) => {
     const extendedClass = `
         ${styles.framesContainer}
         ${isActive ? styles.activeFrames : ''}
@@ -30,8 +24,6 @@ const Frames = ({ frames, isActive, toggleNodeCollapse, toggleNodeCheck }) => {
                                 frameId={id}
                                 root='true'
                                 nodes={descendant}
-                                onCollapse={toggleNodeCollapse}
-                                onCheck={toggleNodeCheck}
                             />
                         </FrameContent>
                     </Frame>
@@ -40,9 +32,4 @@ const Frames = ({ frames, isActive, toggleNodeCollapse, toggleNodeCheck }) => {
     )
 }
 
-const actionCreators = {
-    toggleNodeCollapse,
-    toggleNodeCheck
-}
-
-export default connect(null, actionCreators)(Frames)
+export default Frames

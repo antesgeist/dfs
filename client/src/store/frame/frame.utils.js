@@ -1,86 +1,173 @@
 import nanoid from 'nanoid'
 
-const newNode = () => ({
+const createNewNode = prevSize => ({
     value: `New Node: ${Math.floor(Math.random() * 100)}`,
     state: {
         checked: false,
         collapsed: false
     },
+    order: prevSize + 1,
     id: nanoid(),
     descendant: []
 })
 
-const mapOverNodes = (parentId, nodeId, descendant, actionType) => {
-    return descendant.map(node => {
-        /* base case */
-        if (node.id !== nodeId && !node.descendant.length) return node
+/**
+ * Re order nodes
+ *
+ * @param {array} nodeDescendant Array list to re-order
+ * @param {obj} nodeIndexMap dragEnd event results
+ */
+const reOrderNodes = (nodeDescendant, nodeIndexMap) =>
+    nodeDescendant.map(node => {
+        const { source, dest, draggableId } = nodeIndexMap
 
-        // append node
-        if (actionType === 'APPEND' && node.id === parentId) {
+        // offset source/dest array indices to match order index
+        const sourceOrder = source + 1
+        const destOrder = dest + 1
+
+        // set boundaries for to-be sorted nodes
+        const lowerBound = Math.min(sourceOrder, destOrder)
+        const upperBound = Math.max(sourceOrder, destOrder)
+
+        // CASE 1: Out of bounds / base case
+        if (node.order < lowerBound || node.order > upperBound) {
+            return node
+        }
+
+        // CASE 2: Node === dragged item
+        if (node.id === draggableId) {
             return {
                 ...node,
-                descendant: [...node.descendant, newNode()]
+                order: destOrder
             }
         }
 
-        // toggle node
-        if (node.id === nodeId) {
-            let nodeState
-            let stateKey
+        // CASE 3: Node in-between AND source is LESS THAN dest
+        if (node.order > sourceOrder && node.order < destOrder) {
+            return {
+                ...node,
+                order: node.order - 1
+            }
+        }
+
+        // CASE 4: Node in-between AND source is GREATER THAN dest
+        if (node.order < sourceOrder && node.order > destOrder) {
+            return {
+                ...node,
+                order: node.order + 1
+            }
+        }
+
+        // CASE 5: sourceOrder + 1 === destOrder
+        if (node.order === destOrder && node.order > sourceOrder) {
+            return {
+                ...node,
+                order: node.order - 1
+            }
+        }
+
+        // CASE 6: sourceOrder - 1 === destOrder
+        if (node.order === destOrder && node.order < sourceOrder) {
+            return {
+                ...node,
+                order: node.order + 1
+            }
+        }
+    })
+
+/**
+ * Traverse all nodes
+ *
+ * @param {str} parentId Parent ID reference
+ * @param {str} nodeId Node ID reference
+ * @param {array} descendant Node tree to traverse
+ * @param {obj} nodeIndexMap dragEnd event results
+ * @param {str/upper} actionType Dispatched custom actionType
+ *
+ * todo: create nodeMap/hashTable to optimize node searching
+ * todo: explore tree object diffing
+ */
+const mapOverNodes = (parentId, nodeId, descendant, nodeIndexMap, actionType) =>
+    descendant
+        .sort((a, b) => a.order - b.order)
+        .map(node => {
+            /* base case */
+            if (node.id !== nodeId && node.descendant.length === 0) return node
 
             switch (actionType) {
                 case 'COLLAPSE':
-                    nodeState = !node.state.collapsed
-                    stateKey = 'collapsed'
-                    break
+                    return {
+                        ...node,
+                        state: {
+                            ...node.state,
+                            collapsed: !node.state.collapsed
+                        }
+                    }
+
                 case 'CHECK':
-                    nodeState = !node.state.checked
-                    stateKey = 'checked'
+                    return {
+                        ...node,
+                        state: {
+                            ...node.state,
+                            checked: !node.state.checked
+                        }
+                    }
+
+                case 'APPEND':
+                    if (node.id === nodeId) {
+                        return {
+                            ...node,
+                            descendant: [
+                                ...node.descendant,
+                                createNewNode(node.descendant.length)
+                            ]
+                        }
+                    }
                     break
+
+                case 'DRAG':
+                    if (node.id === parentId) {
+                        return {
+                            ...node,
+                            descendant: reOrderNodes(
+                                node.descendant,
+                                nodeIndexMap
+                            )
+                        }
+                    }
+                    break
+
                 default:
                     break
             }
 
-            return {
-                ...node,
-                state: {
-                    ...node.state,
-                    [stateKey]: nodeState
+            /* recursive case */
+            if (node.descendant.length > 0) {
+                return {
+                    ...node,
+                    descendant: mapOverNodes(
+                        parentId,
+                        nodeId,
+                        node.descendant,
+                        nodeIndexMap,
+                        actionType
+                    )
                 }
             }
-        }
-
-        /* recursive case */
-        if (node.descendant.length > 0) {
-            return {
-                ...node,
-                descendant: mapOverNodes(
-                    parentId,
-                    nodeId,
-                    node.descendant,
-                    actionType
-                )
-            }
-        }
-    })
-}
+        })
 
 /**
  * Map over frameGroups object state to update toggle node state
  *
- * @param {object} frameGroups All frame groups object
+ * @param {object} frameGroups All frame groups
  * @param {string} activeFramesKey Key to lookup target frameGroups array
  * @param {string} frameId To find matching frame id from array
  * @param {string} nodeId Used for recursive node search
  * @param {string/upper} type = ('CHECK', 'COLLAPSE') To distinct event-type dispatch
- *
- * @todo normalize to improve lookup
  */
-export const mapNodeStates = (
-    frameGroups,
-    activeFramesKey,
-    { frameId, parentId, nodeId, type }
-) => {
+export const mapNodeStates = (frameGroups, activeFramesKey, payload) => {
+    const { frameId, parentId, nodeId, nodeIndexMap, type } = payload
+
     // updated frameGroups object state
     const frameGroupsObjectState = {
         ...frameGroups,
@@ -90,16 +177,33 @@ export const mapNodeStates = (
             if (id !== frameId) return frame
 
             // frameId === destructured {id} from frame
-            if (frameId === parentId && nodeId !== parentId) {
+            if (type === 'APPEND' && nodeId === undefined) {
                 return {
                     ...frame,
-                    descendant: [...descendant, newNode()]
+                    descendant: [
+                        ...descendant,
+                        createNewNode(descendant.length)
+                    ]
+                }
+            }
+
+            if (type === 'DRAG' && frameId === parentId) {
+                console.log(frameId, parentId, nodeId)
+                return {
+                    ...frame,
+                    descendant: reOrderNodes(descendant, nodeIndexMap)
                 }
             }
 
             return {
                 ...frame,
-                descendant: mapOverNodes(parentId, nodeId, descendant, type)
+                descendant: mapOverNodes(
+                    parentId,
+                    nodeId,
+                    descendant,
+                    nodeIndexMap,
+                    type
+                )
             }
         })
     }

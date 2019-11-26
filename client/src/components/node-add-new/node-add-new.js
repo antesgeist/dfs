@@ -8,23 +8,17 @@ import { PlusOutline } from '../icons/icons'
 
 import styles from './node-add-new.module.scss'
 
-const NodeAddNew = ({ frameId, parentId, appendNewNode }) => {
+const NodeAddNew = ({ frameId, parentId, nodeId, appendNewNode }) => {
     const onInsertNode = () => {
-        appendNewNode({ frameId, parentId, nodeId: null, type: 'APPEND' })
+        appendNewNode({ frameId, parentId, nodeId, type: 'APPEND' })
     }
-
-    // get insertNode position
-
-    // create action type | add to pos(getPos)
-    // create action add new node action
-    // create reducer to map action
 
     return (
         <li className={styles.nodeAddNew}>
             <Button
                 svg={<PlusOutline className={styles.svgPlusOutline} />}
                 opt={['noPadding']}
-                onClick={() => onInsertNode()}
+                onClick={onInsertNode}
             />
         </li>
     )

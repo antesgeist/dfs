@@ -3,6 +3,12 @@
 .nodeContent {
     @include lines; /* move to placeholders */
 
+    &.nodeIsDragging {
+        &:before {
+            border-left: 0;
+        }
+    }
+
     display: flex;
     align-items: center;
     padding-left: 0.7rem;
@@ -34,9 +40,20 @@
         color: #fff;
         border: 0;
         padding: 2px 4px;
+        pointer-events: none;
 
         &:focus {
             box-shadow: 0px 0px 0px 1px inset #ffffff1a;
+        }
+    }
+
+    .nodeToolbar {
+        visibility: hidden;
+    }
+    
+    &:hover {
+        .nodeToolbar {
+            visibility: visible;
         }
     }
 }

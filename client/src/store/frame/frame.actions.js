@@ -38,14 +38,14 @@ export const fetchFramesAsync = framesFilter => dispatch => {
 
 /* TOGGLES */
 
-export const toggleNodeCollapse = ({ frameId, parentId, nodeId, type }) => ({
+export const toggleNodeCollapse = ({ frameId, nodeId, type }) => ({
     type: FrameActionTypes.TOGGLE_NODE_COLLAPSE,
-    payload: { frameId, parentId, nodeId, type }
+    payload: { frameId, nodeId, type }
 })
 
-export const toggleNodeCheck = ({ frameId, parentId, nodeId, type }) => ({
+export const toggleNodeCheck = ({ frameId, nodeId, type }) => ({
     type: FrameActionTypes.TOGGLE_NODE_CHECK_ONE,
-    payload: { frameId, parentId, nodeId, type }
+    payload: { frameId, nodeId, type }
 })
 
 /* ADD NEW NODE */
@@ -53,4 +53,11 @@ export const toggleNodeCheck = ({ frameId, parentId, nodeId, type }) => ({
 export const appendNewNode = ({ frameId, parentId, nodeId, type }) => ({
     type: FrameActionTypes.APPEND_NEW_NODE,
     payload: { frameId, parentId, nodeId, type }
+})
+
+/* DRAG NODES */
+
+export const dragChildNode = ({ frameId, parentId, nodeIndexMap, type }) => ({
+    type: FrameActionTypes.DRAG_CHILD_NODE,
+    payload: { frameId, parentId, nodeIndexMap, type }
 })

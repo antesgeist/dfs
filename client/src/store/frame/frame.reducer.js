@@ -44,6 +44,8 @@ const frameReducer = (state = INITIAL_STATE, { type, payload }) => {
                 )
             }
 
+        /* TOGGLE EVENTS */
+
         case FrameActionTypes.TOGGLE_NODE_CHECK_ONE:
             return {
                 ...state,
@@ -62,6 +64,19 @@ const frameReducer = (state = INITIAL_STATE, { type, payload }) => {
                     payload
                 )
             }
+
+        /* DRAG EVENTS */
+
+        case FrameActionTypes.DRAG_CHILD_NODE:
+            return {
+                ...state,
+                frameGroups: mapNodeStates(
+                    frameGroups,
+                    activeFrameGroup,
+                    payload
+                )
+            }
+
         default:
             return state
     }
