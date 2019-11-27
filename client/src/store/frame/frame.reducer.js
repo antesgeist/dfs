@@ -1,4 +1,7 @@
+import produce from 'immer'
+
 import FrameActionTypes from './frame.types'
+
 import { mapNodeStates } from './frame.utils'
 
 const INITIAL_STATE = {
@@ -8,78 +11,66 @@ const INITIAL_STATE = {
     errorMessage: null
 }
 
-const frameReducer = (state = INITIAL_STATE, { type, payload }) => {
-    const { frameGroups, activeFrameGroup } = state
+const frameReducer = (state = INITIAL_STATE, { type, payload }) =>
+    produce(state, draft => {
+        const { frameGroups, activeFrameGroup } = draft
 
-    switch (type) {
-        case FrameActionTypes.FETCH_START:
-            return {
-                ...state,
-                isFetching: true
-            }
-        case FrameActionTypes.FETCH_SUCCESS:
-            return {
-                ...state,
-                isFetching: false,
-                frameGroups: payload
-            }
-        case FrameActionTypes.FETCH_FAILURE:
-            return {
-                ...state,
-                isFetching: false,
-                errorMessage: payload
-            }
-        case FrameActionTypes.SET_ACTIVE_GROUP:
-            return {
-                ...state,
-                activeFrameGroup: payload
-            }
-        case FrameActionTypes.TOGGLE_NODE_COLLAPSE:
-            return {
-                ...state,
-                frameGroups: mapNodeStates(
+        switch (type) {
+            case FrameActionTypes.FETCH_START:
+                draft.isFetching = true
+                break
+
+            case FrameActionTypes.FETCH_SUCCESS:
+                draft.isFetching = false
+                draft.frameGroups = payload
+                break
+
+            case FrameActionTypes.FETCH_FAILURE:
+                draft.isFetching = false
+                draft.errorMessage = payload
+                break
+
+            case FrameActionTypes.SET_ACTIVE_GROUP:
+                draft.activeFrameGroup = payload
+                break
+            case FrameActionTypes.TOGGLE_NODE_COLLAPSE:
+                draft.frameGroups = mapNodeStates(
                     frameGroups,
                     activeFrameGroup,
                     payload
                 )
-            }
+                break
 
-        /* TOGGLE EVENTS */
+            /* TOGGLE EVENTS */
 
-        case FrameActionTypes.TOGGLE_NODE_CHECK_ONE:
-            return {
-                ...state,
-                frameGroups: mapNodeStates(
+            case FrameActionTypes.TOGGLE_NODE_CHECK_ONE:
+                draft.frameGroups = mapNodeStates(
                     frameGroups,
                     activeFrameGroup,
                     payload
                 )
-            }
-        case FrameActionTypes.APPEND_NEW_NODE:
-            return {
-                ...state,
-                frameGroups: mapNodeStates(
+                break
+            case FrameActionTypes.APPEND_TO_PARENT_NODE:
+                draft.frameGroups = mapNodeStates(
                     frameGroups,
                     activeFrameGroup,
                     payload
                 )
-            }
+                break
 
-        /* DRAG EVENTS */
+            /* DRAG EVENTS */
 
-        case FrameActionTypes.DRAG_CHILD_NODE:
-            return {
-                ...state,
-                frameGroups: mapNodeStates(
+            case FrameActionTypes.DRAG_CHILD_NODE:
+                draft.frameGroups = mapNodeStates(
                     frameGroups,
                     activeFrameGroup,
                     payload
                 )
-            }
+                break
 
-        default:
-            return state
-    }
-}
+            default:
+                return draft
+        }
+    })
 
 export default frameReducer

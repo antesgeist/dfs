@@ -24,16 +24,17 @@ export const setActiveFrameGroup = frameGroupId => ({
     payload: frameGroupId
 })
 
-export const fetchFramesAsync = framesFilter => dispatch => {
+export const fetchFramesAsync = framesFilter => async dispatch => {
     dispatch(fetchFramesStart())
 
-    const fetchProps = [firestore, framesFilter, 'frames', 'frame_group']
+    try {
+        const fetchProps = [firestore, framesFilter, 'frames', 'frame_group']
+        const frameGroups = await fetchSubCollectionsByDocIds(...fetchProps)
 
-    fetchSubCollectionsByDocIds(...fetchProps)
-        .then(frameGroups => {
-            dispatch(fetchFramesSuccess(frameGroups))
-        })
-        .catch(error => dispatch(fetchFramesFailure(error.message)))
+        dispatch(fetchFramesSuccess(frameGroups))
+    } catch (error) {
+        dispatch(fetchFramesFailure(error.message))
+    }
 }
 
 /* TOGGLES */
@@ -51,7 +52,7 @@ export const toggleNodeCheck = ({ frameId, nodeId, type }) => ({
 /* ADD NEW NODE */
 
 export const appendNewNode = ({ frameId, parentId, nodeId, type }) => ({
-    type: FrameActionTypes.APPEND_NEW_NODE,
+    type: FrameActionTypes.APPEND_TO_PARENT_NODE,
     payload: { frameId, parentId, nodeId, type }
 })
 

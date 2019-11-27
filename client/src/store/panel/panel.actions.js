@@ -3,7 +3,7 @@ import PanelActionTypes from './panel.types'
 import { firestore } from '../../firebase/firebase.utils'
 import { transformPanelSnapshot } from './panel.utils'
 
-import { setActiveFrameGroup } from '../frame/frame.actions'
+import { setActiveFrameGroup, fetchFramesAsync } from '../frame/frame.actions'
 
 export const fetchPanelsStart = () => ({
     type: PanelActionTypes.FETCH_START
@@ -47,11 +47,13 @@ export const fetchPanelsAsync = (
                 return { id, frames_uid }
             }, {})
 
+    const getframesFilter = panels => panels.map(({ frames_uid }) => frames_uid)
+
     let unsubscribe = null
 
     unsubscribe = panelsRef.onSnapshot(async snapshot => {
         try {
-            const transformedSnapshot = transformPanelSnapshot(
+            const transformedSnapshot = await transformPanelSnapshot(
                 snapshot,
                 panelFilter
             )
@@ -60,6 +62,10 @@ export const fetchPanelsAsync = (
 
             dispatch(fetchPanelsSuccess(transformedSnapshot))
             dispatch(setActivePanel(id, frames_uid))
+
+            const framesFilter = getframesFilter(transformedSnapshot)
+
+            dispatch(fetchFramesAsync(framesFilter))
 
             setUnsubscribe(unsubscribe)
         } catch (error) {

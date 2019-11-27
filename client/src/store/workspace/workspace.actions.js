@@ -35,7 +35,7 @@ export const fetchWorkspaceAsync = (
 
     let unsubscribe = null
 
-    unsubscribe = workspaceRef.onSnapshot(async snapshot => {
+    unsubscribe = workspaceRef.onSnapshot(snapshot => {
         try {
             const panelGroups = formatWorkspaceSnapshot(snapshot)
 

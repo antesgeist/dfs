@@ -1,4 +1,5 @@
 import nanoid from 'nanoid'
+import produce from 'immer'
 
 const createNewNode = prevSize => ({
     value: `New Node: ${Math.floor(Math.random() * 100)}`,
@@ -16,6 +17,10 @@ const createNewNode = prevSize => ({
  *
  * @param {array} nodeDescendant Array list to re-order
  * @param {obj} nodeIndexMap dragEnd event results
+ *
+ * // todo: search for large array list re-ordering performance vs
+ * // todo: ... splicing/re-ordering array by index
+ * // todo: create custom mapping function within the array bounds only
  */
 const reOrderNodes = (nodeDescendant, nodeIndexMap) =>
     nodeDescendant.map(node => {
@@ -75,17 +80,67 @@ const reOrderNodes = (nodeDescendant, nodeIndexMap) =>
         }
     })
 
+const mutateDraftNode = (node, target, sourceOrder, destOrder) => {
+    if (node.id === target) {
+        // CASE 1: Node === dragged item
+        node.order = destOrder
+    } else if (node.order > sourceOrder && node.order < destOrder) {
+        // CASE 2: Node in-between AND source is LESS THAN dest
+        node.order -= 1
+    } else if (node.order < sourceOrder && node.order > destOrder) {
+        // CASE 3: Node in-between AND source is GREATER THAN dest
+        node.order += 1
+    } else if (node.order === destOrder && node.order > sourceOrder) {
+        // CASE 4: sourceOrder + 1 === destOrder
+        node.order -= 1
+    } else if (node.order === destOrder && node.order < sourceOrder) {
+        // CASE 5: sourceOrder - 1 === destOrder
+        node.order += 1
+    }
+}
+
+/**
+ * Optimized Re-ordering Routine
+ * Only accepts object as state argument
+ *
+ * @param {Object} draft - Mutable draft state
+ * @param {Object} nodeIndexMap - DragEnd event result
+ * @param {string} arrayActionType - Ordering action type
+ */
+const orderNodes = produce((draft, nodeIndexMap, actionType) => {
+    // get dragEnd results
+    const { source, dest, draggableId } = nodeIndexMap
+
+    // set boundaries for to-be sorted nodes
+    let lowerBound = Math.min(source, dest)
+    const upperBound = Math.max(source, dest)
+
+    // offset source/dest array indices to match order index
+    const sourceOrder = source + 1
+    const destOrder = dest + 1
+
+    // modify array at indices within lower and upper bounds
+    while (lowerBound <= upperBound) {
+        const node = draft.array[lowerBound]
+
+        mutateDraftNode(node, draggableId, sourceOrder, destOrder)
+
+        lowerBound++
+    }
+})
+
 /**
  * Traverse all nodes
  *
- * @param {str} parentId Parent ID reference
- * @param {str} nodeId Node ID reference
+ * @param {string} parentId Parent ID reference
+ * @param {string} nodeId Node ID reference
  * @param {array} descendant Node tree to traverse
- * @param {obj} nodeIndexMap dragEnd event results
- * @param {str/upper} actionType Dispatched custom actionType
+ * @param {Object} nodeIndexMap dragEnd event results
+ * @param {string/upper} actionType Dispatched custom actionType
  *
  * todo: create nodeMap/hashTable to optimize node searching
  * todo: explore tree object diffing
+ * todo: integrate immer
  */
 const mapOverNodes = (parentId, nodeId, descendant, nodeIndexMap, actionType) =>
     descendant
@@ -127,12 +182,15 @@ const mapOverNodes = (parentId, nodeId, descendant, nodeIndexMap, actionType) =>
 
                 case 'DRAG':
                     if (node.id === parentId) {
+                        const { array } = orderNodes(
+                            { array: node.descendant },
+                            nodeIndexMap,
+                            null
+                        )
+
                         return {
                             ...node,
-                            descendant: reOrderNodes(
-                                node.descendant,
-                                nodeIndexMap
-                            )
+                            descendant: array
                         }
                     }
                     break
@@ -188,10 +246,15 @@ export const mapNodeStates = (frameGroups, activeFramesKey, payload) => {
             }
 
             if (type === 'DRAG' && frameId === parentId) {
-                console.log(frameId, parentId, nodeId)
+                const { array } = orderNodes(
+                    { array: descendant },
+                    nodeIndexMap,
+                    null
+                )
+
                 return {
                     ...frame,
-                    descendant: reOrderNodes(descendant, nodeIndexMap)
+                    descendant: array
                 }
             }
 
@@ -237,6 +300,7 @@ export const fetchSubCollectionsByDocIds = async (
 
     const collectionRefs = await Promise.all(queries)
 
+    // reduce and resolve promises
     const frameGroups = await collectionRefs.reduce(
         async (collectionObj, collectionRef) => {
             const subCollectionArray = []
