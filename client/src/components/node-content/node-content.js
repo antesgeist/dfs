@@ -47,7 +47,12 @@ const NodeContent = ({
                 />
             </div>
 
-            <NodeToolbar className={styles.nodeToolbar} opt={['noPadding']} />
+            <NodeToolbar
+                className={styles.nodeToolbar}
+                frameId={frameId}
+                nodeId={nodeId}
+                opt={['noPadding']}
+            />
         </div>
     )
 }

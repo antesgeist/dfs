@@ -16,7 +16,7 @@ import { selectFrameGroup } from '../../store/frame/frame.selectors'
 import styles from './workspace.module.scss'
 
 const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, frames }) => {
-    // export to custom hook
+    // todo: export to custom hook
     useEffect(() => {
         let unsubFromWorkspace = () => {}
         let unsubFromPanels = () => {}
@@ -29,7 +29,8 @@ const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, frames }) => {
             unsubFromWorkspace = unsubFromSnapshot
         }
 
-        // don't select all panels, use boolean property instead
+        // todo: don't select all panels, use boolean property instead
+        // todo: refactor to use firebase get() instead of onSnapshot
         if (!panels && currentUser) {
             const { workspace_id, panels_id } = currentUser
 
@@ -41,6 +42,7 @@ const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, frames }) => {
             )
         }
 
+        // todo: remove this junk
         return () => {
             unsubFromPanels()
             unsubFromWorkspace()
@@ -51,10 +53,10 @@ const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, frames }) => {
         <div className={styles.workspaceContainer}>
             <WorkspaceHeader />
             <Sidebar />
-            {frames ? (
-                <Panel panels={panels} frames={frames} />
-            ) : (
+            {!frames ? (
                 <CanvasPlaceholder />
+            ) : (
+                <Panel panels={panels} frames={frames} />
             )}
         </div>
     )

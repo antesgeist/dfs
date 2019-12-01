@@ -1,7 +1,7 @@
 import nanoid from 'nanoid'
 import produce from 'immer'
 
-const createNewNode = prevSize => ({
+const createNewNode = (prevSize = 0) => ({
     value: `New Node: ${Math.floor(Math.random() * 100)}`,
     state: {
         checked: false,
@@ -130,6 +130,12 @@ const orderNodes = produce((draft, nodeIndexMap, actionType) => {
 })
 
 /**
+ *
+ * @param {string} position NodeID reference
+ */
+// const appendChildNode = produce((draft, position) => {})
+
+/**
  * Traverse all nodes
  *
  * @param {string} parentId Parent ID reference
@@ -195,6 +201,18 @@ const mapOverNodes = (parentId, nodeId, descendant, nodeIndexMap, actionType) =>
                     }
                     break
 
+                case 'APPEND_AS_CHILD':
+                    if (node.id === nodeId) {
+                        return {
+                            ...node,
+                            descendant: [
+                                ...node.descendant,
+                                createNewNode(node.descendant.length)
+                            ]
+                        }
+                    }
+                    break
+
                 default:
                     break
             }
@@ -214,6 +232,90 @@ const mapOverNodes = (parentId, nodeId, descendant, nodeIndexMap, actionType) =>
             }
         })
 
+const mapOverNodesOptimized = produce(
+    (descendant, parentId, nodeId, nodeIndexMap, actionType) => {
+        descendant.map(node => {
+            /* base case */
+            if (node.id !== nodeId && node.descendant.length === 0) return node
+
+            switch (actionType) {
+                case 'COLLAPSE':
+                    return {
+                        ...node,
+                        state: {
+                            ...node.state,
+                            collapsed: !node.state.collapsed
+                        }
+                    }
+
+                case 'CHECK':
+                    return {
+                        ...node,
+                        state: {
+                            ...node.state,
+                            checked: !node.state.checked
+                        }
+                    }
+
+                case 'APPEND':
+                    if (node.id === nodeId) {
+                        return {
+                            ...node,
+                            descendant: [
+                                ...node.descendant,
+                                createNewNode(node.descendant.length)
+                            ]
+                        }
+                    }
+                    break
+
+                case 'DRAG':
+                    if (node.id === parentId) {
+                        const { array } = orderNodes(
+                            { array: node.descendant },
+                            nodeIndexMap,
+                            null
+                        )
+
+                        return {
+                            ...node,
+                            descendant: array
+                        }
+                    }
+                    break
+
+                case 'APPEND_AS_CHILD':
+                    if (node.id === nodeId) {
+                        return {
+                            ...node,
+                            descendant: [
+                                ...node.descendant,
+                                createNewNode(node.descendant.length)
+                            ]
+                        }
+                    }
+                    break
+
+                default:
+                    break
+            }
+
+            /* recursive case */
+            if (node.descendant.length > 0) {
+                return {
+                    ...node,
+                    descendant: mapOverNodes(
+                        parentId,
+                        nodeId,
+                        node.descendant,
+                        nodeIndexMap,
+                        actionType
+                    )
+                }
+            }
+        })
+    }
+)
 /**
  * Map over frameGroups object state to update toggle node state
  *
@@ -298,6 +400,19 @@ export const fetchSubCollectionsByDocIds = async (
             .collection(subCollectionKey)
     )
 
+    /* 
+        new state shape
+
+        {
+            users: { ... },
+            workspace: { ... },
+            panels: { ... },
+            frames: { ... },
+            nodes: { ... },
+            comments: { ... },
+        }
+    */
+
     const collectionRefs = await Promise.all(queries)
 
     // reduce and resolve promises
@@ -305,7 +420,7 @@ export const fetchSubCollectionsByDocIds = async (
         async (collectionObj, collectionRef) => {
             const subCollectionArray = []
 
-            // returns unsubscribe function = void
+            // returns querySnapshot object
             const querySnapshot = await collectionRef.get()
 
             querySnapshot.docs.forEach(doc =>

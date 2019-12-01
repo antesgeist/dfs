@@ -33,6 +33,10 @@ const frameReducer = (state = INITIAL_STATE, { type, payload }) =>
             case FrameActionTypes.SET_ACTIVE_GROUP:
                 draft.activeFrameGroup = payload
                 break
+
+            /* TOGGLE EVENTS */
+            // todo: refactor all succeeding cases into a dynamic reducer
+
             case FrameActionTypes.TOGGLE_NODE_COLLAPSE:
                 draft.frameGroups = mapNodeStates(
                     frameGroups,
@@ -41,16 +45,7 @@ const frameReducer = (state = INITIAL_STATE, { type, payload }) =>
                 )
                 break
 
-            /* TOGGLE EVENTS */
-
             case FrameActionTypes.TOGGLE_NODE_CHECK_ONE:
-                draft.frameGroups = mapNodeStates(
-                    frameGroups,
-                    activeFrameGroup,
-                    payload
-                )
-                break
-            case FrameActionTypes.APPEND_TO_PARENT_NODE:
                 draft.frameGroups = mapNodeStates(
                     frameGroups,
                     activeFrameGroup,
@@ -61,6 +56,24 @@ const frameReducer = (state = INITIAL_STATE, { type, payload }) =>
             /* DRAG EVENTS */
 
             case FrameActionTypes.DRAG_CHILD_NODE:
+                draft.frameGroups = mapNodeStates(
+                    frameGroups,
+                    activeFrameGroup,
+                    payload
+                )
+                break
+
+            /* APPEND EVENTS */
+
+            case FrameActionTypes.APPEND_TO_PARENT_NODE:
+                draft.frameGroups = mapNodeStates(
+                    frameGroups,
+                    activeFrameGroup,
+                    payload
+                )
+                break
+
+            case FrameActionTypes.APPEND_CHILD_NODE:
                 draft.frameGroups = mapNodeStates(
                     frameGroups,
                     activeFrameGroup,

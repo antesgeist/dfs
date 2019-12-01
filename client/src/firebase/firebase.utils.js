@@ -41,6 +41,9 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
 firebase.initializeApp(config)
 
+/**
+ * Push updates to Firebase collections
+ */
 export const addCollectionAndDocuments = async (
     firestore,
     docId,

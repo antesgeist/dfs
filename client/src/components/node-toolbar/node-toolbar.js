@@ -1,15 +1,23 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
+
+import { appendChildNode } from '../../store/frame/frame.actions'
 
 import Button from '../common/button/button'
 import { Gear, Maximize, Close, Copy, Stack, Plus } from '../icons/icons'
 
 import styles from './node-toolbar.module.scss'
 
-const NodeToolbar = ({ opt }) => {
+const NodeToolbar = ({ opt, frameId, nodeId, appendChildNode }) => {
     const [extendedTools, setExtendedTools] = useState(false)
 
     const onToggleExtTools = tools => {
         setExtendedTools(!tools)
+    }
+
+    const onAppendChildNode = () => {
+        console.log('append child')
+        appendChildNode({ frameId, nodeId, type: 'APPEND_AS_CHILD' })
     }
 
     return (
@@ -37,6 +45,7 @@ const NodeToolbar = ({ opt }) => {
                         <Button
                             svg={<Stack className={styles.nodeAppendChild} />}
                             opt={opt}
+                            onClick={onAppendChildNode}
                         />
                         <Button
                             svg={<Plus className={styles.nodeAppendSibling} />}
@@ -49,4 +58,6 @@ const NodeToolbar = ({ opt }) => {
     )
 }
 
-export default NodeToolbar
+const actionCreators = { appendChildNode }
+
+export default connect(null, actionCreators)(NodeToolbar)

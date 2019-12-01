@@ -15,7 +15,7 @@ const Frames = ({ frames, isActive }) => {
     return (
         <div className={extendedClass}>
             {frames
-                .sort((a, b) => (a.order < b.order ? -1 : 1))
+                // .sort((a, b) => (a.order < b.order ? -1 : 1))
                 .map(({ id, title, descendant }) => (
                     <Frame key={id} title={title}>
                         <FrameContent>

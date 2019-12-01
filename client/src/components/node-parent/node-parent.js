@@ -26,7 +26,7 @@ const mapNodesToParent = (
     toggleNodeCheck
 ) =>
     nodes
-        .sort((a, b) => a.order - b.order)
+        // .sort((a, b) => a.order - b.order)
         .map((node, idx) => {
             const { id, value, descendant, state } = node
 
