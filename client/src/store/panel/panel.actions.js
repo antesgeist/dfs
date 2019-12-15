@@ -1,17 +1,19 @@
 import PanelActionTypes from './panel.types'
 
-import { firestore } from '../../firebase/firebase.utils'
-import { transformPanelSnapshot } from './panel.utils'
+import { formatSnapshotsForDispatch } from '../store.utils'
 
-import { setActiveFrameGroup, fetchFramesAsync } from '../frame/frame.actions'
+import {
+    setActiveFrameGroup,
+    fetchFramesAsync
+} from '../frame/frame.actions'
 
 export const fetchPanelsStart = () => ({
     type: PanelActionTypes.FETCH_START
 })
 
-export const fetchPanelsSuccess = panels => ({
+export const fetchPanelsSuccess = panelStates => ({
     type: PanelActionTypes.FETCH_SUCCESS,
-    payload: panels
+    payload: panelStates
 })
 
 export const fetchPanelsFailure = errorMessage => ({
@@ -28,50 +30,26 @@ export const setActivePanel = (panelId, framesId) => dispatch => {
     dispatch(setActiveFrameGroup(framesId))
 }
 
-export const fetchPanelsAsync = (
-    panelId,
-    panelFilter,
-    setUnsubscribe
-) => dispatch => {
+export const fetchPanelsAsync = panelGroupId => async dispatch => {
     dispatch(fetchPanelsStart())
 
-    const panelsRef = firestore
-        .collection('panels')
-        .doc(panelId)
-        .collection('panel_group')
+    try {
+        const formatArgs = [panelGroupId, 'panels', 'frames']
+        const panelSnapshots = await formatSnapshotsForDispatch(
+            ...formatArgs
+        )
 
-    const selectActivePanel = panels =>
-        panels
-            .filter(({ is_active }) => is_active)
-            .reduce((activeIds, { id, frames_uid }) => {
-                return { id, frames_uid }
-            }, {})
+        const {
+            group,
+            activeGroupId,
+            order,
+            nextGroupId
+        } = panelSnapshots
 
-    const getframesFilter = panels => panels.map(({ frames_uid }) => frames_uid)
+        dispatch(fetchPanelsSuccess({ group, activeGroupId, order }))
 
-    let unsubscribe = null
-
-    unsubscribe = panelsRef.onSnapshot(async snapshot => {
-        try {
-            const transformedSnapshot = await transformPanelSnapshot(
-                snapshot,
-                panelFilter
-            )
-
-            const { id, frames_uid } = selectActivePanel(transformedSnapshot)
-
-            dispatch(fetchPanelsSuccess(transformedSnapshot))
-            dispatch(setActivePanel(id, frames_uid))
-
-            const framesFilter = getframesFilter(transformedSnapshot)
-
-            dispatch(fetchFramesAsync(framesFilter))
-
-            setUnsubscribe(unsubscribe)
-        } catch (error) {
-            dispatch(fetchPanelsFailure(error.message))
-        }
-    })
-
-    return unsubscribe
+        dispatch(fetchFramesAsync(nextGroupId))
+    } catch (error) {
+        dispatch(fetchPanelsFailure(error))
+    }
 }

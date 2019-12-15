@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import { selectCurrentUser } from '../../../store/user/user.selectors'
+import { selectCurrentUser } from '../../../store/auth/auth.selectors'
 import { selectPanels } from '../../../store/panel/panel.selectors'
 
 import tabOptions from './tab-options'

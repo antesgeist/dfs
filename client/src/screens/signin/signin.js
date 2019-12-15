@@ -9,7 +9,7 @@ import {
     emailSignInStart,
     googleSignInStart,
     signInFailure
-} from '../../store/user/user.actions'
+} from '../../store/auth/auth.actions'
 
 import PageDefault from '../../components/page-default/page-default'
 import { Lock, EmailOutline } from '../../components/icons/icons'

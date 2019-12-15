@@ -6,7 +6,7 @@ import { AccountPlain } from '../icons/icons'
 import Dropdown from '../common/dropdown/dropdown'
 
 import userDropdownItems from './user-dropdown-items'
-import { selectUserDisplayName } from '../../store/user/user.selectors'
+import { selectUserDisplayName } from '../../store/auth/auth.selectors'
 
 import styles from './workspace-user.module.scss'
 

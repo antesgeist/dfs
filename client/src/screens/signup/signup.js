@@ -42,7 +42,7 @@ const SignUp = () => {
                 password
             )
 
-            await createUserProfileDocument(user, { displayName })
+            await createUserProfileDocument(user, { display_name: displayName })
             setSubmitting(false)
         } catch (error) {
             console.error(error)

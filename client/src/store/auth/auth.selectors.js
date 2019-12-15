@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect'
 
-const selectUser = state => state.user
+const selectAuthState = state => state.auth
 
 export const selectCurrentUser = createSelector(
-    [selectUser],
-    user => user.currentUser
+    [selectAuthState],
+    auth => auth.currentUser
 )
 
 export const selectUserDisplayName = createSelector(
@@ -13,6 +13,6 @@ export const selectUserDisplayName = createSelector(
 )
 
 export const selectIsUserFetching = createSelector(
-    [selectUser],
-    user => user.isFetching
+    [selectAuthState],
+    auth => auth.isFetching
 )

@@ -1,6 +1,5 @@
 export const formatWorkspaceSnapshot = snapshot =>
     snapshot.docs.reduce((cur, doc) => {
-        const { panel_groups } = doc.data()
-
-        return [...panel_groups]
-    }, [])
+        const { id } = doc.data()
+        return { [id]: doc.data() }
+    }, {})

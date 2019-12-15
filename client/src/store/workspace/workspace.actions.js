@@ -2,6 +2,7 @@ import WorkspaceActionTypes from './workspace.types'
 
 import { firestore } from '../../firebase/firebase.utils'
 import { formatWorkspaceSnapshot } from './workspace.utils'
+import { formatSnapshotsForDispatch } from '../store.utils'
 
 import { fetchPanelsAsync } from '../panel/panel.actions'
 
@@ -9,9 +10,9 @@ export const fetchWorkspaceStart = () => ({
     type: WorkspaceActionTypes.FETCH_START
 })
 
-export const fetchWorkspaceSuccess = workspaces => ({
+export const fetchWorkspaceSuccess = workspaceGroups => ({
     type: WorkspaceActionTypes.FETCH_SUCCESS,
-    payload: workspaces
+    payload: workspaceGroups
 })
 
 export const fetchWorkspaceFailure = errorMessage => ({
@@ -19,39 +20,31 @@ export const fetchWorkspaceFailure = errorMessage => ({
     payload: errorMessage
 })
 
-export const fetchWorkspaceAsync = (
-    workspaceId,
-    panelsId,
-    setUnsubFromWorkspace,
-    setUnsubFromPanels
-) => dispatch => {
+export const fetchWorkspaceAsync = workspaceGroupId => async dispatch => {
     dispatch(fetchWorkspaceStart())
 
-    const workspaceRef = firestore
-        .collection('workspaces')
-        .doc(workspaceId)
-        .collection('workspace_group')
-        .where('is_active', '==', true)
+    try {
+        const formatArgs = [workspaceGroupId, 'workspaces', 'panels']
 
-    let unsubscribe = null
+        const workspaceSnapshots = await formatSnapshotsForDispatch(
+            ...formatArgs
+        )
 
-    unsubscribe = workspaceRef.onSnapshot(snapshot => {
-        try {
-            const panelGroups = formatWorkspaceSnapshot(snapshot)
+        const {
+            group,
+            activeGroupId,
+            order,
+            nextGroupId
+        } = workspaceSnapshots
 
-            // 1 - fetch workspace panels
-            dispatch(fetchWorkspaceSuccess(panelGroups))
+        /* WORKSPACE */
+        dispatch(
+            fetchWorkspaceSuccess({ group, activeGroupId, order })
+        )
 
-            // 2 - fetch panel where panel = workspace panels
-            dispatch(
-                fetchPanelsAsync(panelsId, panelGroups, setUnsubFromPanels)
-            )
-
-            setUnsubFromWorkspace(unsubscribe)
-        } catch (error) {
-            dispatch(fetchWorkspaceFailure(error.message))
-        }
-    })
-
-    return unsubscribe
+        /* PANELS */
+        dispatch(fetchPanelsAsync(nextGroupId))
+    } catch (error) {
+        dispatch(fetchWorkspaceFailure(error.message))
+    }
 }

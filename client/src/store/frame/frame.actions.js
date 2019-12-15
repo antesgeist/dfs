@@ -1,7 +1,6 @@
 import FrameActionTypes from './frame.types'
 
-import { firestore } from '../../firebase/firebase.utils'
-import { fetchSubCollectionsByDocIds } from './frame.utils'
+import { formatSnapshotsForDispatch } from '../store.utils'
 
 /* Fetch Frames */
 
@@ -24,16 +23,27 @@ export const setActiveFrameGroup = frameGroupId => ({
     payload: frameGroupId
 })
 
-export const fetchFramesAsync = framesFilter => async dispatch => {
+export const fetchFramesAsync = frameGroupId => async dispatch => {
     dispatch(fetchFramesStart())
 
     try {
-        const fetchProps = [firestore, framesFilter, 'frames', 'frame_group']
-        const frameGroups = await fetchSubCollectionsByDocIds(...fetchProps)
+        // const fetchProps = [firestore, framesFilter, 'frames', 'frame_group']
+        // const frameGroups = await fetchSubCollectionsByDocIds(...fetchProps)
 
-        console.log(frameGroups)
+        const fetchArgs = [frameGroupId, 'frames', 'frame_nodes']
 
-        dispatch(fetchFramesSuccess(frameGroups))
+        const frameSnapshots = await formatSnapshotsForDispatch(
+            ...fetchArgs
+        )
+
+        const {
+            group,
+            activeGroupId,
+            order,
+            nextGroupId
+        } = frameSnapshots
+
+        dispatch(fetchFramesSuccess({ group, activeGroupId, order }))
     } catch (error) {
         dispatch(fetchFramesFailure(error.message))
     }
@@ -53,14 +63,24 @@ export const toggleNodeCheck = ({ frameId, nodeId, type }) => ({
 
 /* EVENT: DRAG */
 
-export const dragChildNode = ({ frameId, parentId, nodeIndexMap, type }) => ({
+export const dragChildNode = ({
+    frameId,
+    parentId,
+    nodeIndexMap,
+    type
+}) => ({
     type: FrameActionTypes.DRAG_CHILD_NODE,
     payload: { frameId, parentId, nodeIndexMap, type }
 })
 
 /* EVENT: APPEND/ADD */
 
-export const appendNewNode = ({ frameId, parentId, nodeId, type }) => ({
+export const appendNewNode = ({
+    frameId,
+    parentId,
+    nodeId,
+    type
+}) => ({
     type: FrameActionTypes.APPEND_TO_PARENT_NODE,
     payload: { frameId, parentId, nodeId, type }
 })

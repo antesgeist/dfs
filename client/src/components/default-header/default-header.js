@@ -3,17 +3,31 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { NavLink } from 'react-router-dom'
 
-import { selectCurrentUser } from '../../store/user/user.selectors'
+import {
+    signOutFailure,
+    signOutSuccess
+} from '../../store/auth/auth.actions'
+import { selectCurrentUser } from '../../store/auth/auth.selectors'
 import { auth } from '../../firebase/firebase.utils'
 
 import { FileTree } from '../icons/icons'
 
 import styles from './default-header.module.scss'
 
-const DefaultHeader = ({ hasUserButton, currentUser }) => {
+const DefaultHeader = ({
+    hasUserButton,
+    currentUser,
+    signOutSuccess,
+    signOutFailure
+}) => {
     const onSignOut = () => {
         auth.signOut()
-        console.log('signed out')
+            .then(() => {
+                signOutSuccess()
+            })
+            .catch(err => {
+                signOutFailure(err)
+            })
     }
 
     return (
@@ -27,13 +41,25 @@ const DefaultHeader = ({ hasUserButton, currentUser }) => {
                 <NavLink exact to='/' className={styles.menuItems}>
                     Home
                 </NavLink>
-                <NavLink exact to='/demo' className={styles.menuItems}>
+                <NavLink
+                    exact
+                    to='/demo'
+                    className={styles.menuItems}
+                >
                     Demo
                 </NavLink>
-                <NavLink exact to='/docs' className={styles.menuItems}>
+                <NavLink
+                    exact
+                    to='/docs'
+                    className={styles.menuItems}
+                >
                     Docs
                 </NavLink>
-                <NavLink exact to='/github' className={styles.menuItems}>
+                <NavLink
+                    exact
+                    to='/github'
+                    className={styles.menuItems}
+                >
                     Github
                 </NavLink>
             </ul>
@@ -75,4 +101,6 @@ const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser
 })
 
-export default connect(mapStateToProps)(DefaultHeader)
+const actionCreators = { signOutSuccess, signOutFailure }
+
+export default connect(mapStateToProps, actionCreators)(DefaultHeader)

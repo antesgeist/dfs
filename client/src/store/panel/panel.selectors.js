@@ -1,8 +1,11 @@
 import { createSelector } from 'reselect'
 
-const selectPanel = state => state.panel
+const selectPanel = state => state.panels
 
-export const selectPanels = createSelector([selectPanel], panel => panel.panels)
+export const selectPanels = createSelector(
+    [selectPanel],
+    panels => panels.panelGroup
+)
 
 export const selectIsWorkspaceFetching = createSelector(
     [selectPanel],
@@ -20,7 +23,10 @@ export const selectActiveFramesUID = createSelector(
         panels &&
         panels
             .filter(panel => panel.is_active)
-            .reduce((framesUIDString, { frames_uid }) => frames_uid, '')
+            .reduce(
+                (framesUIDString, { frames_uid }) => frames_uid,
+                ''
+            )
 )
 
 export const selectFramesIdFilter = createSelector(

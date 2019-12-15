@@ -1,8 +1,9 @@
 import PanelActionTypes from './panel.types'
 
 const INITIAL_STATE = {
-    panels: null,
-    activePanel: null,
+    group: null,
+    activeGroupId: null,
+    order: null,
     isFetching: false,
     errorMessage: null
 }
@@ -15,10 +16,11 @@ const panelReducer = (state = INITIAL_STATE, { type, payload }) => {
                 isFetching: true
             }
         case PanelActionTypes.FETCH_SUCCESS:
+            /* payload = { group, activeGroupId, order} */
             return {
                 ...state,
-                isFetching: false,
-                panels: payload
+                ...payload,
+                isFetching: false
             }
         case PanelActionTypes.FETCH_FAILURE:
             return {
