@@ -1,7 +1,5 @@
 import WorkspaceActionTypes from './workspace.types'
 
-import { firestore } from '../../firebase/firebase.utils'
-import { formatWorkspaceSnapshot } from './workspace.utils'
 import { formatSnapshotsForDispatch } from '../store.utils'
 
 import { fetchPanelsAsync } from '../panel/panel.actions'
@@ -10,9 +8,9 @@ export const fetchWorkspaceStart = () => ({
     type: WorkspaceActionTypes.FETCH_START
 })
 
-export const fetchWorkspaceSuccess = workspaceGroups => ({
+export const fetchWorkspaceSuccess = workspaceFields => ({
     type: WorkspaceActionTypes.FETCH_SUCCESS,
-    payload: workspaceGroups
+    payload: workspaceFields
 })
 
 export const fetchWorkspaceFailure = errorMessage => ({
@@ -24,25 +22,17 @@ export const fetchWorkspaceAsync = workspaceGroupId => async dispatch => {
     dispatch(fetchWorkspaceStart())
 
     try {
-        const formatArgs = [workspaceGroupId, 'workspaces', 'panels']
-
-        const workspaceSnapshots = await formatSnapshotsForDispatch(
-            ...formatArgs
-        )
+        const fetchArgs = [workspaceGroupId, 'workspaces', 'panels']
 
         const {
             group,
-            activeGroupId,
+            activeItem,
             order,
             nextGroupId
-        } = workspaceSnapshots
+        } = await formatSnapshotsForDispatch(...fetchArgs)
 
-        /* WORKSPACE */
-        dispatch(
-            fetchWorkspaceSuccess({ group, activeGroupId, order })
-        )
+        dispatch(fetchWorkspaceSuccess({ group, activeItem, order }))
 
-        /* PANELS */
         dispatch(fetchPanelsAsync(nextGroupId))
     } catch (error) {
         dispatch(fetchWorkspaceFailure(error.message))

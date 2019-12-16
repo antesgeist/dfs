@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
-import { appendChildNode } from '../../store/frame/frame.actions'
+import { appendChildNode } from '../../store/node/node.actions'
 
 import Button from '../common/button/button'
 import { Gear, Maximize, Close, Copy, Stack, Plus } from '../icons/icons'

@@ -1,11 +1,8 @@
 import PanelActionTypes from './panel.types'
 
-import { formatSnapshotsForDispatch } from '../store.utils'
+import { formatPanelsForDispatch } from '../store.utils'
 
-import {
-    setActiveFrameGroup,
-    fetchFramesAsync
-} from '../frame/frame.actions'
+import { setActiveFrameGroup, fetchFramesAsync } from '../frame/frame.actions'
 
 export const fetchPanelsStart = () => ({
     type: PanelActionTypes.FETCH_START
@@ -34,21 +31,18 @@ export const fetchPanelsAsync = panelGroupId => async dispatch => {
     dispatch(fetchPanelsStart())
 
     try {
-        const formatArgs = [panelGroupId, 'panels', 'frames']
-        const panelSnapshots = await formatSnapshotsForDispatch(
-            ...formatArgs
-        )
+        const fetchArgs = [panelGroupId, 'panels', 'frames']
 
         const {
             group,
-            activeGroupId,
+            activeItem,
             order,
-            nextGroupId
-        } = panelSnapshots
+            frameGroupIds
+        } = await formatPanelsForDispatch(...fetchArgs)
 
-        dispatch(fetchPanelsSuccess({ group, activeGroupId, order }))
+        dispatch(fetchPanelsSuccess({ group, activeItem, order }))
 
-        dispatch(fetchFramesAsync(nextGroupId))
+        dispatch(fetchFramesAsync(frameGroupIds))
     } catch (error) {
         dispatch(fetchPanelsFailure(error))
     }

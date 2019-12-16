@@ -4,7 +4,7 @@ const selectPanel = state => state.panels
 
 export const selectPanels = createSelector(
     [selectPanel],
-    panels => panels.panelGroup
+    panels => panels.group
 )
 
 export const selectIsWorkspaceFetching = createSelector(
@@ -14,27 +14,10 @@ export const selectIsWorkspaceFetching = createSelector(
 
 export const selectActivePanel = createSelector(
     [selectPanel],
-    panel => panel && panel.activePanel
+    panel => panel && panel.activeItem
 )
 
-export const selectActiveFramesUID = createSelector(
-    [selectPanels],
-    panels =>
-        panels &&
-        panels
-            .filter(panel => panel.is_active)
-            .reduce(
-                (framesUIDString, { frames_uid }) => frames_uid,
-                ''
-            )
-)
-
-export const selectFramesIdFilter = createSelector(
-    [selectPanels],
-    panels =>
-        panels &&
-        panels.reduce((cur, panel) => {
-            const { frames_uid } = panel
-            return [...frames_uid]
-        }, [])
+export const selectPanelOrder = createSelector(
+    [selectPanel],
+    panels => panels.order
 )

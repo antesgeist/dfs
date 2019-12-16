@@ -1,16 +1,16 @@
 import FrameActionTypes from './frame.types'
 
-import { formatSnapshotsForDispatch } from '../store.utils'
+import { formatFramesForDispatch } from '../store.utils'
 
-/* Fetch Frames */
+import { fetchFrameNodesAsync } from '../frame-nodes/frame-nodes.actions'
 
 export const fetchFramesStart = () => ({
     type: FrameActionTypes.FETCH_START
 })
 
-export const fetchFramesSuccess = frameGroups => ({
+export const fetchFramesSuccess = (frameGroups, order) => ({
     type: FrameActionTypes.FETCH_SUCCESS,
-    payload: frameGroups
+    payload: { frameGroups, order }
 })
 
 export const fetchFramesFailure = errorMessage => ({
@@ -23,69 +23,104 @@ export const setActiveFrameGroup = frameGroupId => ({
     payload: frameGroupId
 })
 
-export const fetchFramesAsync = frameGroupId => async dispatch => {
+export const fetchFramesAsync = frameGroupIds => async dispatch => {
     dispatch(fetchFramesStart())
 
     try {
-        // const fetchProps = [firestore, framesFilter, 'frames', 'frame_group']
-        // const frameGroups = await fetchSubCollectionsByDocIds(...fetchProps)
+        const fetchArgs = [frameGroupIds, 'frames', 'frame_nodes']
 
-        const fetchArgs = [frameGroupId, 'frames', 'frame_nodes']
+        const frameGroups = await formatFramesForDispatch(...fetchArgs)
 
-        const frameSnapshots = await formatSnapshotsForDispatch(
-            ...fetchArgs
-        )
+        dispatch(fetchFramesSuccess(frameGroups, frameGroupIds))
 
-        const {
-            group,
-            activeGroupId,
-            order,
-            nextGroupId
-        } = frameSnapshots
+        // this is awful, refactor this
+        const frameNodeIds = frameGroupIds.map(id => {
+            return frameGroups[id].order.reduce((cur, frameId) => {
+                return frameGroups[id].group[frameId].frame_nodes
+            }, '')
+        })
 
-        dispatch(fetchFramesSuccess({ group, activeGroupId, order }))
+        dispatch(fetchFrameNodesAsync(frameNodeIds))
     } catch (error) {
         dispatch(fetchFramesFailure(error.message))
     }
 }
 
-/* EVENT: TOGGLE */
+// const fnodes = {
+//     frameNodes: {
+//         frameNodesId: {
+//             roots: [...],
+//             all: [...]
+//         },
+//         frameNodesId: {
+//             roots: [...],
+//             all: [...]
+//         },
+//         frameNodesId: {
+//             roots: [...],
+//             all: [...]
+//         },
+//     }
+// }
 
-export const toggleNodeCollapse = ({ frameId, nodeId, type }) => ({
-    type: FrameActionTypes.TOGGLE_NODE_COLLAPSE,
-    payload: { frameId, nodeId, type }
-})
-
-export const toggleNodeCheck = ({ frameId, nodeId, type }) => ({
-    type: FrameActionTypes.TOGGLE_NODE_CHECK_ONE,
-    payload: { frameId, nodeId, type }
-})
-
-/* EVENT: DRAG */
-
-export const dragChildNode = ({
-    frameId,
-    parentId,
-    nodeIndexMap,
-    type
-}) => ({
-    type: FrameActionTypes.DRAG_CHILD_NODE,
-    payload: { frameId, parentId, nodeIndexMap, type }
-})
-
-/* EVENT: APPEND/ADD */
-
-export const appendNewNode = ({
-    frameId,
-    parentId,
-    nodeId,
-    type
-}) => ({
-    type: FrameActionTypes.APPEND_TO_PARENT_NODE,
-    payload: { frameId, parentId, nodeId, type }
-})
-
-export const appendChildNode = ({ frameId, nodeId, type }) => ({
-    type: FrameActionTypes.APPEND_CHILD_NODE,
-    payload: { frameId, nodeId, type }
-})
+const frameGroups = {
+    'BW2ORdrSt-LUQEHeASfZG': {
+        group: {
+            Td2AnwjfQVf_G56hLzMte: {
+                frame_nodes: 'WEq3ZSU_4NQ77toZas6Q4' /* THIS */,
+                id: 'Td2AnwjfQVf_G56hLzMte',
+                last_modified: {
+                    seconds: 1576341213,
+                    nanoseconds: 591000000
+                },
+                title: 'Frame 1 Panel 1'
+            },
+            Td2AnwjfQVf_G56hLzMt1: {
+                frame_nodes: 'WEq3ZSU_4NQ77toZas6Q4' /* THIS */,
+                id: 'Td2AnwjfQVf_G56hLzMte',
+                last_modified: {
+                    seconds: 1576341213,
+                    nanoseconds: 591000000
+                },
+                title: 'Frame 1 Panel 1'
+            },
+            Td2AnwjfQVf_G56hLzMt3: {
+                frame_nodes: 'WEq3ZSU_4NQ77toZas6Q4' /* THIS */,
+                id: 'Td2AnwjfQVf_G56hLzMte',
+                last_modified: {
+                    seconds: 1576341213,
+                    nanoseconds: 591000000
+                },
+                title: 'Frame 1 Panel 1'
+            }
+        },
+        activeItem: 'Td2AnwjfQVf_G56hLzMte',
+        order: ['Td2AnwjfQVf_G56hLzMte'],
+        nextGroupId: 'WEq3ZSU_4NQ77toZas6Q4'
+    },
+    ManualWC8819flGb8gikumzYvp: {
+        group: {
+            Lo2323EUXSwnkvRm0K23: {
+                frame_nodes: 'qDx3kdXHBt3ETU4DYLqd' /* THIS */,
+                id: 'Lo2323EUXSwnkvRm0K23',
+                last_modified: {
+                    seconds: 1576339200,
+                    nanoseconds: 0
+                },
+                title: 'Frame 1 Panel 2'
+            },
+            Lo2323EUXSwnkvRm0K21: {
+                frame_nodes: 'qDx3kdXHBt3ETU4DYLqd' /* THIS */,
+                id: 'Lo2323EUXSwnkvRm0K23',
+                last_modified: {
+                    seconds: 1576339200,
+                    nanoseconds: 0
+                },
+                title: 'Frame 1 Panel 2'
+            }
+        },
+        activeItem: 'Lo2323EUXSwnkvRm0K23',
+        order: ['Lo2323EUXSwnkvRm0K23'],
+        nextGroupId: 'qDx3kdXHBt3ETU4DYLqd'
+    }
+}

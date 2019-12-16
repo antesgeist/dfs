@@ -7,9 +7,14 @@ export const selectCurrentUser = createSelector(
     auth => auth.currentUser
 )
 
+export const selectCurrentWorkspace = createSelector(
+    [selectCurrentUser],
+    currentUser => currentUser.workspaces
+)
+
 export const selectUserDisplayName = createSelector(
     [selectCurrentUser],
-    currentUser => currentUser && currentUser.display_name
+    currentUser => currentUser && currentUser.displayName
 )
 
 export const selectIsUserFetching = createSelector(

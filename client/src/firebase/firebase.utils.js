@@ -31,17 +31,6 @@ export const createUserProfileDocument = async (
 
         try {
             /* 
-                user
-                    create user document
-            
-                workspace
-                    create workspaceGroup document
-                    create default workspace document on workspaceGroup
-
-                panel
-                    create panelGroup document
-                    create default panel document on panelGroup
-
                 todo: extract these to document function creators
                 todo: decouple automatic doc generation when data model is working
             */

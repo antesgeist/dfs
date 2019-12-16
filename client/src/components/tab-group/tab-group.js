@@ -7,11 +7,14 @@ import Button from '../common/button/button'
 import { Plus } from '../icons/icons'
 
 import { setActivePanel } from '../../store/panel/panel.actions'
-import { selectActivePanel } from '../../store/panel/panel.selectors'
+import {
+    selectActivePanel,
+    selectPanelOrder
+} from '../../store/panel/panel.selectors'
 
 import styles from './tab-group.module.scss'
 
-const TabGroup = ({ panels, activePanel, setActivePanel }) => {
+const TabGroup = ({ panels, activePanel, order, setActivePanel }) => {
     const onSelectTab = (panelId, framesId) => {
         setActivePanel(panelId, framesId)
     }
@@ -19,16 +22,20 @@ const TabGroup = ({ panels, activePanel, setActivePanel }) => {
     return (
         <div className={styles.tabGroupContainer}>
             <div className={styles.tabGroup}>
-                {panels
-                    .sort((a, b) => (a.order < b.order ? -1 : 1))
-                    .map(({ id, title, frames_uid }) => (
+                {order.map(panelId => {
+                    const { id, title, frames_uid } = panels[panelId]
+
+                    return (
                         <Tab
                             isActive={activePanel === id}
                             key={id}
                             label={title}
-                            onClick={() => onSelectTab(id, frames_uid)}
+                            onClick={() =>
+                                onSelectTab(id, frames_uid)
+                            }
                         />
-                    ))}
+                    )
+                })}
             </div>
             <div className={styles.tabControls}>
                 <Button svg={<Plus />} />
@@ -38,7 +45,8 @@ const TabGroup = ({ panels, activePanel, setActivePanel }) => {
 }
 
 const mapStateToProps = createStructuredSelector({
-    activePanel: selectActivePanel
+    activePanel: selectActivePanel,
+    order: selectPanelOrder
 })
 
 const actionCreators = {

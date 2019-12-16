@@ -1,140 +1,109 @@
 import React, { useState, Fragment } from 'react'
 import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
 import { Droppable, DragDropContext } from 'react-beautiful-dnd'
 
-import Button from '../common/button/button'
-import { MenuDown, MenuRight } from '../icons/icons'
+import { selectNodeGroup } from '../../store/node/node.selectors'
+import { useDrag } from '../utils/custom-hooks'
 
 import Node from '../node/node'
 import NodeContent from '../node-content/node-content'
 import NodeAddNew from '../node-add-new/node-add-new'
 
-import {
-    dragChildNode,
-    toggleNodeCollapse,
-    toggleNodeCheck
-} from '../../store/frame/frame.actions'
+import Button from '../common/button/button'
+import { MenuDown, MenuRight } from '../icons/icons'
 
 import styles from './node-parent.module.scss'
 
 const mapNodesToParent = (
-    nodes,
+    nodeGroup,
+    data,
     frameId,
-    dragChildNode,
+    index,
     isDragging,
-    toggleNodeCollapse,
-    toggleNodeCheck
-) =>
-    nodes
-        // .sort((a, b) => a.order - b.order)
-        .map((node, idx) => {
-            const { id, value, descendant, state } = node
+    actions
+) => {
+    const { id, title, state, descendant } = data
 
-            return (
-                <Node key={id} id={id} index={idx}>
-                    <NodeContent
-                        frameId={frameId}
-                        nodeId={id}
-                        title={value}
-                        checked={state.checked}
-                        onCheck={toggleNodeCheck}
-                        isDragging={isDragging}
-                    />
-                    {descendant.length > 0 && (
-                        <NodeParent
-                            frameId={frameId}
-                            parentId={id}
-                            nodeId={id}
-                            nodes={descendant}
-                            collapsed={state.collapsed}
-                            dragChildNode={dragChildNode}
-                            toggleNodeCollapse={toggleNodeCollapse}
-                            toggleNodeCheck={toggleNodeCheck}
-                        />
-                    )}
-                </Node>
-            )
-        })
+    return (
+        <Node id={id} index={index}>
+            <NodeContent
+                frameId={frameId}
+                nodeId={id}
+                title={title}
+                checked={state.checked}
+                onCheck={actions.toggleNodeCheck}
+                isDragging={isDragging}
+            />
+            {descendant.length > 0 && (
+                <NodeParent
+                    frameId={frameId}
+                    parentId={id}
+                    nodeId={id}
+                    data={nodeGroup[id]}
+                    actions={actions}
+                />
+            )}
+        </Node>
+    )
+}
 
 /**
  * Node Container
  *
  * @param {bool} root Denote if parent is descendant or not
- * @param {bool} collapsed Node collapsed state
  * @param {bool} checked Node checked state
  * @param {str/uid} frameId Frame/node event dispatch ref and sorting comparison
  * @param {str/uid} parentId Parent node event dispatch
  * @param {str/uid} nodeId Node event dispatch ref
- * @param {array} nodes Node tree
  * @param {event} onCollapse Collapse event handler
  * @param {event} onCheck Check event handler
  *
- * todo: too fucking many props, truncate this shit
  */
+
 const NodeParent = ({
     root,
     frameId,
     parentId,
-    nodeId,
-    nodes,
-    collapsed,
-    dragChildNode,
-    toggleNodeCollapse,
-    toggleNodeCheck
+    data,
+    nodeGroup,
+    index,
+    actions
 }) => {
-    const [isCollapsed, setIsCollapsed] = useState(collapsed)
-    const [isDragging, setIsDragging] = useState(false)
+    const { id, state } = data
+    const { dragChildNode, toggleNodeCollapse } = actions
 
-    const collapseNode = () => {
-        setIsCollapsed(!isCollapsed)
-        toggleNodeCollapse({ frameId, nodeId, type: 'COLLAPSE' })
-    }
+    const [isCollapsed, setIsCollapsed] = useState(state.collapsed)
+    const [onDragEnd, onBeforeDragStart, isDragging] = useDrag(
+        false,
+        dragChildNode,
+        frameId,
+        parentId
+    )
 
     const rootProps = root && {
         id: 'frameRootId',
         className: styles.root
     }
 
-    const attrs = {
+    const attributes = {
         'data-is-collapsed': isCollapsed
     }
 
-    const onDragEnd = result => {
-        const { destination, source, draggableId } = result
-
-        setIsDragging(false)
-
-        if (!destination) {
-            return
-        }
-
-        if (
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-        ) {
-            return
-        }
-
-        dragChildNode({
-            frameId,
-            parentId,
-            nodeIndexMap: {
-                source: source.index,
-                dest: destination.index,
-                draggableId
-            },
-            type: 'DRAG'
-        })
+    const onCollapse = () => {
+        setIsCollapsed(!isCollapsed)
+        toggleNodeCollapse({ frameId, id, type: 'COLLAPSE' })
     }
 
-    const onBeforeDragStart = result => {
-        setIsDragging(true)
-    }
+    const collapseButton = (isCollapsed, handler) => (
+        <Button
+            svg={isCollapsed ? <MenuRight /> : <MenuDown />}
+            style={[styles.collapseBtn]}
+            onClick={handler}
+        />
+    )
 
     return (
-        // todo fix TWO-unresponsive drag event after dragend
-        // todo can't immediately drag/capture inner nodes
-
         <DragDropContext
             onDragEnd={onDragEnd}
             onBeforeDragStart={onBeforeDragStart}
@@ -145,39 +114,28 @@ const NodeParent = ({
 
                     return (
                         <Fragment>
-                            {!root && (
-                                <Button
-                                    svg={
-                                        isCollapsed ? (
-                                            <MenuRight />
-                                        ) : (
-                                            <MenuDown />
-                                        )
-                                    }
-                                    style={[styles.collapseBtn]}
-                                    onClick={collapseNode}
-                                />
-                            )}
+                            {!root && collapseButton(isCollapsed, onCollapse)}
 
                             <ul
                                 ref={innerRef}
                                 {...droppableProps}
                                 {...rootProps}
-                                {...attrs}
+                                {...attributes}
                             >
-                                {mapNodesToParent(
-                                    nodes,
-                                    frameId,
-                                    dragChildNode,
-                                    isDragging,
-                                    toggleNodeCollapse,
-                                    toggleNodeCheck
-                                )}
                                 {placeholder}
+                                {mapNodesToParent(
+                                    nodeGroup,
+                                    data,
+                                    frameId,
+                                    index,
+                                    isDragging,
+                                    actions
+                                )}
+
                                 <NodeAddNew
                                     frameId={frameId}
                                     parentId={parentId}
-                                    nodeId={nodeId}
+                                    nodeId={id}
                                 />
                             </ul>
                         </Fragment>
@@ -188,10 +146,8 @@ const NodeParent = ({
     )
 }
 
-const actionCreators = {
-    dragChildNode,
-    toggleNodeCollapse,
-    toggleNodeCheck
-}
+const mapStateToProps = createStructuredSelector({
+    nodeGroup: selectNodeGroup
+})
 
-export default connect(null, actionCreators)(NodeParent)
+export default connect(mapStateToProps)(NodeParent)

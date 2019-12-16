@@ -11,16 +11,11 @@ import { fetchWorkspaceAsync } from '../../store/workspace/workspace.actions'
 
 import { selectCurrentUser } from '../../store/auth/auth.selectors'
 import { selectPanels } from '../../store/panel/panel.selectors'
-import { selectFrameGroup } from '../../store/frame/frame.selectors'
+import { selectNodeGroup } from '../../store/node/node.selectors'
 
 import styles from './workspace.module.scss'
 
-const Workspace = ({
-    panels,
-    currentUser,
-    fetchWorkspaceAsync,
-    frames
-}) => {
+const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, nodes }) => {
     // todo: export to custom hook
     useEffect(() => {
         // todo: don't select all panels, use boolean property instead
@@ -36,11 +31,7 @@ const Workspace = ({
         <div className={styles.workspaceContainer}>
             <WorkspaceHeader />
             <Sidebar />
-            {!frames ? (
-                <CanvasPlaceholder />
-            ) : (
-                <Panel panels={panels} frames={frames} />
-            )}
+            {!nodes ? <CanvasPlaceholder /> : <Panel panels={panels} />}
         </div>
     )
 }
@@ -48,7 +39,7 @@ const Workspace = ({
 const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
     panels: selectPanels,
-    frames: selectFrameGroup
+    nodes: selectNodeGroup
 })
 
 const actionCreators = {

@@ -1,39 +1,37 @@
-import WorkspaceActionTypes from './workspace.types'
+import FrameNodesActionTypes from './frame-nodes.types'
 
 const INITIAL_STATE = {
     group: null,
-    activeItem: null,
-    order: null,
     isFetching: false,
     errorMessage: null
 }
 
-const workspaceReducer = (
+const frameNodesReducer = (
     state = INITIAL_STATE,
     { type, payload }
 ) => {
     switch (type) {
-        case WorkspaceActionTypes.FETCH_START:
+        case FrameNodesActionTypes.FETCH_START:
             return {
                 ...state,
                 isFetching: true
             }
-        case WorkspaceActionTypes.FETCH_SUCCESS:
-            /* payload = { group, activeItem, order} */
+        case FrameNodesActionTypes.FETCH_SUCCESS:
             return {
                 ...state,
-                ...payload,
+                group: payload,
                 isFetching: false
             }
-        case WorkspaceActionTypes.FETCH_FAILURE:
+        case FrameNodesActionTypes.FETCH_FAILURE:
             return {
                 ...state,
                 errorMessage: payload,
                 isFetching: false
             }
+
         default:
             return state
     }
 }
 
-export default workspaceReducer
+export default frameNodesReducer

@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { appendNewNode } from '../../store/frame/frame.actions'
+import { appendNewNode } from '../../store/node/node.actions'
 
 import Button from '../common/button/button'
 import { PlusOutline } from '../icons/icons'
