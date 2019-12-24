@@ -4,6 +4,7 @@ import FrameActionTypes from './frame.types'
 
 const INITIAL_STATE = {
     frameGroups: null,
+    activeItem: null,
     order: null,
     isFetching: false,
     errorMessage: null

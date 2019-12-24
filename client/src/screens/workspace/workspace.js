@@ -15,7 +15,7 @@ import { selectNodeGroup } from '../../store/node/node.selectors'
 
 import styles from './workspace.module.scss'
 
-const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, nodes }) => {
+const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, nodeGroup }) => {
     // todo: export to custom hook
     useEffect(() => {
         // todo: don't select all panels, use boolean property instead
@@ -31,7 +31,7 @@ const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, nodes }) => {
         <div className={styles.workspaceContainer}>
             <WorkspaceHeader />
             <Sidebar />
-            {!nodes ? <CanvasPlaceholder /> : <Panel panels={panels} />}
+            {!nodeGroup ? <CanvasPlaceholder /> : <Panel panels={panels} />}
         </div>
     )
 }
@@ -39,7 +39,7 @@ const Workspace = ({ panels, currentUser, fetchWorkspaceAsync, nodes }) => {
 const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
     panels: selectPanels,
-    nodes: selectNodeGroup
+    nodeGroup: selectNodeGroup
 })
 
 const actionCreators = {

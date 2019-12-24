@@ -1,6 +1,6 @@
 import WorkspaceActionTypes from './workspace.types'
 
-import { formatSnapshotsForDispatch } from '../store.utils'
+import { formatWorkspaceForDispatch } from '../store.utils'
 
 import { fetchPanelsAsync } from '../panel/panel.actions'
 
@@ -18,22 +18,22 @@ export const fetchWorkspaceFailure = errorMessage => ({
     payload: errorMessage
 })
 
-export const fetchWorkspaceAsync = workspaceGroupId => async dispatch => {
+export const fetchWorkspaceAsync = workspaceId => async dispatch => {
     dispatch(fetchWorkspaceStart())
 
     try {
-        const fetchArgs = [workspaceGroupId, 'workspaces', 'panels']
+        const fetchArgs = [workspaceId, 'workspaces', 'panels']
 
         const {
             group,
             activeItem,
             order,
             nextGroupId
-        } = await formatSnapshotsForDispatch(...fetchArgs)
+        } = await formatWorkspaceForDispatch(...fetchArgs)
 
         dispatch(fetchWorkspaceSuccess({ group, activeItem, order }))
 
-        dispatch(fetchPanelsAsync(nextGroupId))
+        dispatch(fetchPanelsAsync(nextGroupId, workspaceId))
     } catch (error) {
         dispatch(fetchWorkspaceFailure(error.message))
     }

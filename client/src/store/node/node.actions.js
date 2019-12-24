@@ -1,7 +1,14 @@
+import nanoid from 'nanoid'
+
 import NodeActionTypes from './node.types'
 
 import { selectCurrentWorkspace } from '../auth/auth.selectors'
 import { firestore } from '../../firebase/firebase.utils'
+import {
+    saveNewNodeId,
+    fetchFrameNodesSuccess
+} from '../frame-nodes/frame-nodes.actions'
+import { formatNodesForDispatch } from '../store.utils'
 
 export const fetchNodesStart = () => ({
     type: NodeActionTypes.FETCH_START
@@ -20,29 +27,23 @@ export const fetchNodesFailure = error => ({
 export const fetchNodesAsync = () => async (dispatch, getState) => {
     dispatch(fetchNodesStart())
 
-    const formatGroupSnapshots = snapshot =>
-        snapshot.docs.reduce((cur, doc) => {
-            const { id } = doc.data()
-            return { ...cur, [id]: doc.data() }
-        }, {})
+    try {
+        const workspaceId = selectCurrentWorkspace(getState())
 
-    const formatNodeSnapshotForDispatch = async curWorkspaceId => {
-        const nodeGroupSnapshots = await firestore
-            .collection('workspaces')
-            .doc(curWorkspaceId)
+        // fetch frameNodes by workspace
+        const frameNodesSnapshot = await firestore
             .collection('nodes')
+            .where('workspace_id', '==', workspaceId)
             .get()
 
-        return formatGroupSnapshots(nodeGroupSnapshots)
-    }
+        // format nodes snapshots
+        const frameNodesArray = frameNodesSnapshot.docs.map(doc => doc.data())
 
-    try {
-        const state = getState()
-        const currentWorkspaceId = selectCurrentWorkspace(state)
-
-        const nodeGroup = await formatNodeSnapshotForDispatch(
-            currentWorkspaceId
+        const { nodeGroup, frameNodes } = formatNodesForDispatch(
+            frameNodesArray
         )
+
+        dispatch(fetchFrameNodesSuccess(frameNodes))
 
         dispatch(fetchNodesSuccess(nodeGroup))
     } catch (error) {
@@ -71,10 +72,31 @@ export const dragChildNode = ({ frameId, parentId, nodeIndexMap, type }) => ({
 
 /* EVENT: APPEND/ADD */
 
-export const appendNewNode = ({ frameId, parentId, nodeId, type }) => ({
-    type: NodeActionTypes.APPEND_TO_PARENT_NODE,
-    payload: { frameId, parentId, nodeId, type }
+const createNewNode = newNodeId => ({
+    title: `New Node: ${Math.floor(Math.random() * 100)}`,
+    state: {
+        checked: false,
+        collapsed: false
+    },
+    id: newNodeId,
+    descendant: []
 })
+
+export const appendNewNode = ({ frameId, parentId, nodeId }) => dispatch => {
+    // save new node
+    const newNodeId = nanoid()
+    dispatch(saveNewNodeId(frameId, parentId, newNodeId))
+
+    dispatch({
+        type: NodeActionTypes.APPEND_TO_PARENT_NODE,
+        payload: {
+            parentId,
+            nodeId,
+            newNode: createNewNode(newNodeId),
+            newNodeId
+        }
+    })
+}
 
 export const appendChildNode = ({ frameId, nodeId, type }) => ({
     type: NodeActionTypes.APPEND_CHILD_NODE,

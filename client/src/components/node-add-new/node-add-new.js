@@ -10,7 +10,7 @@ import styles from './node-add-new.module.scss'
 
 const NodeAddNew = ({ frameId, parentId, nodeId, appendNewNode }) => {
     const onInsertNode = () => {
-        appendNewNode({ frameId, parentId, nodeId, type: 'APPEND' })
+        appendNewNode({ frameId, parentId, nodeId })
     }
 
     return (

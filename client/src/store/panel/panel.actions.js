@@ -18,13 +18,13 @@ export const fetchPanelsFailure = errorMessage => ({
     payload: errorMessage
 })
 
-export const setActivePanel = (panelId, framesId) => dispatch => {
+export const setActivePanel = panelId => dispatch => {
     dispatch({
         type: PanelActionTypes.SET_ACTIVE,
         payload: panelId
     })
 
-    dispatch(setActiveFrameGroup(framesId))
+    // dispatch(setActiveFrameGroup(framesId))
 }
 
 export const fetchPanelsAsync = panelGroupId => async dispatch => {

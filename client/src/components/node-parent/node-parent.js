@@ -41,6 +41,7 @@ const mapNodesToParent = (
                     parentId={id}
                     nodeId={id}
                     data={nodeGroup[id]}
+                    // nodeGroup={nodeGroup}
                     actions={actions}
                 />
             )}
@@ -70,7 +71,8 @@ const NodeParent = ({
     index,
     actions
 }) => {
-    const { id, state } = data
+    const { id, title, state, descendant } = data
+
     const { dragChildNode, toggleNodeCollapse } = actions
 
     const [isCollapsed, setIsCollapsed] = useState(state.collapsed)
@@ -123,14 +125,27 @@ const NodeParent = ({
                                 {...attributes}
                             >
                                 {placeholder}
-                                {mapNodesToParent(
-                                    nodeGroup,
-                                    data,
-                                    frameId,
-                                    index,
-                                    isDragging,
-                                    actions
-                                )}
+
+                                <Node id={id} index={index}>
+                                    <NodeContent
+                                        frameId={frameId}
+                                        nodeId={id}
+                                        title={title}
+                                        checked={state.checked}
+                                        onCheck={actions.toggleNodeCheck}
+                                        isDragging={isDragging}
+                                    />
+                                    {descendant.length > 0 && (
+                                        <NodeParent
+                                            frameId={frameId}
+                                            parentId={id}
+                                            nodeId={id}
+                                            data={nodeGroup[id]}
+                                            // nodeGroup={nodeGroup}
+                                            actions={actions}
+                                        />
+                                    )}
+                                </Node>
 
                                 <NodeAddNew
                                     frameId={frameId}
@@ -145,6 +160,17 @@ const NodeParent = ({
         </DragDropContext>
     )
 }
+
+/* 
+{mapNodesToParent(
+                                    nodeGroup,
+                                    data,
+                                    frameId,
+                                    index,
+                                    isDragging,
+                                    actions
+                                )}
+*/
 
 const mapStateToProps = createStructuredSelector({
     nodeGroup: selectNodeGroup

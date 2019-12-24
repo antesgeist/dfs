@@ -31,7 +31,7 @@ const panelReducer = (state = INITIAL_STATE, { type, payload }) => {
         case PanelActionTypes.SET_ACTIVE:
             return {
                 ...state,
-                activePanel: payload
+                activeItem: payload
             }
         default:
             return state

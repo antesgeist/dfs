@@ -2,7 +2,8 @@ import FrameNodesActionTypes from './frame-nodes.types'
 
 import { formatFrameNodesForDispatch } from '../store.utils'
 
-import { fetchNodesAsync } from '../node/node.actions'
+// import { fetchNodesAsync } from '../node/node.actions'
+import { selectCurrentWorkspace } from '../auth/auth.selectors'
 
 export const fetchFrameNodesStart = () => ({
     type: FrameNodesActionTypes.FETCH_START
@@ -18,18 +19,23 @@ export const fetchFrameNodesFailure = errorMessage => ({
     payload: errorMessage
 })
 
-export const fetchFrameNodesAsync = frameNodesIds => async dispatch => {
-    dispatch(fetchFrameNodesStart())
+export const saveNewNodeId = (frameId, parentId, newNodeId) => ({
+    type: FrameNodesActionTypes.SAVE_NEW_NODE_ID,
+    payload: { frameId, parentId, newNodeId }
+})
 
-    try {
-        const fetchArgs = [frameNodesIds, 'frame_nodes']
+// export const fetchFrameNodesAsync = () => async (dispatch, getState) => {
+//     dispatch(fetchFrameNodesStart())
 
-        const frameNodesGroup = await formatFrameNodesForDispatch(...fetchArgs)
+//     try {
+//         const workspaceId = selectCurrentWorkspace(getState())
 
-        dispatch(fetchFrameNodesSuccess(frameNodesGroup))
+//         const fetchArgs = [workspaceId, 'frame_nodes']
 
-        dispatch(fetchNodesAsync())
-    } catch (error) {
-        dispatch(fetchFrameNodesFailure(error.message))
-    }
-}
+//         const frameNodesGroup = await formatFrameNodesForDispatch(...fetchArgs)
+
+//         dispatch(fetchFrameNodesSuccess(frameNodesGroup))
+//     } catch (error) {
+//         dispatch(fetchFrameNodesFailure(error.message))
+//     }
+// }

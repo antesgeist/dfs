@@ -35,8 +35,8 @@ const Frames = ({
     return (
         <div className={extendedClass}>
             {order.map(frameId => {
-                const { id, title, frame_nodes } = group[frameId]
-                const rootNodes = frameNodes[frame_nodes].roots
+                const { id, title } = group[frameId]
+                const rootNodes = frameNodes[id].roots
 
                 return (
                     <Frame key={id} title={title}>
@@ -44,7 +44,7 @@ const Frames = ({
                             {rootNodes.map((nodeId, idx) => (
                                 <NodeParent
                                     key={nodeId}
-                                    parentId={id}
+                                    parentId={0}
                                     frameId={frameId}
                                     root='true'
                                     data={nodes[nodeId]}

@@ -1,25 +1,27 @@
 import { firestore } from '../firebase/firebase.utils'
 
-/* FORMAT WORKSPACE */
+/* WORKSPACE */
 
-export const formatGroupSnapshots = snapshot =>
+export const formatWorkspaceSnapshots = snapshot =>
     snapshot.docs.reduce((cur, doc) => {
         const { id } = doc.data()
         return { ...cur, [id]: doc.data() }
     }, {})
 
-export const formatSnapshotsForDispatch = async (
+export const formatWorkspaceForDispatch = async (
     groupId,
     collectionKey,
     nextKey
 ) => {
     const groupRef = firestore.collection(collectionKey).doc(groupId)
 
+    // fetch workspaceGroup document (1)
     const groupSnapshot = await groupRef.get()
     const { active, order } = groupSnapshot.data()
 
+    // fetch all workspace documents (n)
     const snapshots = await groupRef.collection('group').get()
-    const data = formatGroupSnapshots(snapshots)
+    const data = formatWorkspaceSnapshots(snapshots)
 
     const nextGroupId = data[active][nextKey]
 
@@ -31,7 +33,7 @@ export const formatSnapshotsForDispatch = async (
     }
 }
 
-/* FORMAT PANELS */
+/* PANELS */
 
 export const formatPanelSnapshots = snapshot =>
     snapshot.docs.reduce((cur, doc) => {
@@ -46,13 +48,15 @@ export const formatPanelsForDispatch = async (
 ) => {
     const groupRef = firestore.collection(collectionKey).doc(groupId)
 
+    // fetch panelGroup document (1)
     const groupSnapshot = await groupRef.get()
     const { active, order } = groupSnapshot.data()
 
+    // fetch all panel documents (n)
     const snapshots = await groupRef.collection('group').get()
     const data = formatPanelSnapshots(snapshots)
 
-    // frame ids
+    // frame ids; nextKey = 'frames'
     const frameGroupIds = order.map(panelId => data[panelId][nextKey])
 
     return {
@@ -63,7 +67,7 @@ export const formatPanelsForDispatch = async (
     }
 }
 
-/* FORMAT FRAMES */
+/* FRAMES */
 
 export const formatFramesSnapshots = snapshot =>
     snapshot.docs.reduce((cur, doc) => {
@@ -71,30 +75,25 @@ export const formatFramesSnapshots = snapshot =>
         return { ...cur, [id]: doc.data() }
     }, {})
 
-export const formatFramesForDispatch = async (
-    frameIds,
-    collectionKey,
-    nextKey
-) => {
-    // get doc where id in groupIds
-    const frameGroups = await frameIds.reduce(async (cur, id) => {
-        const groupRef = firestore.collection(collectionKey).doc(id)
+// todo: experiment on data aggregation to reduce the number of queries
+export const formatFramesForDispatch = async (frameGroupIds, collectionKey) => {
+    // get frameGroup document where id in frameGroupIds
+    const frameGroups = await frameGroupIds.reduce(async (cur, id) => {
+        const frameGroupRef = firestore.collection(collectionKey).doc(id)
 
-        const groupSnapshot = await groupRef.get()
-        const { active, order } = groupSnapshot.data()
+        // fetch frameGroup document (1)
+        const frameGroupSnapshot = await frameGroupRef.get()
+        const { order } = frameGroupSnapshot.data()
 
-        const snapshots = await groupRef.collection('group').get()
-        const data = formatFramesSnapshots(snapshots)
-
-        const nextGroupId = data[active][nextKey]
+        // fetch all frame documents IN THIS group (n)
+        const framesSnapshot = await frameGroupRef.collection('group').get()
+        const data = formatFramesSnapshots(framesSnapshot)
 
         return {
             ...(await cur),
             [id]: {
                 group: data,
-                activeItem: active,
-                order,
-                nextGroupId
+                order
             }
         }
     }, {})
@@ -102,21 +101,90 @@ export const formatFramesForDispatch = async (
     return frameGroups
 }
 
+/* FRAME-NODES */
+
 export const formatFrameNodesForDispatch = async (
-    frameNodesIds,
+    workspaceId,
     collectionKey
 ) => {
-    const frameNodes = await frameNodesIds.reduce(async (cur, id) => {
-        const groupRef = firestore.collection(collectionKey).doc(id)
+    // fetch frame nodes by workspace
+    const frameNodesRef = await firestore
+        .collection(collectionKey)
+        .where('workspace_id', '==', workspaceId)
+        .get()
 
-        const groupSnapshot = await groupRef.get()
-
-        const data = groupSnapshot.data()
-
-        return { ...(await cur), [id]: data }
+    // format frameNodes snapshots
+    const frameNodes = frameNodesRef.docs.reduce((cur, doc) => {
+        const frameNodes = doc.data()
+        return { ...cur, [frameNodes.frame_id]: frameNodes }
     }, {})
 
     return frameNodes
+}
+
+/* NODES */
+
+export const formatNodesForDispatch = frameNodesArr => {
+    // normalized nodes to be populated
+    const nodeGroup = {}
+
+    // recursive normalizer
+    const frameNodesForDispatch = nodesSnapshot =>
+        nodesSnapshot.reduce((cur, frameData) => {
+            const { frame_id, map } = frameData
+
+            const allNodeIds = []
+            const rootIds = []
+
+            // track node depth to catch rootIds
+            let depth = 1
+
+            // normalize node tree
+            const normalizeTree = nodeTree =>
+                nodeTree.map(node => {
+                    const nodeEmpty = node.descendant.length === 0
+
+                    // only save root nodes
+                    if (depth === 1) rootIds.push(node.id)
+
+                    // save all nodeIds
+                    allNodeIds.push(node.id)
+
+                    // base case
+                    if (nodeEmpty) {
+                        nodeGroup[node.id] = node
+                    } else {
+                        depth++
+
+                        // recursive case
+                        nodeGroup[node.id] = {
+                            ...node,
+                            descendant: normalizeTree(node.descendant)
+                        }
+                    }
+
+                    // save nodeId as reference to node.descendant
+                    return node.id
+                })
+
+            // flatten map array into nodes
+            normalizeTree(map)
+
+            // return normalized frameNodes
+            return {
+                ...cur,
+                [frame_id]: {
+                    frameId: frame_id,
+                    all: allNodeIds,
+                    roots: rootIds
+                }
+            }
+        }, {})
+
+    return {
+        nodeGroup,
+        frameNodes: frameNodesForDispatch(frameNodesArr)
+    }
 }
 
 /**
