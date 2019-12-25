@@ -17,7 +17,7 @@ const NodeContent = ({
     const [nodeBody, setNodeBody] = useState(title)
 
     const toggleNodeCheck = () => {
-        onCheck({ frameId, nodeId, type: 'CHECK' })
+        onCheck({ nodeId, event: 'CHECK' })
         setIsChecked(!isChecked)
     }
 

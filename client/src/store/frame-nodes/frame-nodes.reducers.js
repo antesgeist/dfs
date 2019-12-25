@@ -10,17 +10,8 @@ const INITIAL_STATE = {
 const frameNodesReducer = (state = INITIAL_STATE, { type, payload }) =>
     produce(state, draft => {
         switch (type) {
-            case FrameNodesActionTypes.FETCH_START:
-                draft.isFetching = true
-                break
-
             case FrameNodesActionTypes.FETCH_SUCCESS:
                 draft.group = payload
-                draft.isFetching = false
-                break
-
-            case FrameNodesActionTypes.FETCH_FAILURE:
-                draft.errorMessage = payload
                 draft.isFetching = false
                 break
 

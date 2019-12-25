@@ -4,7 +4,12 @@ const selectNodes = state => state.nodes
 
 export const selectNodeGroup = createSelector(
     [selectNodes],
-    nodes => nodes.group
+    nodes => nodes.groupByNodes
+)
+
+export const selectFrameNodes = createSelector(
+    [selectNodes],
+    nodes => nodes.groupByFrames
 )
 
 export const selectNodesIsFetching = createSelector(

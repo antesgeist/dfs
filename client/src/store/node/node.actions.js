@@ -4,19 +4,16 @@ import NodeActionTypes from './node.types'
 
 import { selectCurrentWorkspace } from '../auth/auth.selectors'
 import { firestore } from '../../firebase/firebase.utils'
-import {
-    saveNewNodeId,
-    fetchFrameNodesSuccess
-} from '../frame-nodes/frame-nodes.actions'
+
 import { formatNodesForDispatch } from '../store.utils'
 
 export const fetchNodesStart = () => ({
     type: NodeActionTypes.FETCH_START
 })
 
-export const fetchNodesSuccess = nodeGroup => ({
+export const fetchNodesSuccess = (frameNodes, nodeGroup) => ({
     type: NodeActionTypes.FETCH_SUCCESS,
-    payload: nodeGroup
+    payload: { frameNodes, nodeGroup }
 })
 
 export const fetchNodesFailure = error => ({
@@ -43,24 +40,24 @@ export const fetchNodesAsync = () => async (dispatch, getState) => {
             frameNodesArray
         )
 
-        dispatch(fetchFrameNodesSuccess(frameNodes))
-
-        dispatch(fetchNodesSuccess(nodeGroup))
+        dispatch(fetchNodesSuccess(frameNodes, nodeGroup))
     } catch (error) {
         dispatch(fetchNodesFailure(error))
     }
 }
 
-/* EVENT: TOGGLE */
+/* EVENT: COLLAPSE */
 
-export const toggleNodeCollapse = ({ frameId, nodeId, type }) => ({
+export const toggleNodeCollapse = ({ parentId, event }) => ({
     type: NodeActionTypes.TOGGLE_NODE_COLLAPSE,
-    payload: { frameId, nodeId, type, action: 'TOGGLE_NODE_COLLAPSE' }
+    payload: { parentId, event }
 })
 
-export const toggleNodeCheck = ({ frameId, nodeId, type }) => ({
+/* EVENT: CHECK */
+
+export const toggleNodeCheck = ({ nodeId, event }) => ({
     type: NodeActionTypes.TOGGLE_NODE_CHECK_ONE,
-    payload: { frameId, nodeId, type }
+    payload: { nodeId, event }
 })
 
 /* EVENT: DRAG */
@@ -82,23 +79,32 @@ const createNewNode = newNodeId => ({
     descendant: []
 })
 
-export const appendNewNode = ({ frameId, parentId, nodeId }) => dispatch => {
-    // save new node
+export const appendNewNode = ({ frameId, parentId }) => dispatch => {
     const newNodeId = nanoid()
-    dispatch(saveNewNodeId(frameId, parentId, newNodeId))
+    const newNode = createNewNode(newNodeId)
 
     dispatch({
         type: NodeActionTypes.APPEND_TO_PARENT_NODE,
         payload: {
+            frameId,
             parentId,
-            nodeId,
-            newNode: createNewNode(newNodeId),
-            newNodeId
+            newNodeId,
+            newNode
         }
     })
 }
 
-export const appendChildNode = ({ frameId, nodeId, type }) => ({
-    type: NodeActionTypes.APPEND_CHILD_NODE,
-    payload: { frameId, nodeId, type }
-})
+export const appendChildNode = ({ frameId, nodeId }) => dispatch => {
+    const newNodeId = nanoid()
+    const newNode = createNewNode(newNodeId)
+
+    dispatch({
+        type: NodeActionTypes.APPEND_CHILD_NODE,
+        payload: {
+            frameId,
+            nodeId,
+            newNodeId,
+            newNode
+        }
+    })
+}

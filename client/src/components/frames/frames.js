@@ -2,8 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import { selectFrameNodeGroup } from '../../store/frame-nodes/frame-nodes.selectors'
-import { selectNodeGroup } from '../../store/node/node.selectors'
+import {
+    selectFrameNodes,
+    selectNodeGroup
+} from '../../store/node/node.selectors'
 import {
     dragChildNode,
     toggleNodeCollapse,
@@ -20,7 +22,7 @@ const Frames = ({
     frames,
     isActive,
     frameNodes,
-    nodes,
+    nodeGroup,
     dragChildNode,
     toggleNodeCollapse,
     toggleNodeCheck
@@ -36,26 +38,25 @@ const Frames = ({
         <div className={extendedClass}>
             {order.map(frameId => {
                 const { id, title } = group[frameId]
+
+                // rootNodes LIKE node.descendant
                 const rootNodes = frameNodes[id].roots
 
                 return (
                     <Frame key={id} title={title}>
                         <FrameContent>
-                            {rootNodes.map((nodeId, idx) => (
-                                <NodeParent
-                                    key={nodeId}
-                                    parentId={0}
-                                    frameId={frameId}
-                                    root='true'
-                                    data={nodes[nodeId]}
-                                    index={idx}
-                                    actions={{
-                                        dragChildNode,
-                                        toggleNodeCollapse,
-                                        toggleNodeCheck
-                                    }}
-                                />
-                            ))}
+                            <NodeParent
+                                parentId={0} // use
+                                frameId={frameId}
+                                root='true'
+                                nodes={rootNodes}
+                                nodeGroup={nodeGroup}
+                                actions={{
+                                    dragChildNode,
+                                    toggleNodeCollapse,
+                                    toggleNodeCheck
+                                }}
+                            />
                         </FrameContent>
                     </Frame>
                 )
@@ -65,8 +66,8 @@ const Frames = ({
 }
 
 const mapStateToProps = createStructuredSelector({
-    frameNodes: selectFrameNodeGroup,
-    nodes: selectNodeGroup
+    frameNodes: selectFrameNodes,
+    nodeGroup: selectNodeGroup
 })
 
 const actionCreators = {

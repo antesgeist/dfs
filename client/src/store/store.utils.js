@@ -139,10 +139,21 @@ export const formatNodesForDispatch = frameNodesArr => {
             // track node depth to catch rootIds
             let depth = 1
 
+            /* 
+                n { d = 1
+                    n { d = 2
+                        n {} d = 3
+                        n {} d = 3
+                        n {} d = 3 
+                    } i === iLen && d !== 1
+                }
+            */
+
             // normalize node tree
             const normalizeTree = nodeTree =>
-                nodeTree.map(node => {
-                    const nodeEmpty = node.descendant.length === 0
+                nodeTree.map((node, idx) => {
+                    const nodeLen = node.descendant.length
+                    const nodeEmpty = nodeLen === 0
 
                     // only save root nodes
                     if (depth === 1) rootIds.push(node.id)
@@ -155,12 +166,16 @@ export const formatNodesForDispatch = frameNodesArr => {
                         nodeGroup[node.id] = node
                     } else {
                         depth++
-
                         // recursive case
                         nodeGroup[node.id] = {
                             ...node,
                             descendant: normalizeTree(node.descendant)
                         }
+                    }
+
+                    // set depth - 1 after each level of recursive iteration
+                    if (!nodeEmpty && depth !== 1 && idx === nodeLen - 1) {
+                        depth--
                     }
 
                     // save nodeId as reference to node.descendant

@@ -16,8 +16,7 @@ const NodeToolbar = ({ opt, frameId, nodeId, appendChildNode }) => {
     }
 
     const onAppendChildNode = () => {
-        console.log('append child')
-        appendChildNode({ frameId, nodeId, type: 'APPEND_AS_CHILD' })
+        appendChildNode({ frameId, nodeId })
     }
 
     return (

@@ -3,7 +3,8 @@ import produce from 'immer'
 import NodeActionTypes from './node.types'
 
 const INITIAL_STATE = {
-    group: null,
+    groupByFrames: null,
+    groupByNodes: null,
     isFetching: false,
     errorMessage: null
 }
@@ -17,7 +18,8 @@ const nodeReducers = (state = INITIAL_STATE, { type, payload }) =>
 
             case NodeActionTypes.FETCH_SUCCESS:
                 draft.isFetching = false
-                draft.group = payload
+                draft.groupByFrames = payload.frameNodes
+                draft.groupByNodes = payload.nodeGroup
                 break
 
             case NodeActionTypes.FETCH_FAILURE:
@@ -25,18 +27,49 @@ const nodeReducers = (state = INITIAL_STATE, { type, payload }) =>
                 draft.errorMessage = payload
                 break
 
+            case NodeActionTypes.TOGGLE_NODE_COLLAPSE: {
+                const { parentId, event } = payload
+
+                draft.groupByNodes[parentId].state.collapsed = !draft
+                    .groupByNodes[parentId].state.collapsed
+
+                break
+            }
+
+            case NodeActionTypes.TOGGLE_NODE_CHECK_ONE: {
+                const { nodeId, event } = payload
+
+                draft.groupByNodes[nodeId].state.checked = !draft.groupByNodes[
+                    nodeId
+                ].state.checked
+
+                break
+            }
+
             case NodeActionTypes.APPEND_TO_PARENT_NODE: {
-                const { parentId, nodeId, newNode, newNodeId } = payload
+                const { frameId, parentId, newNodeId, newNode } = payload
 
-                /* FIREBASE DATA MODELING */
+                // insert node to lookup table first
+                draft.groupByNodes[newNodeId] = newNode
 
+                // update descendant reference ids
                 if (parentId === 0) {
-                    // insert new node into nodes
-                    draft.group[newNodeId] = newNode
+                    draft.groupByFrames[frameId].roots.push(newNodeId)
+                    draft.groupByFrames[frameId].all.push(newNodeId)
+                } else {
+                    draft.groupByFrames[frameId].all.push(newNodeId)
+                    draft.groupByNodes[parentId].descendant.push(newNodeId)
                 }
 
-                // insert new node ID into frameNodes (all, roots)
-                // insert new node ID into
+                break
+            }
+
+            case NodeActionTypes.APPEND_CHILD_NODE: {
+                const { frameId, nodeId, newNodeId, newNode } = payload
+
+                draft.groupByNodes[newNodeId] = newNode
+                draft.groupByFrames[frameId].all.push(newNodeId)
+                draft.groupByNodes[nodeId].descendant.push(newNodeId)
 
                 break
             }
@@ -48,50 +81,7 @@ const nodeReducers = (state = INITIAL_STATE, { type, payload }) =>
 
 export default nodeReducers
 
-/* 
-    case NodeActionTypes.APPEND_CHILD_NODE:
-    case NodeActionTypes.APPEND_SIBLING_NODE:
-    case NodeActionTypes.SET_ACTIVE_GROUP:
-    case NodeActionTypes.TOGGLE_NODE_COLLAPSE:
-    case NodeActionTypes.TOGGLE_NODE_CHECK_ONE:
-    case NodeActionTypes.TOGGLE_NODE_CHECK_CASCADE:
-    case NodeActionTypes.DRAG_CHILD_NODE:
-
-*/
-
-// case FrameActionTypes.TOGGLE_NODE_COLLAPSE:
-//     draft.frameGroups = mapNodeStates(
-//         frameGroups,
-//         activeFrameGroup,
-//         payload
-//     )
-//     break
-
-// case FrameActionTypes.TOGGLE_NODE_CHECK_ONE:
-//     draft.frameGroups = mapNodeStates(
-//         frameGroups,
-//         activeFrameGroup,
-//         payload
-//     )
-//     break
-
 // case FrameActionTypes.DRAG_CHILD_NODE:
-//     draft.frameGroups = mapNodeStates(
-//         frameGroups,
-//         activeFrameGroup,
-//         payload
-//     )
-//     break
-
-// case FrameActionTypes.APPEND_TO_PARENT_NODE:
-//     draft.frameGroups = mapNodeStates(
-//         frameGroups,
-//         activeFrameGroup,
-//         payload
-//     )
-//     break
-
-// case FrameActionTypes.APPEND_CHILD_NODE:
 //     draft.frameGroups = mapNodeStates(
 //         frameGroups,
 //         activeFrameGroup,

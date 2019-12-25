@@ -1,9 +1,6 @@
 import React, { useState, Fragment } from 'react'
-import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
 import { Droppable, DragDropContext } from 'react-beautiful-dnd'
 
-import { selectNodeGroup } from '../../store/node/node.selectors'
 import { useDrag } from '../utils/custom-hooks'
 
 import Node from '../node/node'
@@ -15,39 +12,33 @@ import { MenuDown, MenuRight } from '../icons/icons'
 
 import styles from './node-parent.module.scss'
 
-const mapNodesToParent = (
-    nodeGroup,
-    data,
-    frameId,
-    index,
-    isDragging,
-    actions
-) => {
-    const { id, title, state, descendant } = data
+const mapNodes = (frameId, nodes, nodeGroup, isDragging, actions) =>
+    nodes.map((nodeId, idx) => {
+        const { title, state, descendant } = nodeGroup[nodeId]
 
-    return (
-        <Node id={id} index={index}>
-            <NodeContent
-                frameId={frameId}
-                nodeId={id}
-                title={title}
-                checked={state.checked}
-                onCheck={actions.toggleNodeCheck}
-                isDragging={isDragging}
-            />
-            {descendant.length > 0 && (
-                <NodeParent
+        return (
+            <Node key={nodeId} id={nodeId} index={idx}>
+                <NodeContent
                     frameId={frameId}
-                    parentId={id}
-                    nodeId={id}
-                    data={nodeGroup[id]}
-                    // nodeGroup={nodeGroup}
-                    actions={actions}
+                    nodeId={nodeId}
+                    title={title}
+                    checked={state.checked}
+                    onCheck={actions.toggleNodeCheck}
+                    isDragging={isDragging}
                 />
-            )}
-        </Node>
-    )
-}
+                {descendant.length > 0 && (
+                    <NodeParent
+                        frameId={frameId}
+                        parentId={nodeId}
+                        nodes={descendant}
+                        nodeGroup={nodeGroup}
+                        collapsed={state.collapsed}
+                        actions={actions}
+                    />
+                )}
+            </Node>
+        )
+    })
 
 /**
  * Node Container
@@ -66,16 +57,13 @@ const NodeParent = ({
     root,
     frameId,
     parentId,
-    data,
+    nodes,
     nodeGroup,
-    index,
+    collapsed,
     actions
 }) => {
-    const { id, title, state, descendant } = data
-
     const { dragChildNode, toggleNodeCollapse } = actions
 
-    const [isCollapsed, setIsCollapsed] = useState(state.collapsed)
     const [onDragEnd, onBeforeDragStart, isDragging] = useDrag(
         false,
         dragChildNode,
@@ -88,22 +76,22 @@ const NodeParent = ({
         className: styles.root
     }
 
+    // root nodes not collapsed by default
+    const initCollapsedState = root ? false : collapsed
+
+    // set root nodes to non-collapsed temporarily
+    const [isCollapsed, setIsCollapsed] = useState(initCollapsedState)
+
     const attributes = {
         'data-is-collapsed': isCollapsed
     }
 
-    const onCollapse = () => {
-        setIsCollapsed(!isCollapsed)
-        toggleNodeCollapse({ frameId, id, type: 'COLLAPSE' })
-    }
+    const svgChevron = isCollapsed ? <MenuRight /> : <MenuDown />
 
-    const collapseButton = (isCollapsed, handler) => (
-        <Button
-            svg={isCollapsed ? <MenuRight /> : <MenuDown />}
-            style={[styles.collapseBtn]}
-            onClick={handler}
-        />
-    )
+    const onCollapse = parentId => {
+        setIsCollapsed(!isCollapsed)
+        toggleNodeCollapse({ parentId, event: 'COLLAPSE' })
+    }
 
     return (
         <DragDropContext
@@ -116,7 +104,13 @@ const NodeParent = ({
 
                     return (
                         <Fragment>
-                            {!root && collapseButton(isCollapsed, onCollapse)}
+                            {!root && (
+                                <Button
+                                    svg={svgChevron}
+                                    style={[styles.collapseBtn]}
+                                    onClick={() => onCollapse(parentId)}
+                                />
+                            )}
 
                             <ul
                                 ref={innerRef}
@@ -126,31 +120,17 @@ const NodeParent = ({
                             >
                                 {placeholder}
 
-                                <Node id={id} index={index}>
-                                    <NodeContent
-                                        frameId={frameId}
-                                        nodeId={id}
-                                        title={title}
-                                        checked={state.checked}
-                                        onCheck={actions.toggleNodeCheck}
-                                        isDragging={isDragging}
-                                    />
-                                    {descendant.length > 0 && (
-                                        <NodeParent
-                                            frameId={frameId}
-                                            parentId={id}
-                                            nodeId={id}
-                                            data={nodeGroup[id]}
-                                            // nodeGroup={nodeGroup}
-                                            actions={actions}
-                                        />
-                                    )}
-                                </Node>
+                                {mapNodes(
+                                    frameId,
+                                    nodes,
+                                    nodeGroup,
+                                    isDragging,
+                                    actions
+                                )}
 
                                 <NodeAddNew
                                     frameId={frameId}
                                     parentId={parentId}
-                                    nodeId={id}
                                 />
                             </ul>
                         </Fragment>
@@ -161,19 +141,4 @@ const NodeParent = ({
     )
 }
 
-/* 
-{mapNodesToParent(
-                                    nodeGroup,
-                                    data,
-                                    frameId,
-                                    index,
-                                    isDragging,
-                                    actions
-                                )}
-*/
-
-const mapStateToProps = createStructuredSelector({
-    nodeGroup: selectNodeGroup
-})
-
-export default connect(mapStateToProps)(NodeParent)
+export default NodeParent

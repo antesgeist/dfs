@@ -8,9 +8,9 @@ import { PlusOutline } from '../icons/icons'
 
 import styles from './node-add-new.module.scss'
 
-const NodeAddNew = ({ frameId, parentId, nodeId, appendNewNode }) => {
+const NodeAddNew = ({ frameId, parentId, appendNewNode }) => {
     const onInsertNode = () => {
-        appendNewNode({ frameId, parentId, nodeId })
+        appendNewNode({ frameId, parentId })
     }
 
     return (
